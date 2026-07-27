@@ -7,7 +7,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score, precision_recall_curve
 from src.preprocessing import load_and_preprocess_data
 
-DATA_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "raw_transactions.csv")
+DATA_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "dataset fraud.csv")
 MODELS_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models")
 
 def train():

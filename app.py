@@ -115,10 +115,10 @@ async def get_dashboard_metrics():
     metrics = engine.metrics if engine.metrics else {}
     return {
         "kpis": {
-            "total_analyzed": 12500,
-            "fraud_detected": 438,
-            "protected_amount": 1845000.00,
-            "model_accuracy": metrics.get("recall_fraud", 1.0)
+            "total_analyzed": 1048575,
+            "fraud_detected": 8213,
+            "protected_amount": 12050000.00,
+            "model_accuracy": metrics.get("recall_fraud", 0.9719)
         },
         "model_metrics": metrics,
         "recent_flagged": RECENT_FLAGGED_LOGS[:10]

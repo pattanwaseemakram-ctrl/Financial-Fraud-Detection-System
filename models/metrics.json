@@ -2,6 +2,10 @@
   "model_type": "Random Forest Classifier + SMOTE",
   "feature_columns": [
     "amount",
+    "oldbalanceOrg",
+    "newbalanceOrig",
+    "oldbalanceDest",
+    "newbalanceDest",
     "hour",
     "day_of_week",
     "time_of_day_risk",
@@ -9,32 +13,22 @@
     "unusual_location",
     "spending_deviation",
     "transaction_frequency_24h",
-    "device_type_ATM",
-    "device_type_Desktop",
-    "device_type_Mobile",
-    "device_type_POS",
-    "merchant_category_Crypto",
-    "merchant_category_Electronics",
-    "merchant_category_Gaming",
-    "merchant_category_Grocery",
-    "merchant_category_Retail",
-    "merchant_category_Travel",
-    "merchant_category_Wire_Transfer"
+    "balance_diff_orig"
   ],
-  "optimal_threshold": 0.71,
-  "roc_auc": 1.0,
-  "precision_fraud": 1.0,
-  "recall_fraud": 1.0,
-  "f1_fraud": 1.0,
-  "accuracy": 1.0,
+  "optimal_threshold": 0.75,
+  "roc_auc": 0.9979,
+  "precision_fraud": 0.9964,
+  "recall_fraud": 0.9719,
+  "f1_fraud": 0.984,
+  "accuracy": 0.9993,
   "confusion_matrix": [
     [
-      2895,
-      0
+      12214,
+      1
     ],
     [
-      0,
-      105
+      8,
+      277
     ]
   ]
 }
