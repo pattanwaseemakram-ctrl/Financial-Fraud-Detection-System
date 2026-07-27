@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FraudShield AI - Real-Time Fraud Detection System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <header class="navbar">
+            <div class="logo">
+                <span class="icon">🛡️</span>
+                <h2>Intelligent Fraud Detection System</h2>
+            </div>
+            <div class="status-pill"><span class="pulse"></span> Scoring Engine: Active</div>
+        </header>
+
+        <main class="dashboard-grid">
+            <div class="kpi-card">
+                <h4>Total Analyzed</h4>
+                <p id="kpi-total">12,500</p>
+            </div>
+            <div class="kpi-card danger">
+                <h4>Fraud Intercepted</h4>
+                <p id="kpi-fraud">438</p>
+            </div>
+            <div class="kpi-card success">
+                <h4>Protected Value</h4>
+                <p id="kpi-value">$1,845,000</p>
+            </div>
+            <div class="kpi-card info">
+                <h4>Model Sensitivity (Recall)</h4>
+                <p id="kpi-recall">100%</p>
+            </div>
+
+            <!-- Transaction Simulator Form -->
+            <section class="card simulator-card">
+                <h3>⚡ Real-Time Transaction Risk Analyzer</h3>
+                <form id="tx-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>User ID</label>
+                            <input type="text" id="user_id" value="USR_0192" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Amount ($)</label>
+                            <input type="number" id="amount" value="3450.00" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Merchant Category</label>
+                            <select id="merchant_category">
+                                <option value="Crypto" selected>Crypto</option>
+                                <option value="Wire_Transfer">Wire Transfer</option>
+                                <option value="Electronics">Electronics</option>
+                                <option value="Retail">Retail</option>
+                                <option value="Grocery">Grocery</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Location</label>
+                            <select id="location">
+                                <option value="Lagos, NG" selected>Lagos, NG (Suspicious)</option>
+                                <option value="New York, US">New York, US</option>
+                                <option value="Moscow, RU">Moscow, RU</option>
+                                <option value="Online">Online</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary">Analyze Risk Score</button>
+                </form>
+
+                <div id="result-box" class="result-box hidden">
+                    <div class="risk-badge" id="risk-badge">HIGH RISK</div>
+                    <h3 id="risk-score">Risk Score: 92.4%</h3>
+                    <p id="action-taken">Action: BLOCKED_IMMEDIATE_ALERT</p>
+                    <ul id="audit-flags"></ul>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="/static/js/dashboard.js"></script>
+</body>
+</html>
