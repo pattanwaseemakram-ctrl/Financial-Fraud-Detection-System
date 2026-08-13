@@ -1,62 +1,71 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
+try:
+    df = pd.read_csv("Dataset/encoded_transactions.csv")
 
-df = pd.read_csv("Dataset/encoded_transactions.csv")
+    print(df.head())
 
-print(df.head())
-
-print("\nDataset Information:")
-print(df.info())
+    print("\nDataset Information:")
+    print(df.info())
 
 
 
-print("\nColumns Before Scaling:")
-print(df.columns)
+    print("\nColumns Before Scaling:")
+    print(df.columns)
 
-# Continuous numerical columns to scale
-numerical_columns = [
+    # Continuous numerical columns to scale
+    numerical_columns = [
     "Amount",
     "Account Balance",
     "Transaction_Hour",
     "Transaction_Day",
     "Transaction_Month"
-]
+    ]
 
-print("\nColumns Selected for Scaling:")
-print(numerical_columns)
-
-
-
-# Create StandardScaler 
-scaler = StandardScaler()
-
-print("\nStandardScaler object created successfully.")
-
-
-# Apply StandardScaler to the selected columns
-df[numerical_columns] = scaler.fit_transform(df[numerical_columns])
-
-print("\nFeature Scaling Applied Successfully.")
+    print("\nColumns Selected for Scaling:")
+    print(numerical_columns)
 
 
 
+    # Create StandardScaler 
+    scaler = StandardScaler()
 
-print("\nScaled Dataset:")
-print(df.head())
+    print("\nStandardScaler object created successfully.")
+
+
+    # Apply StandardScaler to the selected columns
+    df[numerical_columns] = scaler.fit_transform(df[numerical_columns])
+
+    print("\nFeature Scaling Applied Successfully.")
 
 
 
 
-print("\nMean of Scaled Columns:")
-print(df[numerical_columns].mean())
-
-print("\nStandard Deviation of Scaled Columns:")
-print(df[numerical_columns].std())
+    print("\nScaled Dataset:")
+    print(df.head())
 
 
 
 
-# Save the scaled dataset
-df.to_csv("Dataset/scaled_transactions.csv", index=False)
+    print("\nMean of Scaled Columns:")
+    print(df[numerical_columns].mean())
 
-print("\nScaled dataset saved successfully.")
+    print("\nStandard Deviation of Scaled Columns:")
+    print(df[numerical_columns].std())
+
+
+
+
+    # Save the scaled dataset
+    df.to_csv("Dataset/scaled_transactions.csv", index=False)
+
+    print("\nScaled dataset saved successfully.")
+
+except FileNotFoundError:
+    print("Error: Required input dataset was not found.")
+
+except ValueError as e:
+    print("Feature scaling data error:", e)
+
+except Exception as e:
+    print("Unexpected error during feature scaling:", e)    

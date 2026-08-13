@@ -1,58 +1,68 @@
 import pandas as pd
+try:
+    df = pd.read_csv("Dataset/feature_engineered_transactions.csv")
 
-df = pd.read_csv("Dataset/feature_engineered_transactions.csv")
-print(df.head())
+    print(df.head())
 
-print("\nCategorical Columns:")
-print(df.select_dtypes(include=["object"]).columns)
+    print("\nCategorical Columns:")
+    print(df.select_dtypes(include=["object"]).columns)
 
-# Drop unnecessary
-df = df.drop(columns=[
-    "Transaction ID",
-    "Sender Account ID",
-    "Receiver Account ID",
-    "Timestamp",
-    "Device ID",
-    "IP Address"
-])
+    # Drop unnecessary
+    df = df.drop(columns=[
+        "Transaction ID",
+        "Sender Account ID",
+        "Receiver Account ID",
+        "Timestamp",
+        "Device ID",
+        "IP Address"
+    ])
 
-print("\nRemaining Columns:")
-print(df.columns)
-
-
-# Check unique values in categorical columns
-
-print("\nType:")
-print(df["Type"].unique())
-
-print("\nLocation:")
-print(df["Location"].unique())
-
-print("\nTransaction Weekday:")
-print(df["Transaction_Weekday"].unique())
+    print("\nRemaining Columns:")
+    print(df.columns)
 
 
+    # Check unique values in categorical columns
 
-# One-Hot Encoding
+    print("\nType:")
+    print(df["Type"].unique())
 
+    print("\nLocation:")
+    print(df["Location"].unique())
 
-df = pd.get_dummies(
-    df,
-    columns=["Type", "Location", "Transaction_Weekday"],
-    dtype=int
-)
-
-print("\nEncoded Dataset:")
-print(df.head())
+    print("\nTransaction Weekday:")
+    print(df["Transaction_Weekday"].unique())
 
 
 
-print("\nEncoded Columns:")
-print(df.columns)
+    # One-Hot Encoding
+
+
+    df = pd.get_dummies(
+        df,
+        columns=["Type", "Location", "Transaction_Weekday"],
+        dtype=int
+    )
+
+    print("\nEncoded Dataset:")
+    print(df.head())
 
 
 
-# Save the Encoded Dataset
-df.to_csv("Dataset/encoded_transactions.csv", index=False)
+    print("\nEncoded Columns:")
+    print(df.columns)
 
-print("\nEncoded dataset saved successfully.")
+
+
+    # Save the Encoded Dataset
+    df.to_csv("Dataset/encoded_transactions.csv", index=False)
+
+    print("\nEncoded dataset saved successfully.")
+
+except FileNotFoundError:
+    print("Error: Required input dataset was not found.")
+
+except ValueError as e:
+    print("Encoding data error:", e)
+
+except Exception as e:
+    print("Unexpected error during encoding:", e)
