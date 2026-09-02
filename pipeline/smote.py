@@ -31,7 +31,7 @@ class SMOTEProcessor:
 
     # Method to create SMOTE object
     def create_smote(self):
-        return SMOTE(random_state=42)
+        return SMOTE(sampling_strategy=0.5,random_state=42)
 
     # Method to apply SMOTE to training data
     def apply_smote(self, smote, X_train, y_train):

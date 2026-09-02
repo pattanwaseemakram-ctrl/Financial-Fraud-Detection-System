@@ -1,0 +1,169 @@
+import pandas as pd
+
+from sklearn.linear_model import LogisticRegression
+
+from sklearn.metrics import (
+    accuracy_score,
+    confusion_matrix,
+    classification_report,
+    roc_auc_score,
+    average_precision_score
+)
+
+
+# Input files
+X_TRAIN_FILE = "Dataset/X_train_selected.csv"
+Y_TRAIN_FILE = "Dataset/y_train.csv"
+
+X_TEST_FILE = "Dataset/X_test_selected.csv"
+Y_TEST_FILE = "Dataset/y_test.csv"
+
+
+# Main function to control the model training workflow
+def main():
+
+    try:
+
+        # Load training features
+        X_train = pd.read_csv(X_TRAIN_FILE)
+
+        # Load training target
+        y_train = pd.read_csv(Y_TRAIN_FILE).squeeze()
+
+        # Load testing features
+        X_test = pd.read_csv(X_TEST_FILE)
+
+        # Load testing target
+        y_test = pd.read_csv(Y_TEST_FILE).squeeze()
+
+
+        # Display training and testing shapes
+        print("Training Features Shape:")
+        print(X_train.shape)
+
+        print("\nTraining Target Shape:")
+        print(y_train.shape)
+
+        print("\nTesting Features Shape:")
+        print(X_test.shape)
+
+        print("\nTesting Target Shape:")
+        print(y_test.shape)
+
+
+        # Display training class distribution
+        print("\nTraining Class Distribution:")
+        print(y_train.value_counts())
+
+        # Display testing class distribution
+        print("\nTesting Class Distribution:")
+        print(y_test.value_counts())
+
+
+        # Create Logistic Regression model
+        model = LogisticRegression(
+            random_state=42,
+            max_iter=1000
+        )
+
+        print(
+            "\nLogistic Regression model "
+            "created successfully.")
+
+
+        # Train the model
+        model.fit(
+            X_train,
+            y_train)
+
+        print("\nModel training "
+            "completed successfully.")
+
+
+        # Make class predictions
+        y_pred = model.predict(
+            X_test)
+
+        print("\nPredictions completed.")
+
+
+        # Display actual values
+        print("\nActual Values:")
+        print(y_test.values)
+
+
+        # Display predicted values
+        print("\nPredicted Values:")
+        print(y_pred)
+
+
+        # Calculate accuracy
+        accuracy = accuracy_score(
+            y_test,
+            y_pred)
+
+        print("\nAccuracy:")
+        print(accuracy)
+
+
+        # Calculate confusion matrix
+        cm = confusion_matrix(
+            y_test,
+            y_pred)
+
+        print("\nConfusion Matrix:")
+        print(cm)
+
+
+        # Generate classification report
+        report = classification_report(
+            y_test,
+            y_pred)
+
+        print("\nClassification Report:")
+        print(report)
+
+
+        # Get probability predictions for class 1
+        y_probability = model.predict_proba(
+            X_test
+        )[:, 1]
+
+        print("\nFirst 10 Class 1 Probabilities:")
+        print(y_probability[:10])
+
+
+        # Calculate ROC-AUC
+        roc_auc = roc_auc_score(
+            y_test,
+            y_probability)
+
+        print("\nROC-AUC:")
+        print(roc_auc)
+
+
+        # Calculate PR-AUC
+        pr_auc = average_precision_score(
+            y_test,
+            y_probability)
+
+        print("\nPR-AUC:")
+        print(pr_auc)
+
+
+    # Handle missing dataset files
+    except FileNotFoundError:
+        print("Error: Required dataset file " "was not found.")
+
+    # Handle invalid data
+    except ValueError as e:
+        print("Data error during model training:",e)
+
+    # Handle unexpected errors
+    except Exception as e:
+        print("Unexpected error:",e)
+
+
+# Run main() when this file is executed directly
+if __name__ == "__main__":
+    main()
