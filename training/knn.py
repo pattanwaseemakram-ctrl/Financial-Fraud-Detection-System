@@ -12,11 +12,11 @@ from sklearn.metrics import (
 
 
 # Input files
-X_TRAIN_FILE = "Dataset/X_train_selected.csv"
-Y_TRAIN_FILE = "Dataset/y_train.csv"
+X_TRAIN_FILE = "Dataset/split/X_train_selected.csv"
+Y_TRAIN_FILE = "Dataset/split/y_train.csv"
 
-X_TEST_FILE = "Dataset/X_test_selected.csv"
-Y_TEST_FILE = "Dataset/y_test.csv"
+X_TEST_FILE = "Dataset/split/X_test_selected.csv"
+Y_TEST_FILE = "Dataset/split/y_test.csv"
 
 
 # Main function to control the KNN workflow

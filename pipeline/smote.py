@@ -3,11 +3,11 @@ from imblearn.over_sampling import SMOTE
 
 
 # Input and output file paths
-X_TRAIN_FILE = "Dataset/X_train_selected.csv"
-Y_TRAIN_FILE = "Dataset/y_train.csv"
+X_TRAIN_FILE = "Dataset/split/X_train_selected.csv"
+Y_TRAIN_FILE = "Dataset/split/y_train.csv"
 
-X_TRAIN_SMOTE_FILE = "Dataset/X_train_smote.csv"
-Y_TRAIN_SMOTE_FILE = "Dataset/y_train_smote.csv"
+X_TRAIN_SMOTE_FILE = "Dataset/smote/X_train_smote.csv"
+Y_TRAIN_SMOTE_FILE = "Dataset/smote/y_train_smote.csv"
 
 
 # Class containing all SMOTE processing methods

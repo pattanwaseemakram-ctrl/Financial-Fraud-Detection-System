@@ -5,7 +5,7 @@ import numpy as np
 
 
 # Input dataset path
-INPUT_FILE = "Dataset/X_train.csv"
+INPUT_FILE = "Dataset/split/X_train.csv"
 
 
 # Class containing correlation analysis methods
@@ -66,7 +66,8 @@ class CorrelationAnalyzer:
                             row,
                             column,
                             correlation_value))
-                    return highly_correlated_pairs
+
+        return highly_correlated_pairs
 
 
 # Main function to control the correlation analysis workflow

@@ -6,15 +6,15 @@ from sklearn.model_selection import train_test_split
 
 
 # Input and output file paths
-INPUT_FILE = "Dataset/scaled_transactions.csv"
+INPUT_FILE = "Dataset/processed data/scaled_transactions.csv"
 
-X_TRAIN_SELECTED_FILE = "Dataset/X_train_selected.csv"
-X_TEST_SELECTED_FILE = "Dataset/X_test_selected.csv"
-Y_TRAIN_FILE = "Dataset/y_train.csv"
-Y_TEST_FILE = "Dataset/y_test.csv"
+X_TRAIN_SELECTED_FILE = "Dataset/split/X_train_selected.csv"
+X_TEST_SELECTED_FILE = "Dataset/split/X_test_selected.csv"
+Y_TRAIN_FILE = "Dataset/split/y_train.csv"
+Y_TEST_FILE = "Dataset/split/y_test.csv"
 
-X_TRAIN_FILE = "Dataset/X_train.csv"
-X_TEST_FILE = "Dataset/X_test.csv"
+X_TRAIN_FILE = "Dataset/split/X_train.csv"
+X_TEST_FILE = "Dataset/split/X_test.csv"
 
 
 # Class containing all feature selection methods

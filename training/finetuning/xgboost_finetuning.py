@@ -14,16 +14,16 @@ from sklearn.metrics import (
 
 
 # Input files
-X_TRAIN_FILE = "Dataset/X_train_selected.csv"
-Y_TRAIN_FILE = "Dataset/y_train.csv"
+X_TRAIN_FILE = "Dataset/split/X_train_selected.csv"
+Y_TRAIN_FILE = "Dataset/split/y_train.csv"
 
-X_TEST_FILE = "Dataset/X_test_selected.csv"
-Y_TEST_FILE = "Dataset/y_test.csv"
+X_TEST_FILE = "Dataset/split/X_test_selected.csv"
+Y_TEST_FILE = "Dataset/split/y_test.csv"
 
 
 # Output file
 MODEL_OUTPUT_FILE = (
-    "Dataset/xgboost_finetuned.pkl"
+    "training/finetuned models/xgboost_finetuned.pkl"
 )
 
 
@@ -93,20 +93,17 @@ def main():
 
             "n_estimators": [
                 100,
-                200,
-                300
+                200
             ],
 
             "max_depth": [
                 3,
-                5,
-                7
+                5
             ],
 
             "learning_rate": [
                 0.01,
-                0.1,
-                0.2
+                0.1
             ],
 
             "subsample": [
@@ -387,19 +384,24 @@ def main():
 
         print(
             "Error: Required dataset file "
-            "was not found.")
+            "was not found."
+        )
 
 
     except ValueError as e:
 
         print(
-            "Data error during fine-tuning:",e)
+            "Data error during fine-tuning:",
+            e
+        )
 
 
     except Exception as e:
 
         print(
-            "Unexpected error:",e)
+            "Unexpected error:",
+            e
+        )
 
 
 # Run main function
