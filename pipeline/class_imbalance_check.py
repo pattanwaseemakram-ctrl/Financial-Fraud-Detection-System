@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-# Input dataset path
-INPUT_FILE = "Dataset/encoded_transactions.csv"
+# Input dataset
+INPUT_FILE = "Dataset/processed data/encoded_transactions.csv"
 
 
 # Target column

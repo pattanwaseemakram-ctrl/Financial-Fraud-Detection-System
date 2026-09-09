@@ -3,8 +3,8 @@ from sklearn.preprocessing import StandardScaler
 
 
 # Input and output file paths
-INPUT_FILE = "Dataset/encoded_transactions.csv"
-OUTPUT_FILE = "Dataset/scaled_transactions.csv"
+INPUT_FILE = "Dataset/processed data/encoded_transactions.csv"
+OUTPUT_FILE = "Dataset/processed data/scaled_transactions.csv"
 
 
 # Class containing all feature scaling methods

@@ -4,7 +4,7 @@ import seaborn as sns
 
 
 # Input dataset path
-INPUT_FILE = "Dataset/financial_transactions.csv"
+INPUT_FILE = "Dataset/raw dataset/financial_transactions.csv"
 
 
 # EDA class containing data analysis methods

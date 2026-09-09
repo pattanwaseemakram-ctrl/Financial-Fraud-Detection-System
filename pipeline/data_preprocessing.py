@@ -2,9 +2,8 @@ import pandas as pd
 
 
 # Input and output file paths
-INPUT_FILE = "Dataset/financial_transactions.csv"
-OUTPUT_FILE = "Dataset/cleaned_transactions.csv"
-
+INPUT_FILE = "Dataset/raw dataset/financial_transactions.csv"
+OUTPUT_FILE = "Dataset/processed data/cleaned_transactions.csv"
 
 # Class containing all data preprocessing methods
 class DataPreprocessor:

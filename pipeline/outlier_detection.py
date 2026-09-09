@@ -4,7 +4,7 @@ import seaborn as sns
 
 
 # Input dataset path
-INPUT_FILE = "Dataset/feature_engineered_transactions.csv"
+INPUT_FILE = "Dataset/processed data/feature_engineered_transactions.csv"
 
 
 # Class containing all outlier detection methods

@@ -2,8 +2,8 @@ import pandas as pd
 
 
 # Input and output file paths
-INPUT_FILE = "Dataset/feature_engineered_transactions.csv"
-OUTPUT_FILE = "Dataset/encoded_transactions.csv"
+INPUT_FILE = "Dataset/processed data/feature_engineered_transactions.csv"
+OUTPUT_FILE = "Dataset/processed data/encoded_transactions.csv"
 
 
 # Class containing all encoding methods
