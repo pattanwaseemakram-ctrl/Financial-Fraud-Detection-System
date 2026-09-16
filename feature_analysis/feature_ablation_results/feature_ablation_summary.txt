@@ -1,0 +1,22 @@
+FEATURE ABLATION ANALYSIS SUMMARY
+======================================================================
+
+Model:
+StandardScaler -> RandomOverSampler -> LogisticRegression
+
+ROS sampling strategy: 0.5
+Logistic Regression C: 0.0005
+Class Weight: balanced
+
+Feature Set Comparison:
+
+                 Feature Set  Number of Features  Accuracy  Precision   Recall       F1  ROC-AUC   PR-AUC  False Positives  False Negatives
+   Current Improved Features                  31     0.513   0.113113 0.562189 0.188333 0.546752 0.133210              886               88
+            Cleaned Features                  29     0.513   0.113113 0.562189 0.188333 0.546614 0.134137              886               88
+Without Interaction Features                  25     0.505   0.110563 0.557214 0.184514 0.544045 0.127253              901               89
+      Strong Signal Features                  16     0.486   0.107312 0.562189 0.180223 0.529020 0.126078              940               88
+
+Best Feature Set:
+Current Improved Features
+F1 Score: 0.1883
+PR-AUC: 0.1332

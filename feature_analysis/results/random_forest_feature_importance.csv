@@ -1,0 +1,32 @@
+Feature,Importance
+Amount,0.15351572155896792
+Account Balance,0.1529402921279003
+Amount_Percent_of_Balance,0.15023555935884628
+Amount_to_Balance_Ratio,0.15011346365603678
+Transaction_Hour,0.09592240116927901
+Spending_Deviation_Amount,0.040810181318458066
+Transaction_Day,0.026873382454934477
+User Device Recognition,0.01806107265026039
+Type_Deposit,0.01576659282898371
+Type_Transfer,0.015612426827113276
+Type_Withdrawal,0.015589487131830917
+Location_New York,0.015194202604169874
+Location_Florida,0.014592809776852999
+Location_Texas,0.014105471637839324
+Location_Deviation,0.013541552378167869
+Unusual_Hour,0.013273664660187954
+Login Location Match,0.013234067952858138
+Location_California,0.013176079489696051
+Spending Pattern Deviation,0.010706179359648611
+Transaction_Weekday_Saturday,0.009250863421080358
+Transaction_Weekday_Friday,0.009114196584419478
+Transaction_Weekday_Thursday,0.00888823448252119
+Transaction_Weekday_Sunday,0.008138341096023766
+Transaction_Weekday_Monday,0.007299154007818721
+Transaction_Weekday_Wednesday,0.007160790753986838
+Known Threat Flag,0.006883810712117779
+Low_Balance,0.0
+High_Value_Transaction,0.0
+Transaction_Month,0.0
+High_Amount_Unusual_Hour,0.0
+Location_Deviation_High_Amount,0.0

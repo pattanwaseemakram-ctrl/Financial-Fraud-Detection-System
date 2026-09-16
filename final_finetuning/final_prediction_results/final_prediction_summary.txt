@@ -1,0 +1,27 @@
+FINAL FRAUD PREDICTION SUMMARY
+======================================================================
+
+Model: Final Clean Logistic Regression
+Input Dataset: encoded_transactions_improved.csv
+
+Total Transactions: 10000
+Predicted Normal: 5063
+Predicted Suspicious: 4937
+
+Risk Distribution:
+Low Risk: 0
+Medium Risk: 10000
+High Risk: 0
+
+Probability Statistics:
+Minimum: 0.3810
+Maximum: 0.6012
+Average: 0.4991
+
+Removed Features:
+- Transaction_Month
+- High_Value_Transaction
+- Low_Balance
+- High_Amount_Unusual_Hour
+- Location_Deviation_High_Amount
+- Amount_Percent_of_Balance
