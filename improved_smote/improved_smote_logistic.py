@@ -40,7 +40,7 @@ sys.path.append(
     )
 )
 
-from custom_transformers import (
+from final_model.custom_transformers import(
     FeatureSelector,
     SelectiveScaler
 )
