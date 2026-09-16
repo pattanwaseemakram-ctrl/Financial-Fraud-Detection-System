@@ -1,0 +1,33 @@
+FINAL MODEL COMPARISON SUMMARY
+===========================================================================
+
+Dataset:
+encoded_transactions_improved.csv
+
+Train/Test Split:
+80% Training / 20% Testing
+random_state = 42
+
+Balancing Method:
+RandomOverSampler (sampling_strategy=0.5)
+
+Models Compared:
+1. Logistic Regression
+2. Random Forest
+3. XGBoost
+
+Model Comparison:
+
+              Model  Accuracy  Precision   Recall       F1  ROC-AUC   PR-AUC  False Positives  False Negatives
+Logistic Regression    0.5130   0.113113 0.562189 0.188333 0.546752 0.133210              886               88
+      Random Forest    0.8045   0.107438 0.129353 0.117381 0.469484 0.104650              216              175
+            XGBoost    0.8680   0.129412 0.054726 0.076923 0.502629 0.107684               74              190
+
+Model with highest F1:
+Logistic Regression
+
+F1 Score   : 18.83%
+Precision  : 11.31%
+Recall     : 56.22%
+ROC-AUC    : 0.5468
+PR-AUC     : 0.1332

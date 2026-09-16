@@ -1,0 +1,83 @@
+TARGET-FEATURE RELATIONSHIP ANALYSIS
+============================================================
+
+Dataset Shape: (10000, 32)
+Number of Features: 31
+Training Samples: 8000
+Testing Samples: 2000
+
+Top Features by Overall Signal:
+
+                      Feature  RF Importance  Mutual Information  Absolute Mean Difference  Standardized Difference  Average Rank
+             Transaction_Hour       0.095922            0.004273                  0.388847                 0.056676          4.50
+    Spending_Deviation_Amount       0.040810            0.001779                 93.849485                 0.039054          6.00
+              Account Balance       0.152940            0.003862                 27.769557                -0.023853          6.50
+                       Amount       0.153516            0.003618                 44.000843                 0.015510          7.75
+    Amount_Percent_of_Balance       0.150236            0.000000                  3.925977                 0.024183          8.25
+          Location_California       0.013176            0.004145                  0.024452                -0.057580          8.75
+      Amount_to_Balance_Ratio       0.150113            0.000000                  0.039260                 0.024183          9.25
+                 Unusual_Hour       0.013274            0.000000                  0.029876                -0.064346         10.00
+   Transaction_Weekday_Friday       0.009114            0.000000                  0.031558                 0.081830         10.50
+             Location_Florida       0.014593            0.000000                  0.017267                 0.039358         11.00
+                 Type_Deposit       0.015767            0.000657                  0.009856                 0.020697         13.00
+   Transaction_Weekday_Sunday       0.008138            0.000000                  0.017922                -0.049109         13.00
+            Known Threat Flag       0.006884            0.000000                  0.015216                -0.073487         13.25
+         Login Location Match       0.013234            0.006053                  0.007360                -0.016097         14.25
+Transaction_Weekday_Wednesday       0.007161            0.000815                  0.014031                -0.038637         14.25
+
+Top Features by Mutual Information:
+
+                       Feature  Mutual Information
+             Transaction_Month            0.006540
+          Login Location Match            0.006053
+              Transaction_Hour            0.004273
+           Location_California            0.004145
+        High_Value_Transaction            0.004099
+               Account Balance            0.003862
+       User Device Recognition            0.003836
+                        Amount            0.003618
+     Spending_Deviation_Amount            0.001779
+ Transaction_Weekday_Wednesday            0.000815
+                  Type_Deposit            0.000657
+Location_Deviation_High_Amount            0.000319
+     Amount_Percent_of_Balance            0.000000
+       Amount_to_Balance_Ratio            0.000000
+                  Unusual_Hour            0.000000
+
+Top Features by Standardized Difference:
+
+                      Feature  Normal Mean  Suspicious Mean  Standardized Difference
+   Transaction_Weekday_Friday     0.166203         0.197761                 0.081830
+            Known Threat Flag     0.052529         0.037313                -0.073487
+                 Unusual_Hour     0.329628         0.299751                -0.064346
+          Location_California     0.248332         0.223881                -0.057580
+             Transaction_Hour    11.582546        11.971393                 0.056676
+   Transaction_Weekday_Sunday     0.167176         0.149254                -0.049109
+             Location_Florida     0.251390         0.268657                 0.039358
+    Spending_Deviation_Amount   983.269732      1077.119216                 0.039054
+Transaction_Weekday_Wednesday     0.163285         0.149254                -0.038637
+ Transaction_Weekday_Saturday     0.167454         0.179104                 0.030774
+   Spending Pattern Deviation     0.199833         0.211443                 0.028717
+ Transaction_Weekday_Thursday     0.172457         0.162935                -0.025480
+    Amount_Percent_of_Balance   201.660597       205.586574                 0.024183
+      Amount_to_Balance_Ratio     2.016606         2.055866                 0.024183
+              Account Balance  2991.844669      2964.075112                -0.023853
+
+Categorical Feature Suspicious Rates:
+
+                       Feature  Total Occurrences  Normal Count  Suspicious Count  Suspicious Rate
+    Transaction_Weekday_Friday               1692          1496               196         0.115839
+  Transaction_Weekday_Saturday               1685          1496               189         0.112166
+              Location_Florida               2505          2233               272         0.108583
+            Location_Deviation               2965          2651               314         0.105902
+                  Type_Deposit               3458          3102               356         0.102950
+                 Type_Transfer               3314          2983               331         0.099879
+             Location_New York               2531          2280               251         0.099170
+               Type_Withdrawal               3228          2910               318         0.098513
+                Location_Texas               2500          2254               246         0.098400
+    Transaction_Weekday_Monday               1641          1482               159         0.096892
+  Transaction_Weekday_Thursday               1710          1546               164         0.095906
+           Location_California               2464          2228               236         0.095779
+ Transaction_Weekday_Wednesday               1598          1447               151         0.094493
+    Transaction_Weekday_Sunday               1674          1528               146         0.087216
+Location_Deviation_High_Amount                  0             0                 0         0.000000

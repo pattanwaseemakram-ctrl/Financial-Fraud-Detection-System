@@ -1,0 +1,39 @@
+FINAL CLEAN MODEL FEATURES
+==================================================
+
+Total features: 25
+
+Features used:
+- Amount
+- Account Balance
+- User Device Recognition
+- Known Threat Flag
+- Login Location Match
+- Spending Pattern Deviation
+- Transaction_Hour
+- Transaction_Day
+- Amount_to_Balance_Ratio
+- Spending_Deviation_Amount
+- Location_Deviation
+- Unusual_Hour
+- Type_Deposit
+- Type_Transfer
+- Type_Withdrawal
+- Location_California
+- Location_Florida
+- Location_New York
+- Location_Texas
+- Transaction_Weekday_Friday
+- Transaction_Weekday_Monday
+- Transaction_Weekday_Saturday
+- Transaction_Weekday_Sunday
+- Transaction_Weekday_Thursday
+- Transaction_Weekday_Wednesday
+
+Features removed:
+- Transaction_Month
+- High_Value_Transaction
+- Low_Balance
+- High_Amount_Unusual_Hour
+- Location_Deviation_High_Amount
+- Amount_Percent_of_Balance
