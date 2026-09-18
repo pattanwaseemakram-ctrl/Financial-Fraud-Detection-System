@@ -90,7 +90,8 @@ class FeatureSelector:
 
         plt.gca().invert_yaxis()
         plt.tight_layout()
-        plt.show()
+        plt.savefig("Dataset/split/feature_importance.png")
+        plt.close()
 
     # Method to select important features
     def select_features(

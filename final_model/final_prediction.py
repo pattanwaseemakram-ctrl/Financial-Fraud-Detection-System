@@ -1,12 +1,7 @@
 import os
+import sys
 import joblib
 import pandas as pd
-
-from custom_transformers import (
-    FeatureSelector,
-    SelectiveScaler
-)
-
 
 # Project root directory
 BASE_DIR = os.path.abspath(
@@ -15,6 +10,14 @@ BASE_DIR = os.path.abspath(
         ".."
     )
 )
+sys.path.insert(0, BASE_DIR)
+sys.path.insert(0, os.path.join(BASE_DIR, "final_model"))
+
+from custom_transformers import (
+    FeatureSelector,
+    SelectiveScaler
+)
+
 
 # Input dataset
 INPUT_FILE = os.path.join(
@@ -27,7 +30,7 @@ INPUT_FILE = os.path.join(
 # Trained model
 MODEL_FILE = os.path.join(
     BASE_DIR,
-    "final_finetuning",
+    "final_model",
     "models",
     "ros_logistic_end_to_end_finetuned.pkl"
 )
@@ -35,7 +38,7 @@ MODEL_FILE = os.path.join(
 # Output directory
 OUTPUT_DIR = os.path.join(
     BASE_DIR,
-    "final_finetuning",
+    "final_model",
     "results"
 )
 

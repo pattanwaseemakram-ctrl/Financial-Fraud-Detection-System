@@ -6,15 +6,10 @@ import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import (
-    accuracy_score,
-    precision_score,
-    recall_score,
-    f1_score,
+    roc_curve,
     roc_auc_score,
-    average_precision_score,
-    confusion_matrix,
-    classification_report,
-    ConfusionMatrixDisplay
+    precision_recall_curve,
+    average_precision_score
 )
 
 
@@ -61,7 +56,7 @@ INPUT_FILE = os.path.join(
     "encoded_transactions.csv"
 )
 
-# Trained final model
+# Final trained model
 MODEL_FILE = os.path.join(
     BASE_DIR,
     "final_model",
@@ -69,24 +64,24 @@ MODEL_FILE = os.path.join(
     "ros_logistic_end_to_end_finetuned.pkl"
 )
 
-# Evaluation output directory
+# Visualization output directory
 OUTPUT_DIR = os.path.join(
     BASE_DIR,
     "final_model",
-    "evaluation",
+    "visualization",
     "results"
 )
 
-# Evaluation report
-REPORT_FILE = os.path.join(
+# ROC curve output
+ROC_FILE = os.path.join(
     OUTPUT_DIR,
-    "final_evaluation_report.txt"
+    "roc_curve.png"
 )
 
-# Confusion matrix image
-CONFUSION_MATRIX_FILE = os.path.join(
+# Precision-Recall curve output
+PR_FILE = os.path.join(
     OUTPUT_DIR,
-    "confusion_matrix.png"
+    "precision_recall_curve.png"
 )
 
 
@@ -155,9 +150,6 @@ def main():
         print("\nTest data shape:")
         print(X_test.shape)
 
-        print("\nTest target distribution:")
-        print(y_test.value_counts())
-
         # ---------------------------------------------------------
         # Load final trained model
         # ---------------------------------------------------------
@@ -171,50 +163,97 @@ def main():
         print("Final model loaded successfully.")
 
         # ---------------------------------------------------------
-        # Generate predictions
+        # Generate probability predictions
+        #
+        # Class 1 represents suspicious transactions.
         # ---------------------------------------------------------
 
-        print("\nGenerating final evaluation predictions...")
-
-        y_pred = model.predict(
-            X_test
-        )
+        print("\nGenerating prediction probabilities...")
 
         y_prob = model.predict_proba(
             X_test
         )[:, 1]
 
         # ---------------------------------------------------------
-        # Calculate evaluation metrics
+        # Calculate ROC-AUC
         # ---------------------------------------------------------
-
-        accuracy = accuracy_score(
-            y_test,
-            y_pred
-        )
-
-        precision = precision_score(
-            y_test,
-            y_pred,
-            zero_division=0
-        )
-
-        recall = recall_score(
-            y_test,
-            y_pred,
-            zero_division=0
-        )
-
-        f1 = f1_score(
-            y_test,
-            y_pred,
-            zero_division=0
-        )
 
         roc_auc = roc_auc_score(
             y_test,
             y_prob
         )
+
+        # ---------------------------------------------------------
+        # Generate ROC curve values
+        # ---------------------------------------------------------
+
+        false_positive_rate, true_positive_rate, roc_thresholds = (
+            roc_curve(
+                y_test,
+                y_prob
+            )
+        )
+
+        # ---------------------------------------------------------
+        # Create ROC curve
+        # ---------------------------------------------------------
+
+        plt.figure(
+            figsize=(8, 6)
+        )
+
+        plt.plot(
+            false_positive_rate,
+            true_positive_rate,
+            label=f"ROC-AUC = {roc_auc:.4f}"
+        )
+
+        plt.plot(
+            [0, 1],
+            [0, 1],
+            linestyle="--",
+            label="Random Classifier"
+        )
+
+        plt.xlabel(
+            "False Positive Rate"
+        )
+
+        plt.ylabel(
+            "True Positive Rate"
+        )
+
+        plt.title(
+            "ROC Curve - ROS + Logistic Regression"
+        )
+
+        plt.legend(
+            loc="lower right"
+        )
+
+        plt.tight_layout()
+
+        plt.savefig(
+            ROC_FILE,
+            dpi=300
+        )
+
+        plt.close()
+
+        # ---------------------------------------------------------
+        # Calculate Precision-Recall values
+        # ---------------------------------------------------------
+
+        precision, recall, pr_thresholds = (
+            precision_recall_curve(
+                y_test,
+                y_prob
+            )
+        )
+
+        # ---------------------------------------------------------
+        # Calculate PR-AUC
+        # ---------------------------------------------------------
 
         pr_auc = average_precision_score(
             y_test,
@@ -222,219 +261,73 @@ def main():
         )
 
         # ---------------------------------------------------------
-        # Confusion matrix
+        # Create Precision-Recall curve
         # ---------------------------------------------------------
 
-        cm = confusion_matrix(
-            y_test,
-            y_pred
+        plt.figure(
+            figsize=(8, 6)
         )
 
-        tn, fp, fn, tp = cm.ravel()
-
-        # ---------------------------------------------------------
-        # Classification report
-        # ---------------------------------------------------------
-
-        report = classification_report(
-            y_test,
-            y_pred,
-            zero_division=0
+        plt.plot(
+            recall,
+            precision,
+            label=f"PR-AUC = {pr_auc:.4f}"
         )
 
-        # ---------------------------------------------------------
-        # Display final evaluation results
-        # ---------------------------------------------------------
-
-        print("\n")
-        print("=" * 60)
-        print("FINAL MODEL EVALUATION")
-        print("=" * 60)
-
-        print(
-            "\nModel:"
-            "\nROS + Logistic Regression"
+        plt.xlabel(
+            "Recall"
         )
 
-        print("\nTest Metrics:")
-
-        print(
-            f"Accuracy:  {accuracy:.4f}"
+        plt.ylabel(
+            "Precision"
         )
-
-        print(
-            f"Precision: {precision:.4f}"
-        )
-
-        print(
-            f"Recall:    {recall:.4f}"
-        )
-
-        print(
-            f"F1 Score:  {f1:.4f}"
-        )
-
-        print(
-            f"ROC-AUC:   {roc_auc:.4f}"
-        )
-
-        print(
-            f"PR-AUC:    {pr_auc:.4f}"
-        )
-
-        print("\nConfusion Matrix:")
-
-        print(cm)
-
-        print("\nConfusion Matrix Values:")
-
-        print(
-            f"True Negatives:  {tn}"
-        )
-
-        print(
-            f"False Positives: {fp}"
-        )
-
-        print(
-            f"False Negatives: {fn}"
-        )
-
-        print(
-            f"True Positives:  {tp}"
-        )
-
-        print("\nClassification Report:")
-
-        print(report)
-
-        # ---------------------------------------------------------
-        # Save evaluation report
-        # ---------------------------------------------------------
-
-        with open(
-            REPORT_FILE,
-            "w",
-            encoding="utf-8"
-        ) as file:
-
-            file.write(
-                "FINAL MODEL EVALUATION REPORT\n"
-            )
-
-            file.write(
-                "=" * 60
-                + "\n"
-            )
-
-            file.write(
-                "Model: ROS + Logistic Regression\n\n"
-            )
-
-            file.write(
-                f"Test Dataset Size: {len(y_test)}\n\n"
-            )
-
-            file.write(
-                "Metrics:\n"
-            )
-
-            file.write(
-                f"Accuracy:  {accuracy:.4f}\n"
-            )
-
-            file.write(
-                f"Precision: {precision:.4f}\n"
-            )
-
-            file.write(
-                f"Recall:    {recall:.4f}\n"
-            )
-
-            file.write(
-                f"F1 Score:  {f1:.4f}\n"
-            )
-
-            file.write(
-                f"ROC-AUC:   {roc_auc:.4f}\n"
-            )
-
-            file.write(
-                f"PR-AUC:    {pr_auc:.4f}\n\n"
-            )
-
-            file.write(
-                "Confusion Matrix:\n"
-            )
-
-            file.write(
-                str(cm)
-                + "\n\n"
-            )
-
-            file.write(
-                f"True Negatives:  {tn}\n"
-            )
-
-            file.write(
-                f"False Positives: {fp}\n"
-            )
-
-            file.write(
-                f"False Negatives: {fn}\n"
-            )
-
-            file.write(
-                f"True Positives:  {tp}\n\n"
-            )
-
-            file.write(
-                "Classification Report:\n"
-            )
-
-            file.write(
-                report
-            )
-
-        # ---------------------------------------------------------
-        # Create confusion matrix visualization
-        # ---------------------------------------------------------
-
-        display = ConfusionMatrixDisplay(
-            confusion_matrix=cm,
-            display_labels=[
-                "Normal",
-                "Suspicious"
-            ]
-        )
-
-        display.plot()
 
         plt.title(
-            "Confusion Matrix - ROS + Logistic Regression"
+            "Precision-Recall Curve - ROS + Logistic Regression"
+        )
+
+        plt.legend(
+            loc="upper right"
         )
 
         plt.tight_layout()
 
         plt.savefig(
-            CONFUSION_MATRIX_FILE,
+            PR_FILE,
             dpi=300
         )
 
         plt.close()
 
         # ---------------------------------------------------------
-        # Display saved files
+        # Display results
         # ---------------------------------------------------------
 
-        print("\nEvaluation report saved to:")
-        print(REPORT_FILE)
-
-        print("\nConfusion matrix saved to:")
-        print(CONFUSION_MATRIX_FILE)
+        print("\n")
+        print("=" * 60)
+        print("FINAL CURVE RESULTS")
+        print("=" * 60)
 
         print(
-            "\nFinal model evaluation completed successfully."
+            f"ROC-AUC: {roc_auc:.4f}"
+        )
+
+        print(
+            f"PR-AUC:  {pr_auc:.4f}"
+        )
+
+        print("\nROC curve saved to:")
+        print(
+            ROC_FILE
+        )
+
+        print("\nPrecision-Recall curve saved to:")
+        print(
+            PR_FILE
+        )
+
+        print(
+            "\nFinal curve generation completed successfully."
         )
 
     # Handle missing files

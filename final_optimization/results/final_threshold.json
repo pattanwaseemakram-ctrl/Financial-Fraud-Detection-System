@@ -1,5 +1,0 @@
-{
-    "threshold": 0.1,
-    "model": "ROS + Logistic Regression",
-    "selection_metric": "F1"
-}

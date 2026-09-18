@@ -1,2 +1,0 @@
-Model,Features,Accuracy,Precision,Recall,F1,ROC-AUC,PR-AUC,True Negatives,False Positives,False Negatives,True Positives
-Final Clean Logistic Regression,25,0.513,0.11311311311311312,0.5621890547263682,0.18833333333333332,0.5466137904142434,0.13413696803402675,913,886,88,113
