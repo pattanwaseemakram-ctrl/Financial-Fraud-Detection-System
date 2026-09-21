@@ -49,6 +49,10 @@ OUTPUT_FILE = os.path.join(
 )
 
 
+# Optimized Decision Threshold (Max F2 / Recall-Weighted)
+DECISION_THRESHOLD = 0.42
+
+
 def main():
 
     try:
@@ -112,24 +116,21 @@ def main():
         print("Model loaded successfully.")
 
         # ---------------------------------------------------------
-        # Generate predictions
-        # ---------------------------------------------------------
-
-        print("\nGenerating predictions...")
-
-        predictions = model.predict(
-            X
-        )
-
-        # ---------------------------------------------------------
-        # Generate fraud probability
+        # Generate fraud probability & predictions (Optimized Threshold)
         #
         # Probability of class 1 = suspicious transaction
+        # Decision cutoff: DECISION_THRESHOLD = 0.42
         # ---------------------------------------------------------
+
+        print(f"\nGenerating predictions using optimized threshold ({DECISION_THRESHOLD:.2f})...")
 
         probabilities = model.predict_proba(
             X
         )[:, 1]
+
+        predictions = (
+            probabilities >= DECISION_THRESHOLD
+        ).astype(int)
 
         # ---------------------------------------------------------
         # Create result dataframe

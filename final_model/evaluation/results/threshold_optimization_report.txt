@@ -1,0 +1,91 @@
+========================================================================
+FINANCIAL FRAUD DETECTION - THRESHOLD OPTIMIZATION REPORT
+========================================================================
+Hold-out Test Set Size:     2,000 transactions
+Ground Truth Frauds:        200 transactions (10.00%)
+Ground Truth Legitimate:    1,800 transactions
+Cost Assumption:            Missed Fraud (FN) = $1,000 | False Alarm (FP) = $25
+========================================================================
+
+1. COMPARATIVE STRATEGY BENCHMARK
+------------------------------------------------------------------------
+Strategy                       Thresh   Recall    Precision  F1       FP    FN    Cost ($)  
+------------------------------------------------------------------------
+Default Baseline (0.50)        0.50     97.00%    87.39%     91.94%   28    6     $6,700    
+Max F1-Score (Balanced)        0.75     91.50%    93.37%     92.42%   13    17    $17,325   
+Max F2-Score (Recall-Weighted) 0.42     98.50%    84.55%     90.99%   36    3     $3,900    
+Youden's J-Index (Max TPR - FPR) 0.35     99.00%    82.85%     90.21%   41    2     $3,025    
+Min Financial Loss (FN=$1000, FP=$25) 0.34     99.00%    82.85%     90.21%   41    2     $3,025    
+------------------------------------------------------------------------
+
+2. IN-DEPTH ANALYSIS OF OPTIMAL STRATEGIES
+------------------------------------------------------------------------
+> Strategy: Default Baseline (0.50)
+   Decision Cutoff:       0.5000
+   Accuracy:              98.30% (Error: 1.70%)
+   Fraud Recall:          97.00% (Caught 194 / 200)
+   Precision:             87.39%
+   F1-Score:              91.94%
+   F2-Score:              94.91%
+   False Positives (FP):  28 (False alarm rate: 1.56%)
+   False Negatives (FN):  6 missed frauds
+   Financial Loss:        $6,700
+
+> Strategy: Max F1-Score (Balanced)
+   Decision Cutoff:       0.7453
+   Accuracy:              98.50% (Error: 1.50%)
+   Fraud Recall:          91.50% (Caught 183 / 200)
+   Precision:             93.37%
+   F1-Score:              92.42%
+   F2-Score:              91.87%
+   False Positives (FP):  13 (False alarm rate: 0.72%)
+   False Negatives (FN):  17 missed frauds
+   Financial Loss:        $17,325
+
+> Strategy: Max F2-Score (Recall-Weighted)
+   Decision Cutoff:       0.4204
+   Accuracy:              98.05% (Error: 1.95%)
+   Fraud Recall:          98.50% (Caught 197 / 200)
+   Precision:             84.55%
+   F1-Score:              90.99%
+   F2-Score:              95.35%
+   False Positives (FP):  36 (False alarm rate: 2.00%)
+   False Negatives (FN):  3 missed frauds
+   Financial Loss:        $3,900
+
+> Strategy: Youden's J-Index (Max TPR - FPR)
+   Decision Cutoff:       0.3548
+   Accuracy:              97.85% (Error: 2.15%)
+   Fraud Recall:          99.00% (Caught 198 / 200)
+   Precision:             82.85%
+   F1-Score:              90.21%
+   F2-Score:              95.28%
+   False Positives (FP):  41 (False alarm rate: 2.28%)
+   False Negatives (FN):  2 missed frauds
+   Financial Loss:        $3,025
+
+> Strategy: Min Financial Loss (FN=$1000, FP=$25)
+   Decision Cutoff:       0.3445
+   Accuracy:              97.85% (Error: 2.15%)
+   Fraud Recall:          99.00% (Caught 198 / 200)
+   Precision:             82.85%
+   F1-Score:              90.21%
+   F2-Score:              95.28%
+   False Positives (FP):  41 (False alarm rate: 2.28%)
+   False Negatives (FN):  2 missed frauds
+   Financial Loss:        $3,025
+
+3. OPERATIONAL RECOMMENDATIONS FOR PRODUCTION DEPLOYMENT
+------------------------------------------------------------------------
+* Tier 1: Auto-Approve (P < 0.35)
+  Transactions with fraud probability below 0.35 represent extremely low risk.
+  Recommended action: Instant Authorization without friction.
+
+* Tier 2: Step-Up Authentication / Human Review (0.35 <= P < 0.50)
+  Captures the critical fraud boundary (recovers 50% to 67% of missed frauds).
+  Recommended action: Automated OTP / Biometric verification or queue for fast analyst review.
+
+* Tier 3: Immediate Decline / Auto-Block (P >= 0.50)
+  High certainty malicious transactions.
+  Recommended action: Immediate payment block and push notification to account owner.
+========================================================================

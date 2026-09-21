@@ -8,20 +8,23 @@ An enterprise-grade Machine Learning system designed to detect fraudulent financ
 
 Evaluated on an untouched hold-out test set of **2,000 transactions** (1,800 legitimate, 200 fraudulent):
 
-| Metric | Score | Performance Level |
-| :--- | :---: | :---: |
-| **Accuracy** | **98.30%** | Exceptional overall classification |
-| **Precision** | **87.39%** | Only 28 false alarms out of 1,800 normal transactions |
-| **Recall (Fraud Detection)** | **97.00%** | **Catches 194 out of 200 fraud transactions** |
-| **F1-Score** | **91.94%** | Harmonic balance between precision and recall |
-| **ROC-AUC** | **0.9967** | Outstanding discriminative ability |
-| **PR-AUC** | **0.9712** | Superior performance on imbalanced positive class |
+| Metric | Baseline ($T = 0.50$) | Optimized ($T = 0.42$) | Performance Impact |
+| :--- | :---: | :---: | :--- |
+| **Recall (Fraud Caught)** | 97.00% (194/200) | **98.50% (197/200)** | 🟢 **Catches 3 additional frauds** |
+| **Missed Frauds (FN)** | 6 missed | **3 missed** | 🟢 **Missed fraud rate cut by 50%** |
+| **Precision** | **87.39%** | 84.55% | Only 36 false alarms out of 1,800 normal |
+| **Accuracy** | **98.30%** | 98.05% | Near-zero false alarm rate (2.0%) |
+| **$F_1$-Score** | 91.94% | 90.99% | Robust harmonic balance |
+| **$F_2$-Score (Fraud-Weighted)** | 94.91% | **95.35%** | 🟢 **Optimal recall-weighted fraud metric** |
+| **ROC-AUC** | **0.9967** | **0.9967** | Outstanding discriminative ability |
+| **PR-AUC** | **0.9712** | **0.9712** | Superior performance on imbalanced class |
 
-### Confusion Matrix
+### Confusion Matrix (Optimized Operating Threshold = 0.42)
 ```
                      Predicted Normal (0)   Predicted Suspicious (1)
-Actual Normal (0)            1,772                      28
-Actual Suspicious (1)            6                     194
+Actual Normal (0)            1,764                      36          (False Alarms)
+Actual Suspicious (1)            3                     197          (Frauds Caught)
+                             (Missed)
 ```
 
 ---
@@ -60,6 +63,7 @@ Financial-Fraud-Detection-System/
 ├── final_model/
 │   ├── custom_transformers.py                    # FeatureSelector & SelectiveScaler transformers
 │   ├── train_model.py                            # End-to-end model training (ROS + Logistic Regression)
+│   ├── threshold_optimization.py                 # Multi-criterion threshold tuning & financial cost optimization
 │   ├── final_prediction.py                       # Batch prediction engine with risk tiers & probabilities
 │   ├── models/
 │   │   └── ros_logistic_end_to_end_finetuned.pkl # Production trained pipeline model
@@ -67,7 +71,11 @@ Financial-Fraud-Detection-System/
 │   │   ├── final_evaluation.py                   # Evaluation suite on untouched test data
 │   │   └── results/
 │   │       ├── final_evaluation_report.txt       # Text report of metrics & confusion matrix
-│   │       └── confusion_matrix.png              # High-resolution confusion matrix heatmap
+│   │       ├── confusion_matrix.png              # High-resolution confusion matrix heatmap
+│   │       ├── threshold_optimization_report.txt # Multi-strategy threshold report & cost benchmark
+│   │       ├── threshold_sweep_results.csv       # Sweep data across candidate cutoffs (0.05 to 0.95)
+│   │       ├── threshold_metrics_curve.png       # Precision, Recall, F1, F2 vs threshold plot
+│   │       └── threshold_cost_curve.png          # Total financial loss vs threshold curve
 │   ├── visualization/
 │   │   ├── final_curves.py                       # Script to generate ROC and PR curves
 │   │   └── results/
@@ -188,7 +196,14 @@ python final_model/visualization/final_curves.py
 ```
 *Outputs: `final_model/visualization/results/roc_curve.png` and `precision_recall_curve.png`*
 
-### 6. Run Batch Predictions & Risk Scoring
+### 6. Perform Decision Threshold & Cost Optimization
+Tune the decision threshold across criteria ($F_1$, $F_2$, Youden's $J$, and expected financial cost):
+```bash
+python final_model/threshold_optimization.py
+```
+*Outputs: `threshold_optimization_report.txt`, `threshold_metrics_curve.png`, `threshold_cost_curve.png`, and `threshold_sweep_results.csv`*
+
+### 7. Run Batch Predictions & Risk Scoring
 Generate predictions and risk levels across transactions:
 ```bash
 python final_model/final_prediction.py

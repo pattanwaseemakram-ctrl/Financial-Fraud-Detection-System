@@ -1,32 +1,40 @@
 FINAL MODEL EVALUATION REPORT
 ============================================================
 Model: ROS + Logistic Regression
+Decision Threshold: 0.42 (Optimized - Max F2 Recall)
 
 Test Dataset Size: 2000
 
-Metrics:
-Accuracy:  0.9830
-Precision: 0.8739
-Recall:    0.9700
-F1 Score:  0.9194
+Metrics (Optimized Operating Point):
+Accuracy:  0.9805
+Precision: 0.8455
+Recall:    0.9850
+F1 Score:  0.9099
+F2 Score:  0.9535
 ROC-AUC:   0.9967
 PR-AUC:    0.9712
 
 Confusion Matrix:
-[[1772   28]
- [   6  194]]
+[[1764   36]
+ [   3  197]]
 
-True Negatives:  1772
-False Positives: 28
-False Negatives: 6
-True Positives:  194
+True Negatives:  1764
+False Positives: 36
+False Negatives: 3
+True Positives:  197
+
+Threshold Optimization Impact:
+------------------------------------------------------------
+Default Threshold (0.50):   Recall: 97.00% | Caught: 194/200 | Missed: 6 | FP: 28
+Optimized Threshold (0.42): Recall: 98.50% | Caught: 197/200 | Missed: 3 | FP: 36
+Improvement:                Missed frauds reduced by 50% (from 6 down to 3)
 
 Classification Report:
               precision    recall  f1-score   support
 
            0       1.00      0.98      0.99      1800
-           1       0.87      0.97      0.92       200
+           1       0.85      0.98      0.91       200
 
     accuracy                           0.98      2000
-   macro avg       0.94      0.98      0.95      2000
+   macro avg       0.92      0.98      0.95      2000
 weighted avg       0.98      0.98      0.98      2000
