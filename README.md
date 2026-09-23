@@ -84,6 +84,12 @@ Financial-Fraud-Detection-System/
 │   └── results/
 │       └── final_fraud_predictions.csv           # Scored transactions with fraud probabilities & risk tiers
 │
+├── backend/
+│   ├── app.py                                    # FastAPI REST API application & endpoints
+│   ├── model_service.py                          # Feature preparation & calibrated model scoring service
+│   ├── schemas.py                                # Pydantic request & response validation models
+│   └── alert_service.py                          # SQLite database service for fraud alert management & triage
+│
 ├── requirements.txt                              # Pinned Python package dependencies
 ├── .gitignore                                    # Version control exclusion rules
 └── README.md                                     # Project documentation
@@ -210,6 +216,17 @@ python final_model/final_prediction.py
 ```
 *Outputs: `final_model/results/final_fraud_predictions.csv`*
 
+### 8. Run Real-Time Fraud Detection REST API (FastAPI)
+Launch the production REST service:
+```bash
+uvicorn backend.app:app --reload --port 8000
+```
+- **Interactive Documentation (Swagger UI)**: `http://localhost:8000/docs`
+- **Health Check & Model Status**: `http://localhost:8000/health`
+- **Single Transaction Scoring**: `POST /predict` (with optional `?threshold=0.42`)
+- **Multi-Transaction Batch Scoring**: `POST /batch-predict`
+- **Fraud Alerts Management**: `GET /alerts`, `GET /alerts-summary`, `PUT /alerts/{id}/status`
+
 ---
 
 ## Technologies Used
@@ -218,4 +235,5 @@ python final_model/final_prediction.py
 - **Data Manipulation:** `pandas`, `numpy`
 - **Machine Learning:** `scikit-learn`, `imbalanced-learn`, `xgboost`
 - **Visualization:** `matplotlib`, `seaborn`
+- **API & Serving:** `FastAPI`, `Uvicorn`, `Pydantic`
 - **Serialization:** `joblib`
