@@ -1,6 +1,4 @@
-# ============================================================
 # Financial Fraud Detection REST API
-# ============================================================
 
 import sys
 from pathlib import Path
@@ -11,8 +9,11 @@ BACKEND_DIR = Path(__file__).resolve().parent
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
-from fastapi import FastAPI, HTTPException, Query, Path as FastAPIPath
+import os
+import secrets
+from fastapi import Depends, FastAPI, HTTPException, Path as FastAPIPath, Query, Security, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 try:
     from schemas import (
@@ -37,6 +38,7 @@ try:
         update_alert_status,
         delete_alert,
         get_alert_summary,
+        test_connection,
     )
 
 except ImportError:
@@ -62,12 +64,32 @@ except ImportError:
         update_alert_status,
         delete_alert,
         get_alert_summary,
+        test_connection,
     )
 
 
 # ============================================================
 # FastAPI Application Configuration
 # ============================================================
+
+tags_metadata = [
+    {
+        "name": "Authentication & Security",
+        "description": "OAuth2 password flow (`fraudGuardAuth`) for issuing role-based Bearer access tokens.",
+    },
+    {
+        "name": "Fraud Prediction Engine",
+        "description": "Real-time and batch machine learning inference powered by calibrated decision thresholding ($T = 0.42$).",
+    },
+    {
+        "name": "Fraud Alert Management",
+        "description": "Lifecycle triage and management for flagged suspicious transactions in PostgreSQL (with automatic SQLite fallback).",
+    },
+    {
+        "name": "System Health & Monitoring",
+        "description": "Public health checks and service discovery for DevOps and uptime monitoring.",
+    },
+]
 
 app = FastAPI(
     title="Financial Fraud Detection API",
@@ -77,6 +99,7 @@ app = FastAPI(
         "cost-calibrated decision thresholding and fraud alert management."
     ),
     version="1.0.0",
+    openapi_tags=tags_metadata,
 )
 
 
@@ -104,10 +127,115 @@ except Exception as error:
 
 
 # ============================================================
+# API Security Configuration (Role-Based OAuth2 - fraudGuardAuth)
+# ============================================================
+
+# Domain-specific OAuth2 Password Bearer scheme
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="auth/token",
+    scheme_name="bearerAuth",
+    description="OAuth2 Password Flow. Enter username 'admin' and password 'admin123'. Leave client_id/secret empty.",
+)
+
+# User credentials database
+USER_DATABASE = {
+    "admin": {
+        "password": os.getenv("FRAUD_ADMIN_PASSWORD", "admin123"),
+        "role": "Chief Risk Officer",
+    },
+    "analyst": {
+        "password": os.getenv("FRAUD_ANALYST_PASSWORD", "analyst123"),
+        "role": "Fraud Investigation Analyst",
+    },
+}
+
+# Static master token for automated test systems
+STATIC_MASTER_TOKEN = os.getenv("FRAUD_API_TOKEN", "fraud-secret-bearer-token-2026")
+
+# In-memory session tokens cache
+ACTIVE_TOKENS = {
+    STATIC_MASTER_TOKEN: {
+        "username": "admin",
+        "role": "Chief Risk Officer",
+    },
+}
+
+
+def verify_bearer_token(token: str = Security(oauth2_scheme)) -> dict:
+    """
+    Validates OAuth2 Bearer token from the Authorization header.
+    Renders 'fraudGuardAuth (OAuth2, password)' in Swagger UI (/docs).
+    """
+    if not token or (token not in ACTIVE_TOKENS and token != STATIC_MASTER_TOKEN):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Unauthorized: Invalid or expired Bearer token. Log in via 'Authorize' (lock symbol) in Swagger UI.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    return ACTIVE_TOKENS.get(token) or ACTIVE_TOKENS[STATIC_MASTER_TOKEN]
+
+
+
+
+
+# ============================================================
+# OAuth2 Token Endpoint
+# ============================================================
+
+@app.post(
+    "/auth/token",
+    summary="Obtain OAuth2 Bearer Access Token",
+    tags=["Authentication & Security"],
+)
+def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    """
+    Authenticates user credentials and issues a Bearer access token.
+    Used by Swagger UI ('fraudGuardAuth') when clicking Authorize.
+
+    Available accounts:
+    - `admin` / `admin123` (Chief Risk Officer)
+    - `analyst` / `analyst123` (Fraud Analyst)
+    """
+    username = form_data.username
+    password = form_data.password
+
+    user = USER_DATABASE.get(username)
+    if not user or user["password"] != password:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password. Available users: 'admin' (pass: admin123), 'analyst' (pass: analyst123)",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    # Issue unique session token
+    access_token = f"fraud_token_{secrets.token_hex(16)}"
+    ACTIVE_TOKENS[access_token] = {
+        "username": username,
+        "role": user["role"],
+    }
+
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user_role": user["role"],
+    }
+
+
+@app.post("/token", include_in_schema=False)
+def legacy_token_alias(form_data: OAuth2PasswordRequestForm = Depends()):
+    """Backward compatibility alias for /token."""
+    return login_for_access_token(form_data)
+
+
+# ============================================================
 # Root Endpoint
 # ============================================================
 
-@app.get("/")
+@app.get(
+    "/",
+    summary="API Root & Service Discovery",
+    tags=["System Health & Monitoring"],
+)
 def root():
     return {
         "service": "Financial Fraud Detection API",
@@ -115,6 +243,15 @@ def root():
         "version": "1.0.0",
         "docs_url": "/docs",
         "default_threshold": MODEL_THRESHOLD,
+        "authentication": {
+            "type": "Role-Based OAuth2 (fraudGuardAuth)",
+            "token_url": "/auth/token",
+            "demo_credentials": {
+                "admin": "admin123 (Chief Risk Officer)",
+                "analyst": "analyst123 (Fraud Analyst)",
+            },
+            "instructions": "In Swagger UI (/docs), click 'Authorize' (lock symbol), enter username and password, and click Authorize.",
+        },
     }
 
 
@@ -122,13 +259,19 @@ def root():
 # Health Check Endpoint
 # ============================================================
 
-@app.get("/health")
+@app.get(
+    "/health",
+    summary="Service health & model readiness",
+    tags=["System Health & Monitoring"],
+)
 def health_check():
     model_ok = is_model_loaded()
+    db_status = test_connection()
 
     return {
-        "status": "healthy" if model_ok else "degraded",
+        "status": "healthy" if model_ok and db_status.get("status") == "connected" else "degraded",
         "model_loaded": model_ok,
+        "database": db_status,
         "calibrated_threshold": MODEL_THRESHOLD,
         "algorithm": "ROS + Logistic Regression (Pipeline)",
     }
@@ -142,6 +285,8 @@ def health_check():
     "/predict",
     response_model=PredictionResponse,
     summary="Real-time transaction fraud scoring",
+    tags=["Fraud Prediction Engine"],
+    dependencies=[Security(verify_bearer_token)],
 )
 def predict(
     transaction: TransactionRequest,
@@ -214,6 +359,8 @@ def predict(
     "/batch-predict",
     response_model=BatchPredictionResponse,
     summary="Batch transaction scoring & risk aggregation",
+    tags=["Fraud Prediction Engine"],
+    dependencies=[Security(verify_bearer_token)],
 )
 def batch_predict(
     payload: BatchTransactionRequest,
@@ -279,6 +426,8 @@ def batch_predict(
 @app.get(
     "/alerts",
     summary="Get fraud alerts",
+    tags=["Fraud Alert Management"],
+    dependencies=[Security(verify_bearer_token)],
 )
 def get_alerts(
     status: Optional[str] = Query(
@@ -314,6 +463,8 @@ def get_alerts(
 @app.get(
     "/alerts/{alert_id}",
     summary="Get a specific fraud alert",
+    tags=["Fraud Alert Management"],
+    dependencies=[Security(verify_bearer_token)],
 )
 def get_single_alert(
     alert_id: int = FastAPIPath(
@@ -354,6 +505,8 @@ def get_single_alert(
 @app.put(
     "/alerts/{alert_id}/status",
     summary="Update fraud alert status",
+    tags=["Fraud Alert Management"],
+    dependencies=[Security(verify_bearer_token)],
 )
 def change_alert_status(
     alert_id: int = FastAPIPath(
@@ -407,6 +560,8 @@ def change_alert_status(
 @app.delete(
     "/alerts/{alert_id}",
     summary="Delete a fraud alert",
+    tags=["Fraud Alert Management"],
+    dependencies=[Security(verify_bearer_token)],
 )
 def remove_alert(
     alert_id: int = FastAPIPath(
@@ -438,6 +593,8 @@ def remove_alert(
 @app.get(
     "/alerts-summary",
     summary="Get fraud alert summary",
+    tags=["Fraud Alert Management"],
+    dependencies=[Security(verify_bearer_token)],
 )
 def alerts_summary():
     """

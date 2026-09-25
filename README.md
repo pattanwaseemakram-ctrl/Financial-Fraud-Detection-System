@@ -222,10 +222,19 @@ Launch the production REST service:
 uvicorn backend.app:app --reload --port 8000
 ```
 - **Interactive Documentation (Swagger UI)**: `http://localhost:8000/docs`
-- **Health Check & Model Status**: `http://localhost:8000/health`
-- **Single Transaction Scoring**: `POST /predict` (with optional `?threshold=0.42`)
-- **Multi-Transaction Batch Scoring**: `POST /batch-predict`
-- **Fraud Alerts Management**: `GET /alerts`, `GET /alerts-summary`, `PUT /alerts/{id}/status`
+- **Health Check & Model Status** (Public): `GET /health`
+- **Single Transaction Scoring** (🔒 Secured): `POST /predict` (with optional `?threshold=0.42`)
+- **Multi-Transaction Batch Scoring** (🔒 Secured): `POST /batch-predict`
+- **Fraud Alerts Management** (🔒 Secured): `GET /alerts`, `GET /alerts-summary`, `PUT /alerts/{id}/status`, `DELETE /alerts/{id}`
+
+#### API Authorization & Swagger UI Lock Symbol (`bearerAuth`)
+All sensitive transaction scoring and alert management routes are secured with **OAuth2 Bearer Authentication (`bearerAuth`)**:
+- **Swagger UI**: Navigate to `http://localhost:8000/docs`, click the **"Authorize"** button (or any **padlock icon 🔒** next to endpoints).
+- **Log in credentials**:
+  - **username**: `admin` &nbsp;|&nbsp; **password**: `admin123`
+  - *(Leave `client_id` and `client_secret` blank)*
+- **Token Endpoint**: `POST /auth/token` (and `POST /token`) receives credentials and issues a secure Bearer access token.
+- **Direct HTTP / cURL**: Pass `-H "Authorization: Bearer <access_token>"` (or master token `fraud-secret-bearer-token-2026`).
 
 ---
 
