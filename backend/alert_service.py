@@ -2,7 +2,8 @@
 # Alert and Flagging Service
 # Financial Fraud Detection System
 #
-# Supports PostgreSQL (production) with automatic SQLite fallback
+# Uses PostgreSQL for alert storage
+# Supports migration from existing SQLite alerts
 # ============================================================
 
 import os
@@ -17,9 +18,10 @@ from sqlalchemy import (
     MetaData,
     Table,
     Column,
-    Integer,
+    BigInteger,
     String,
     Float,
+    DateTime,
     select,
     insert,
     update,
@@ -42,9 +44,8 @@ DATABASE_FILE = DATA_DIR / "fraud_alerts.db"
 # Ensure data directory exists
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-# Load environment variables from .env file in project root or backend dir
+# Load environment variables from .env file
 load_dotenv(PROJECT_ROOT / ".env")
-load_dotenv(DATA_DIR.parent / ".env")
 
 # ============================================================
 # Database Engine & URL Resolver
@@ -52,35 +53,57 @@ load_dotenv(DATA_DIR.parent / ".env")
 
 def get_database_url() -> str:
     """
-    Resolves the configured database connection string.
+    Resolves the configured PostgreSQL connection string.
 
     Priority:
-    1. Explicit DATABASE_URL in environment (.env).
-    2. Composed PostgreSQL URL from DB_USER, DB_PASSWORD, DB_HOST, DB_PORT, DB_NAME.
-    3. Fallback to local SQLite database in backend/data/fraud_alerts.db.
+    1. DATABASE_URL from .env
+    2. PostgreSQL connection from individual DB_* variables
+
+    PostgreSQL is required for the active application.
     """
+
     raw_url = os.getenv("DATABASE_URL", "").strip()
 
     if raw_url:
         # Standardize PostgreSQL dialect for SQLAlchemy + psycopg2
         if raw_url.startswith("postgres://"):
-            return raw_url.replace("postgres://", "postgresql+psycopg2://", 1)
-        elif raw_url.startswith("postgresql://"):
-            return raw_url.replace("postgresql://", "postgresql+psycopg2://", 1)
+            return raw_url.replace(
+                "postgres://",
+                "postgresql+psycopg2://",
+                1,
+            )
+
+        if raw_url.startswith("postgresql://"):
+            return raw_url.replace(
+                "postgresql://",
+                "postgresql+psycopg2://",
+                1,
+            )
+
+        if raw_url.startswith("postgresql+psycopg2://"):
+            return raw_url
+
         return raw_url
 
-    # Check individual components
+    # Check individual PostgreSQL components
     db_user = os.getenv("DB_USER")
     db_password = os.getenv("DB_PASSWORD")
-    db_host = os.getenv("DB_HOST", "localhost")
+    db_host = os.getenv("DB_HOST", "127.0.0.1")
     db_port = os.getenv("DB_PORT", "5432")
     db_name = os.getenv("DB_NAME")
 
     if db_user and db_password and db_name:
-        return f"postgresql+psycopg2://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
+        return (
+            f"postgresql+psycopg2://"
+            f"{db_user}:{db_password}@"
+            f"{db_host}:{db_port}/{db_name}"
+        )
 
-    # Default fallback to SQLite
-    return f"sqlite:///{DATABASE_FILE}"
+    raise RuntimeError(
+        "PostgreSQL configuration is missing. "
+        "Please configure DATABASE_URL or DB_USER, DB_PASSWORD, "
+        "DB_HOST, DB_PORT, and DB_NAME in the .env file."
+    )
 
 
 _engine: Optional[Engine] = None
@@ -89,83 +112,136 @@ _last_pg_error: Optional[str] = None
 
 def get_engine() -> Engine:
     """
-    Returns a singleton SQLAlchemy engine instance.
-    If PostgreSQL is configured but unreachable (e.g. service not started yet),
-    gracefully falls back to the local SQLite database so the application never crashes.
+    Returns a singleton SQLAlchemy PostgreSQL engine.
+
+    PostgreSQL connection errors are raised instead of silently
+    falling back to SQLite, so database problems are visible.
     """
+
     global _engine, _last_pg_error
 
     if _engine is None:
         db_url = get_database_url()
 
-        if db_url.startswith("sqlite"):
-            DATA_DIR.mkdir(parents=True, exist_ok=True)
-            _engine = sa.create_engine(
-                db_url,
-                connect_args={"check_same_thread": False},
+        if not db_url.startswith("postgresql"):
+            raise RuntimeError(
+                "Only PostgreSQL is supported by the active alert service."
             )
-        else:
-            # Attempt connection to PostgreSQL
-            try:
-                pg_engine = sa.create_engine(
-                    db_url,
-                    pool_pre_ping=True,
-                    pool_size=5,
-                    max_overflow=10,
-                    connect_args={"connect_timeout": 3},
-                )
-                with pg_engine.connect() as test_conn:
-                    test_conn.execute(text("SELECT 1"))
 
-                _engine = pg_engine
-                _last_pg_error = None
+        try:
+            pg_engine = sa.create_engine(
+                db_url,
+                pool_pre_ping=True,
+                pool_size=5,
+                max_overflow=10,
+                connect_args={"connect_timeout": 5},
+            )
 
-            except Exception as error:
-                _last_pg_error = str(error)
-                logger.warning(
-                    "PostgreSQL is currently unreachable: %s. "
-                    "Falling back to local SQLite database (%s).",
-                    error,
-                    DATABASE_FILE,
-                )
-                DATA_DIR.mkdir(parents=True, exist_ok=True)
-                _engine = sa.create_engine(
-                    f"sqlite:///{DATABASE_FILE}",
-                    connect_args={"check_same_thread": False},
-                )
+            # Test PostgreSQL connection
+            with pg_engine.connect() as test_conn:
+                test_conn.execute(text("SELECT 1"))
+
+            _engine = pg_engine
+            _last_pg_error = None
+
+            logger.info("PostgreSQL connection established successfully.")
+
+        except Exception as error:
+            _last_pg_error = str(error)
+
+            logger.error(
+                "PostgreSQL connection failed: %s",
+                error,
+            )
+
+            raise RuntimeError(
+                f"PostgreSQL connection failed: {error}"
+            ) from error
 
     return _engine
 
 
 def reset_engine():
     """
-    Resets the singleton engine (useful when connection settings change or PostgreSQL starts).
+    Resets the singleton PostgreSQL engine.
+    Useful when connection settings change.
     """
     global _engine, _last_pg_error
+
     if _engine is not None:
         _engine.dispose()
         _engine = None
+
     _last_pg_error = None
 
 
 # ============================================================
-# Schema Definition
+# PostgreSQL Schema Definition
 # ============================================================
 
 metadata = MetaData()
 
 alerts_table = Table(
-    "alerts",
+    "fraud_alerts",
     metadata,
-    Column("id", Integer, primary_key=True, autoincrement=True),
-    Column("transaction_id", String(100), nullable=False),
-    Column("fraud_probability", Float, nullable=False),
-    Column("prediction", String(50), nullable=False),
-    Column("risk_score", Float, nullable=False),
-    Column("risk_level", String(50), nullable=False),
-    Column("alert_status", String(50), nullable=False, default="New"),
-    Column("created_at", String(100), nullable=False),
-    Column("updated_at", String(100), nullable=False),
+
+    Column(
+        "id",
+        BigInteger,
+        primary_key=True,
+        autoincrement=True,
+    ),
+
+    Column(
+        "transaction_id",
+        String(255),
+        nullable=False,
+    ),
+
+    Column(
+        "fraud_probability",
+        Float,
+        nullable=False,
+    ),
+
+    Column(
+        "prediction",
+        String(50),
+        nullable=False,
+    ),
+
+    Column(
+        "risk_score",
+        Float,
+        nullable=False,
+    ),
+
+    Column(
+        "risk_level",
+        String(20),
+        nullable=False,
+    ),
+
+    Column(
+        "status",
+        String(20),
+        nullable=False,
+        default="New",
+    ),
+
+    Column(
+        "created_at",
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=sa.text("CURRENT_TIMESTAMP"),
+    ),
+
+    Column(
+        "updated_at",
+        DateTime(timezone=True),
+        nullable=False,
+        server_default=sa.text("CURRENT_TIMESTAMP"),
+    ),
 )
 
 
@@ -175,56 +251,88 @@ alerts_table = Table(
 
 def initialize_database():
     """
-    Creates the alert database and alerts table if they do not already exist.
-    Compatible with both PostgreSQL and SQLite.
+    Verifies the PostgreSQL connection and creates the
+    fraud_alerts table if it does not already exist.
     """
+
     try:
-        DATA_DIR.mkdir(parents=True, exist_ok=True)
         engine = get_engine()
         metadata.create_all(engine)
-    except Exception as error:
-        raise RuntimeError(f"Database initialization failed: {error}")
 
+        logger.info(
+            "PostgreSQL database initialized successfully."
+        )
+
+    except Exception as error:
+        raise RuntimeError(
+            f"Database initialization failed: {error}"
+        ) from error
+
+
+# ============================================================
+# Database Connection Test
+# ============================================================
 
 def test_connection() -> Dict[str, Any]:
     """
-    Verifies the active database connection.
-    Returns status, dialect, and current database URL info.
+    Verifies the active PostgreSQL connection.
+
+    Returns connection status and database information.
     """
+
     try:
         engine = get_engine()
-        with engine.connect() as conn:
-            result = conn.execute(text("SELECT 1")).scalar()
-            dialect = engine.dialect.name
-            url_display = (
-                str(engine.url).replace(engine.url.password or "___", "****")
-                if engine.url.password
-                else str(engine.url)
+
+        with engine.connect() as connection:
+
+            result = connection.execute(
+                text("SELECT 1")
+            ).scalar()
+
+            database_name = connection.execute(
+                text("SELECT current_database()")
+            ).scalar()
+
+            database_user = connection.execute(
+                text("SELECT current_user")
+            ).scalar()
+
+            server_port = connection.execute(
+                text("SHOW port")
+            ).scalar()
+
+            url_display = str(
+                engine.url.render_as_string(
+                    hide_password=True
+                )
             )
 
-            res = {
-                "status": "connected" if result == 1 else "unexpected_result",
-                "database_type": dialect,
-                "is_postgresql": dialect == "postgresql",
-                "is_sqlite": dialect == "sqlite",
+            return {
+                "status": "connected"
+                if result == 1
+                else "unexpected_result",
+
+                "database_type": engine.dialect.name,
+
+                "is_postgresql": (
+                    engine.dialect.name == "postgresql"
+                ),
+
+                "database_name": database_name,
+
+                "database_user": database_user,
+
+                "server_port": server_port,
+
                 "url": url_display,
             }
 
-            if _last_pg_error:
-                res["warning"] = "PostgreSQL is offline. Operating in fallback SQLite mode."
-                res["postgres_offline_reason"] = _last_pg_error
-
-            return res
-
     except Exception as error:
-        dialect = "unknown"
-        try:
-            dialect = get_engine().dialect.name
-        except Exception:
-            pass
+
         return {
             "status": "error",
-            "database_type": dialect,
+            "database_type": "postgresql",
+            "is_postgresql": False,
             "error": str(error),
         }
 
@@ -243,7 +351,6 @@ def create_alert(
     """
     Creates an alert for a suspicious transaction.
     """
-    initialize_database()
 
     if prediction != "Suspicious":
         return {
@@ -251,81 +358,122 @@ def create_alert(
             "message": "Transaction does not require an alert.",
         }
 
-    current_time = datetime.now(timezone.utc).isoformat()
+    initialize_database()
+
+    current_time = datetime.now(timezone.utc)
+
     engine = get_engine()
 
     try:
+
         stmt = insert(alerts_table).values(
             transaction_id=transaction_id,
             fraud_probability=fraud_probability,
             prediction=prediction,
             risk_score=risk_score,
             risk_level=risk_level,
-            alert_status="New",
+            status="New",
             created_at=current_time,
             updated_at=current_time,
         )
 
         with engine.begin() as connection:
+
             result = connection.execute(stmt)
-            alert_id = result.inserted_primary_key[0] if result.inserted_primary_key else None
+
+            alert_id = (
+                result.inserted_primary_key[0]
+                if result.inserted_primary_key
+                else None
+            )
 
         return {
             "alert_created": True,
             "alert_id": alert_id,
             "transaction_id": transaction_id,
             "alert_status": "New",
-            "message": "Suspicious transaction flagged successfully.",
+            "message": (
+                "Suspicious transaction flagged successfully."
+            ),
         }
 
     except Exception as error:
-        raise RuntimeError(f"Failed to create alert: {error}")
+
+        raise RuntimeError(
+            f"Failed to create alert: {error}"
+        ) from error
 
 
 # ============================================================
 # Get All Alerts
 # ============================================================
 
-def get_all_alerts(status: Optional[str] = None) -> List[Dict[str, Any]]:
+def get_all_alerts(
+    status: Optional[str] = None,
+) -> List[Dict[str, Any]]:
     """
     Returns all alerts.
 
     Optional:
     status = New / Under Review / Resolved
     """
+
     initialize_database()
+
     engine = get_engine()
 
     try:
-        stmt = select(alerts_table).order_by(alerts_table.c.created_at.desc())
+
+        stmt = select(alerts_table).order_by(
+            alerts_table.c.created_at.desc()
+        )
+
         if status:
-            stmt = stmt.where(alerts_table.c.alert_status == status)
+            stmt = stmt.where(
+                alerts_table.c.status == status
+            )
 
         with engine.connect() as connection:
-            rows = connection.execute(stmt).mappings().all()
+
+            rows = connection.execute(
+                stmt
+            ).mappings().all()
 
         return [dict(row) for row in rows]
 
     except Exception as error:
-        raise RuntimeError(f"Failed to retrieve alerts: {error}")
+
+        raise RuntimeError(
+            f"Failed to retrieve alerts: {error}"
+        ) from error
 
 
 # ============================================================
 # Get Single Alert
 # ============================================================
 
-def get_alert(alert_id: int) -> Optional[Dict[str, Any]]:
+def get_alert(
+    alert_id: int,
+) -> Optional[Dict[str, Any]]:
     """
     Returns one alert using its alert ID.
     """
+
     initialize_database()
+
     engine = get_engine()
 
     try:
-        stmt = select(alerts_table).where(alerts_table.c.id == alert_id)
+
+        stmt = select(alerts_table).where(
+            alerts_table.c.id == alert_id
+        )
 
         with engine.connect() as connection:
-            row = connection.execute(stmt).mappings().first()
+
+            row = connection.execute(
+                stmt
+            ).mappings().first()
 
         if row is None:
             return None
@@ -333,14 +481,20 @@ def get_alert(alert_id: int) -> Optional[Dict[str, Any]]:
         return dict(row)
 
     except Exception as error:
-        raise RuntimeError(f"Failed to retrieve alert: {error}")
+
+        raise RuntimeError(
+            f"Failed to retrieve alert: {error}"
+        ) from error
 
 
 # ============================================================
 # Update Alert Status
 # ============================================================
 
-def update_alert_status(alert_id: int, status: str) -> Dict[str, Any]:
+def update_alert_status(
+    alert_id: int,
+    status: str,
+) -> Dict[str, Any]:
     """
     Updates an alert status.
 
@@ -349,28 +503,43 @@ def update_alert_status(alert_id: int, status: str) -> Dict[str, Any]:
     - Under Review
     - Resolved
     """
-    allowed_statuses = ["New", "Under Review", "Resolved"]
+
+    allowed_statuses = [
+        "New",
+        "Under Review",
+        "Resolved",
+    ]
 
     if status not in allowed_statuses:
+
         raise ValueError(
-            "Invalid alert status. Use: New, Under Review, or Resolved."
+            "Invalid alert status. "
+            "Use: New, Under Review, or Resolved."
         )
 
     initialize_database()
+
     engine = get_engine()
-    updated_time = datetime.now(timezone.utc).isoformat()
+
+    updated_time = datetime.now(timezone.utc)
 
     try:
+
         stmt = (
             update(alerts_table)
             .where(alerts_table.c.id == alert_id)
-            .values(alert_status=status, updated_at=updated_time)
+            .values(
+                status=status,
+                updated_at=updated_time,
+            )
         )
 
         with engine.begin() as connection:
+
             result = connection.execute(stmt)
 
             if result.rowcount == 0:
+
                 return {
                     "updated": False,
                     "message": "Alert not found.",
@@ -380,31 +549,45 @@ def update_alert_status(alert_id: int, status: str) -> Dict[str, Any]:
             "updated": True,
             "alert_id": alert_id,
             "alert_status": status,
-            "message": "Alert status updated successfully.",
+            "message": (
+                "Alert status updated successfully."
+            ),
         }
 
     except Exception as error:
-        raise RuntimeError(f"Failed to update alert status: {error}")
+
+        raise RuntimeError(
+            f"Failed to update alert status: {error}"
+        ) from error
 
 
 # ============================================================
 # Delete Alert
 # ============================================================
 
-def delete_alert(alert_id: int) -> Dict[str, Any]:
+def delete_alert(
+    alert_id: int,
+) -> Dict[str, Any]:
     """
     Deletes an alert by ID.
     """
+
     initialize_database()
+
     engine = get_engine()
 
     try:
-        stmt = delete(alerts_table).where(alerts_table.c.id == alert_id)
+
+        stmt = delete(alerts_table).where(
+            alerts_table.c.id == alert_id
+        )
 
         with engine.begin() as connection:
+
             result = connection.execute(stmt)
 
             if result.rowcount == 0:
+
                 return {
                     "deleted": False,
                     "message": "Alert not found.",
@@ -417,7 +600,10 @@ def delete_alert(alert_id: int) -> Dict[str, Any]:
         }
 
     except Exception as error:
-        raise RuntimeError(f"Failed to delete alert: {error}")
+
+        raise RuntimeError(
+            f"Failed to delete alert: {error}"
+        ) from error
 
 
 # ============================================================
@@ -428,31 +614,44 @@ def get_alert_summary() -> Dict[str, int]:
     """
     Returns alert counts for dashboard use.
     """
+
     initialize_database()
+
     engine = get_engine()
 
     try:
+
         with engine.connect() as connection:
+
             total_alerts = connection.execute(
-                select(func.count()).select_from(alerts_table)
+                select(func.count()).select_from(
+                    alerts_table
+                )
             ).scalar() or 0
 
             new_alerts = connection.execute(
                 select(func.count())
                 .select_from(alerts_table)
-                .where(alerts_table.c.alert_status == "New")
+                .where(
+                    alerts_table.c.status == "New"
+                )
             ).scalar() or 0
 
             under_review = connection.execute(
                 select(func.count())
                 .select_from(alerts_table)
-                .where(alerts_table.c.alert_status == "Under Review")
+                .where(
+                    alerts_table.c.status
+                    == "Under Review"
+                )
             ).scalar() or 0
 
             resolved = connection.execute(
                 select(func.count())
                 .select_from(alerts_table)
-                .where(alerts_table.c.alert_status == "Resolved")
+                .where(
+                    alerts_table.c.status == "Resolved"
+                )
             ).scalar() or 0
 
         return {
@@ -463,7 +662,10 @@ def get_alert_summary() -> Dict[str, int]:
         }
 
     except Exception as error:
-        raise RuntimeError(f"Failed to create alert summary: {error}")
+
+        raise RuntimeError(
+            f"Failed to create alert summary: {error}"
+        ) from error
 
 
 # ============================================================
@@ -472,55 +674,244 @@ def get_alert_summary() -> Dict[str, int]:
 
 def migrate_sqlite_to_postgres() -> Dict[str, Any]:
     """
-    Migrates existing alerts from the local SQLite database to the
-    currently configured PostgreSQL database.
+    Migrates existing alerts from the old SQLite database
+    to the PostgreSQL fraud_alerts table.
     """
+
     engine = get_engine()
+
     if engine.dialect.name != "postgresql":
+
         return {
             "migrated": False,
-            "message": "Target database is not PostgreSQL. Please configure and start PostgreSQL first.",
+            "message": (
+                "Target database is not PostgreSQL."
+            ),
         }
 
     if not DATABASE_FILE.exists():
+
         return {
             "migrated": False,
-            "message": f"SQLite database file not found at {DATABASE_FILE}.",
+            "message": (
+                f"SQLite database file not found at "
+                f"{DATABASE_FILE}."
+            ),
         }
 
-    initialize_database()
-    sqlite_engine = sa.create_engine(f"sqlite:///{DATABASE_FILE}")
+    # --------------------------------------------------------
+    # Define the OLD SQLite table structure
+    # --------------------------------------------------------
+
+    sqlite_metadata = MetaData()
+
+    sqlite_alerts_table = Table(
+        "alerts",
+        sqlite_metadata,
+
+        Column(
+            "id",
+            Integer,
+            primary_key=True,
+        ),
+
+        Column(
+            "transaction_id",
+            String(100),
+            nullable=False,
+        ),
+
+        Column(
+            "fraud_probability",
+            Float,
+            nullable=False,
+        ),
+
+        Column(
+            "prediction",
+            String(50),
+            nullable=False,
+        ),
+
+        Column(
+            "risk_score",
+            Float,
+            nullable=False,
+        ),
+
+        Column(
+            "risk_level",
+            String(50),
+            nullable=False,
+        ),
+
+        Column(
+            "alert_status",
+            String(50),
+            nullable=False,
+        ),
+
+        Column(
+            "created_at",
+            String(100),
+            nullable=False,
+        ),
+
+        Column(
+            "updated_at",
+            String(100),
+            nullable=False,
+        ),
+    )
+
+    sqlite_engine = sa.create_engine(
+        f"sqlite:///{DATABASE_FILE}"
+    )
 
     try:
+
+        # ----------------------------------------------------
+        # Read alerts from SQLite
+        # ----------------------------------------------------
+
         with sqlite_engine.connect() as sqlite_conn:
+
             rows = sqlite_conn.execute(
                 select(
-                    alerts_table.c.transaction_id,
-                    alerts_table.c.fraud_probability,
-                    alerts_table.c.prediction,
-                    alerts_table.c.risk_score,
-                    alerts_table.c.risk_level,
-                    alerts_table.c.alert_status,
-                    alerts_table.c.created_at,
-                    alerts_table.c.updated_at,
+                    sqlite_alerts_table.c.transaction_id,
+                    sqlite_alerts_table.c.fraud_probability,
+                    sqlite_alerts_table.c.prediction,
+                    sqlite_alerts_table.c.risk_score,
+                    sqlite_alerts_table.c.risk_level,
+                    sqlite_alerts_table.c.alert_status,
+                    sqlite_alerts_table.c.created_at,
+                    sqlite_alerts_table.c.updated_at,
                 )
             ).mappings().all()
 
         if not rows:
-            return {"migrated": True, "migrated_count": 0, "message": "No rows to migrate."}
+
+            return {
+                "migrated": True,
+                "migrated_count": 0,
+                "message": "No rows to migrate.",
+            }
+
+        # ----------------------------------------------------
+        # Insert into PostgreSQL
+        # ----------------------------------------------------
+
+        migrated_count = 0
 
         with engine.begin() as pg_conn:
+
             for row in rows:
-                pg_conn.execute(insert(alerts_table).values(**dict(row)))
+
+                pg_conn.execute(
+                    insert(alerts_table).values(
+                        transaction_id=row[
+                            "transaction_id"
+                        ],
+
+                        fraud_probability=row[
+                            "fraud_probability"
+                        ],
+
+                        prediction=row[
+                            "prediction"
+                        ],
+
+                        risk_score=row[
+                            "risk_score"
+                        ],
+
+                        risk_level=row[
+                            "risk_level"
+                        ],
+
+                        status=row[
+                            "alert_status"
+                        ],
+
+                        created_at=_parse_datetime(
+                            row["created_at"]
+                        ),
+
+                        updated_at=_parse_datetime(
+                            row["updated_at"]
+                        ),
+                    )
+                )
+
+                migrated_count += 1
 
         return {
             "migrated": True,
-            "migrated_count": len(rows),
-            "message": f"Successfully migrated {len(rows)} alerts from SQLite to PostgreSQL.",
+            "migrated_count": migrated_count,
+            "message": (
+                f"Successfully migrated "
+                f"{migrated_count} alerts "
+                f"from SQLite to PostgreSQL."
+            ),
         }
 
     except Exception as error:
-        raise RuntimeError(f"Migration failed: {error}")
+
+        raise RuntimeError(
+            f"Migration failed: {error}"
+        ) from error
+
+    finally:
+
+        sqlite_engine.dispose()
+
+
+# ============================================================
+# Date Conversion Helper
+# ============================================================
+
+def _parse_datetime(
+    value: Any,
+) -> datetime:
+    """
+    Converts an old SQLite timestamp string
+    into a timezone-aware datetime.
+    """
+
+    if isinstance(value, datetime):
+
+        if value.tzinfo is None:
+            return value.replace(
+                tzinfo=timezone.utc
+            )
+
+        return value
+
+    if not value:
+
+        return datetime.now(timezone.utc)
+
+    value = str(value)
+
+    try:
+
+        parsed = datetime.fromisoformat(
+            value.replace(
+                "Z",
+                "+00:00",
+            )
+        )
+
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(
+                tzinfo=timezone.utc
+            )
+
+        return parsed
+
+    except ValueError:
+
+        return datetime.now(timezone.utc)
 
 
 # ============================================================
@@ -528,16 +919,37 @@ def migrate_sqlite_to_postgres() -> Dict[str, Any]:
 # ============================================================
 
 if __name__ == "__main__":
+
     try:
-        print("Testing Database Connection...")
+
+        print(
+            "Testing PostgreSQL Database Connection..."
+        )
+
         conn_info = test_connection()
-        print("Connection Info:", conn_info)
+
+        print(
+            "Connection Info:",
+            conn_info,
+        )
 
         initialize_database()
-        print("Alert database initialized successfully.")
 
-        print("\nCurrent alert summary:")
-        print(get_alert_summary())
+        print(
+            "PostgreSQL alert database "
+            "initialized successfully."
+        )
+
+        print(
+            "\nCurrent alert summary:"
+        )
+
+        print(
+            get_alert_summary()
+        )
 
     except Exception as error:
-        print(f"\nAlert service test failed:\n{error}")
+
+        print(
+            f"\nAlert service test failed:\n{error}"
+        )

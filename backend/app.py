@@ -618,8 +618,9 @@ def alerts_summary():
 if __name__ == "__main__":
     import uvicorn
 
+    app_target = "backend.app:app" if (Path.cwd() / "backend").exists() else "app:app"
     uvicorn.run(
-        "app:app",
+        app_target,
         host="127.0.0.1",
         port=8000,
         reload=True,
