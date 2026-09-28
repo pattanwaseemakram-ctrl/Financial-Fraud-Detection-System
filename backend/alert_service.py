@@ -15,6 +15,7 @@ from typing import Optional, List, Dict, Any
 from dotenv import load_dotenv
 import sqlalchemy as sa
 from sqlalchemy import (
+    Integer,
     MetaData,
     Table,
     Column,

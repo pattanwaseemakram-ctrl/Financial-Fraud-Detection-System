@@ -9,11 +9,14 @@ BACKEND_DIR = Path(__file__).resolve().parent
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
+import json
 import os
 import secrets
 from fastapi import Depends, FastAPI, HTTPException, Path as FastAPIPath, Query, Security, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, RedirectResponse
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.staticfiles import StaticFiles
 
 try:
     from schemas import (
@@ -92,7 +95,7 @@ tags_metadata = [
 ]
 
 app = FastAPI(
-    title="Financial Fraud Detection API",
+    title="Intelligence Fraud Shield API",
     description=(
         "Enterprise real-time and batch fraud prediction API powered by an "
         "end-to-end trained ML pipeline (ROS + Logistic Regression) with "
@@ -117,8 +120,18 @@ app.add_middleware(
 
 
 # ============================================================
-# Initialize Alert Database
+# Frontend Static Mount & Assets
 # ============================================================
+
+PROJECT_ROOT = BACKEND_DIR.parent
+FRONTEND_DIR = PROJECT_ROOT / "frontend"
+
+if FRONTEND_DIR.exists():
+    if (FRONTEND_DIR / "css").exists():
+        app.mount("/css", StaticFiles(directory=str(FRONTEND_DIR / "css")), name="css")
+    if (FRONTEND_DIR / "js").exists():
+        app.mount("/js", StaticFiles(directory=str(FRONTEND_DIR / "js")), name="js")
+    app.mount("/static", StaticFiles(directory=str(FRONTEND_DIR)), name="static")
 
 try:
     initialize_database()
@@ -228,17 +241,43 @@ def legacy_token_alias(form_data: OAuth2PasswordRequestForm = Depends()):
 
 
 # ============================================================
-# Root Endpoint
+# Dashboard & Service Discovery Endpoints
 # ============================================================
 
 @app.get(
     "/",
+    summary="Fraud Monitoring & Prediction Dashboard",
+    include_in_schema=False,
+)
+def serve_dashboard():
+    index_file = FRONTEND_DIR / "index.html"
+    if index_file.exists():
+        return FileResponse(str(index_file))
+    return {
+        "service": "Financial Fraud Detection API",
+        "status": "online",
+        "version": "1.0.0",
+        "docs_url": "/docs",
+    }
+
+
+@app.get(
+    "/dashboard",
+    summary="Fraud Monitoring Dashboard Alias",
+    include_in_schema=False,
+)
+def serve_dashboard_alias():
+    return serve_dashboard()
+
+
+@app.get(
+    "/api",
     summary="API Root & Service Discovery",
     tags=["System Health & Monitoring"],
 )
-def root():
+def api_root():
     return {
-        "service": "Financial Fraud Detection API",
+        "service": "Intelligence Fraud Shield API",
         "status": "online",
         "version": "1.0.0",
         "docs_url": "/docs",
@@ -253,6 +292,19 @@ def root():
             "instructions": "In Swagger UI (/docs), click 'Authorize' (lock symbol), enter username and password, and click Authorize.",
         },
     }
+
+
+@app.get(
+    "/sample-197-batch",
+    summary="Fetch 197 hold-out fraud transactions for batch testing",
+    tags=["Fraud Prediction Engine"],
+)
+def get_sample_197_batch():
+    batch_file = PROJECT_ROOT / "final_model" / "results" / "request_body_197_transactions.json"
+    if batch_file.exists():
+        with open(batch_file, "r") as f:
+            return json.load(f)
+    return {"transactions": []}
 
 
 # ============================================================

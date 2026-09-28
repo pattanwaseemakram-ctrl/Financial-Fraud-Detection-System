@@ -88,7 +88,16 @@ Financial-Fraud-Detection-System/
 │   ├── app.py                                    # FastAPI REST API application & endpoints
 │   ├── model_service.py                          # Feature preparation & calibrated model scoring service
 │   ├── schemas.py                                # Pydantic request & response validation models
-│   └── alert_service.py                          # SQLite database service for fraud alert management & triage
+│   ├── alert_service.py                          # PostgreSQL & SQLite alert management service
+│   └── predict_197_batch_api.py                  # API verification script for 197 test-set frauds
+│
+├── frontend/
+│   ├── index.html                                # Enterprise SOC Fraud Monitoring Dashboard
+│   ├── css/
+│   │   └── style.css                             # Luxury dark fintech theme & gauge styling
+│   └── js/
+│       ├── api.js                                # OAuth2 & REST API client layer
+│       └── dashboard.js                          # Live predictor engine, batch runner & alert triage
 │
 ├── requirements.txt                              # Pinned Python package dependencies
 ├── .gitignore                                    # Version control exclusion rules
@@ -236,13 +245,36 @@ All sensitive transaction scoring and alert management routes are secured with *
 - **Token Endpoint**: `POST /auth/token` (and `POST /token`) receives credentials and issues a secure Bearer access token.
 - **Direct HTTP / cURL**: Pass `-H "Authorization: Bearer <access_token>"` (or master token `fraud-secret-bearer-token-2026`).
 
+### 9. Enterprise Fraud Monitoring & Operations Dashboard (Web UI)
+Launch the browser dashboard directly at:
+```text
+http://localhost:8000/
+```
+- **Login Screen**: Quick one-click authentication as **Admin (Chief Risk Officer)** or **Analyst (Fraud Investigator)**.
+- **Overview & KPIs**: Real-time stats on total alerts, new cases, triage progress, and risk breakdown.
+- **⚡ Live Fraud Predictor**:
+  - Load preset demo scenarios (e.g., *Account Takeover & Drain*, *Location Anomaly*, *Normal Daily Expense*).
+  - Fine-tune parameters and slider cutoff ($T = 0.42$).
+  - Animated SVG radial risk gauge, fraud verdict banner, and **Explainable AI (XAI)** contributing risk factors.
+  - Automatically records suspicious transactions into PostgreSQL.
+- **📦 Batch Prediction Studio**:
+  - One-click evaluation of all 197 test-set hold-out fraud cases or custom JSON upload.
+  - Live progress telemetry, fraud detection rate, and results preview.
+- **🚨 Alert Investigation & Triage**:
+  - Interactive table of all PostgreSQL fraud alerts with status filtering (`New`, `Under Review`, `Resolved`) and search.
+  - One-click triage actions (`Review`, `Resolve`, `Delete`) and CSV export.
+- **📖 In-App Analyst Guide**: Full documentation of features, the 11 engineered signals, threshold optimization logic, and SOC workflows.
+
 ---
 
 ## Technologies Used
 
 - **Language:** Python 3.10+
-- **Data Manipulation:** `pandas`, `numpy`
-- **Machine Learning:** `scikit-learn`, `imbalanced-learn`, `xgboost`
+- **Machine Learning & Pipeline:** `scikit-learn`, `imbalanced-learn`, `xgboost`, `pandas`, `numpy`
+- **Database & ORM:** `PostgreSQL`, `SQLAlchemy 2.0`, `psycopg2-binary` (with automatic SQLite fallback)
+- **API & Serving:** `FastAPI`, `Uvicorn`, `Pydantic v2`
+- **Security:** OAuth2 Password Bearer flow (`bearerAuth`) with role-based access
+- **Frontend & UI:** HTML5, Vanilla CSS (Glassmorphic dark fintech theme), Modern JavaScript (Fetch API, SVG Gauge)
 - **Visualization:** `matplotlib`, `seaborn`
-- **API & Serving:** `FastAPI`, `Uvicorn`, `Pydantic`
 - **Serialization:** `joblib`
+
