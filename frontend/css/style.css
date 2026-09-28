@@ -3703,6 +3703,202 @@ input[type="range"] {
 }
 
 /* ============================================================
+   15.B Tactical Starlink Sat Cam HUD Overlay (1:1 with Reference Image)
+   ============================================================ */
+.sat-cam-tactical-hud {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 25;
+    padding: 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: opacity 0.4s ease;
+}
+
+/* Reticle Framing Brackets (Image Corners) */
+.sat-cam-tactical-hud .hud-corner {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-color: rgba(56, 189, 248, 0.45);
+    border-style: solid;
+}
+
+.sat-cam-tactical-hud .hud-corner.top-left {
+    top: 24px;
+    left: 24px;
+    border-width: 2.5px 0 0 2.5px;
+}
+
+.sat-cam-tactical-hud .hud-corner.top-right {
+    top: 24px;
+    right: 24px;
+    border-width: 2.5px 2.5px 0 0;
+}
+
+.sat-cam-tactical-hud .hud-corner.bottom-left {
+    bottom: 24px;
+    left: 24px;
+    border-width: 0 0 2.5px 2.5px;
+}
+
+.sat-cam-tactical-hud .hud-corner.bottom-right {
+    bottom: 24px;
+    right: 24px;
+    border-width: 0 2.5px 2.5px 0;
+}
+
+/* Top-Left Tactical Satellite Comms Icon */
+.hud-sat-icon-wrap {
+    position: absolute;
+    top: 28px;
+    left: 28px;
+    width: 48px;
+    height: 48px;
+    filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.65));
+}
+
+.hud-sat-svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Top-Right Tactical Beacon Status (Matching Reference Image) */
+.hud-beacon-status-wrap {
+    position: absolute;
+    top: 26px;
+    right: 28px;
+    background: rgba(6, 11, 20, 0.78);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+    border-radius: 4px;
+    padding: 8px 14px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.hud-beacon-icon-line {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.hud-beacon-svg {
+    width: 28px;
+    height: 28px;
+    filter: drop-shadow(0 0 6px rgba(255, 0, 51, 0.8));
+}
+
+.hud-status-pills {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+}
+
+.hud-p-dot.cyan {
+    color: #38bdf8;
+    text-shadow: 0 0 6px rgba(56, 189, 248, 0.9);
+}
+
+.hud-p-dot.green {
+    color: #22c55e;
+    text-shadow: 0 0 6px rgba(34, 197, 94, 0.9);
+}
+
+/* Bottom-Left Flight Telemetry Metrics (Matching Reference Image) */
+.hud-flight-telemetry-block {
+    position: absolute;
+    bottom: 28px;
+    left: 28px;
+    background: rgba(6, 11, 20, 0.84);
+    border-left: 2.5px solid #38bdf8;
+    border-radius: 2px 6px 6px 2px;
+    padding: 10px 18px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 11px;
+    min-width: 170px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.8);
+}
+
+.hud-tele-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.hud-t-lbl {
+    color: #94a3b8;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.hud-t-val {
+    color: #f8fafc;
+    font-weight: 700;
+}
+
+/* Bottom-Right Starlink Mission Docket (Matching Reference Image) */
+.hud-mission-card {
+    position: absolute;
+    bottom: 28px;
+    right: 28px;
+    background: rgba(6, 11, 20, 0.84);
+    border-right: 2.5px solid #38bdf8;
+    border-radius: 6px 2px 2px 6px;
+    padding: 10px 18px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    text-align: right;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.8);
+}
+
+.hud-mission-logo {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 3px;
+}
+
+.starlink-arc-svg {
+    width: 50px;
+    height: 24px;
+    filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.8));
+}
+
+.hud-m-title {
+    font-size: 11px;
+    font-weight: 800;
+    color: #f1f5f9;
+    letter-spacing: 0.5px;
+    margin-bottom: 2px;
+}
+
+.hud-m-sub {
+    font-size: 9.5px;
+    color: #94a3b8;
+}
+
+/* In Sat Cam Mode, fade out side widgets for cinematic clarity */
+.sat-viewport-container.sat-cam-active .sat-radar-scan-box,
+.sat-viewport-container.sat-cam-active .sat-sim-layer-box,
+.sat-viewport-container.sat-cam-active .sat-starlink-card,
+.sat-viewport-container.sat-cam-active .sat-gyro-dial-box {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+}
+
+/* ============================================================
    16. Responsive Adaptations
    ============================================================ */
 @media (max-width: 1100px) {

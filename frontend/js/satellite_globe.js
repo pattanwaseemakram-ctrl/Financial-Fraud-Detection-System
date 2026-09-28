@@ -67,7 +67,7 @@
     let earthMesh, atmosphereMesh;
     let constellationGroup, constellationSatellites = [], orbitalRings = [];
     let interSatLinkLines;
-    let activeSatelliteGroup, activeSatSolarWing, activeSatStrobe;
+    let activeSatelliteGroup, activeSatSolarWing, activeSatStrobe, activeSatBeaconLight, activeSatFlareSprite, activeSatPlumes = [];
     let laserBeamMesh, laserSparks = [];
     let groundPingGroup, pingRings = [];
     let groundMarkerGroup;
@@ -366,76 +366,668 @@
     }
 
     // ============================================================
+    // Procedural PBR Canvas Texture Generators for Starlink Satellite
+    // ============================================================
+
+    // 1. High-Resolution Photovoltaic Silicon Solar Array (4 Folding Segments)
+    function createStarlinkSolarTexture() {
+        const canvas = document.createElement("canvas");
+        canvas.width = 1024;
+        canvas.height = 2048;
+        const ctx = canvas.getContext("2d");
+
+        // Deep titanium black frame
+        ctx.fillStyle = "#070b14";
+        ctx.fillRect(0, 0, 1024, 2048);
+
+        const panelCount = 4;
+        const panelH = (2048 - 60) / panelCount;
+        const padX = 32;
+
+        for (let p = 0; p < panelCount; p++) {
+            const topY = 14 + p * (panelH + 10);
+            const pWidth = 1024 - padX * 2;
+
+            // Panel frame backing
+            ctx.fillStyle = "#0c1322";
+            ctx.fillRect(padX, topY, pWidth, panelH);
+            ctx.strokeStyle = "#334155";
+            ctx.lineWidth = 3;
+            ctx.strokeRect(padX, topY, pWidth, panelH);
+
+            // Photovoltaic Silicon Wafers Grid (8 columns x 22 rows per segment)
+            const cols = 8;
+            const rows = 22;
+            const cellW = (pWidth - 20) / cols;
+            const cellH = (panelH - 24) / rows;
+
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    const cx = padX + 10 + c * cellW;
+                    const cy = topY + 12 + r * cellH;
+
+                    // Silicon Cell Gradient (Cobalt blue with anti-reflective sheen)
+                    const grad = ctx.createLinearGradient(cx, cy, cx + cellW, cy + cellH);
+                    const specShift = ((c * 7 + r * 13 + p * 19) % 5) * 5;
+                    grad.addColorStop(0, `rgb(${14 + specShift}, ${38 + specShift}, ${115 + specShift})`);
+                    grad.addColorStop(0.5, `rgb(${24 + specShift}, ${62 + specShift}, ${150 + specShift})`);
+                    grad.addColorStop(1, `rgb(${12 + specShift}, ${32 + specShift}, ${95 + specShift})`);
+
+                    ctx.fillStyle = grad;
+                    ctx.fillRect(cx + 1, cy + 1, cellW - 2, cellH - 2);
+
+                    // Silver Grid Fingers (Conductive micro-wires)
+                    ctx.strokeStyle = "rgba(186, 230, 253, 0.4)";
+                    ctx.lineWidth = 0.8;
+                    for (let f = 1; f < 5; f++) {
+                        const fy = cy + (f * cellH) / 5;
+                        ctx.beginPath();
+                        ctx.moveTo(cx + 2, fy);
+                        ctx.lineTo(cx + cellW - 2, fy);
+                        ctx.stroke();
+                    }
+
+                    // Dual Silver Busbars per column
+                    ctx.strokeStyle = "rgba(255, 255, 255, 0.88)";
+                    ctx.lineWidth = 1.6;
+                    const b1 = cx + cellW * 0.32;
+                    const b2 = cx + cellW * 0.68;
+                    ctx.beginPath();
+                    ctx.moveTo(b1, cy);
+                    ctx.lineTo(b1, cy + cellH);
+                    ctx.moveTo(b2, cy);
+                    ctx.lineTo(b2, cy + cellH);
+                    ctx.stroke();
+                }
+            }
+
+            // Mechanical Hinge Line & Gold Contacts between panels
+            if (p < panelCount - 1) {
+                const hy = topY + panelH + 5;
+                ctx.fillStyle = "#1e293b";
+                ctx.fillRect(padX - 8, hy - 4, pWidth + 16, 8);
+                ctx.fillStyle = "#eab308"; // gold hinge pins
+                for (let h = 0; h < 6; h++) {
+                    const hx = padX + (h * pWidth) / 5;
+                    ctx.beginPath();
+                    ctx.arc(hx, hy, 3.5, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+
+        // Mission Stencil at Base of Solar Wing
+        ctx.fillStyle = "rgba(226, 232, 240, 0.9)";
+        ctx.font = "bold 18px monospace";
+        ctx.fillText("STARLINK PV-ARRAY BATCH 345 // 100% PWR", 45, 2035);
+
+        const tex = new THREE.CanvasTexture(canvas);
+        tex.anisotropy = 8;
+        return tex;
+    }
+
+    function createStarlinkSolarBumpTexture() {
+        const canvas = document.createElement("canvas");
+        canvas.width = 512;
+        canvas.height = 1024;
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#000000";
+        ctx.fillRect(0, 0, 512, 1024);
+
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 4; i++) {
+            ctx.strokeRect(16, 10 + i * 255, 480, 245);
+        }
+        for (let x = 30; x < 490; x += 30) {
+            ctx.beginPath();
+            ctx.moveTo(x, 10);
+            ctx.lineTo(x, 1015);
+            ctx.stroke();
+        }
+        return new THREE.CanvasTexture(canvas);
+    }
+
+    // 2. Chassis Top Plate Texture (Recessed Seams, Starlink Swoosh Logos, Mission Serials)
+    function createStarlinkChassisTopTexture() {
+        const canvas = document.createElement("canvas");
+        canvas.width = 1024;
+        canvas.height = 512;
+        const ctx = canvas.getContext("2d");
+
+        // Aerospace white/light grey composite body
+        ctx.fillStyle = "#dce1e8";
+        ctx.fillRect(0, 0, 1024, 512);
+
+        // Subtle composite surface variations
+        ctx.fillStyle = "rgba(255, 255, 255, 0.12)";
+        for (let i = 0; i < 200; i++) {
+            ctx.fillRect(Math.random() * 1024, Math.random() * 512, Math.random() * 12, Math.random() * 6);
+        }
+
+        // Recessed Modular Seams
+        ctx.strokeStyle = "#475569";
+        ctx.lineWidth = 3;
+        ctx.strokeRect(30, 30, 964, 452);
+
+        ctx.beginPath();
+        ctx.moveTo(30, 256);
+        ctx.lineTo(994, 256);
+        ctx.stroke();
+
+        const vSeams = [230, 430, 630, 830];
+        vSeams.forEach((x) => {
+            ctx.beginPath();
+            ctx.moveTo(x, 30);
+            ctx.lineTo(x, 482);
+            ctx.stroke();
+        });
+
+        // Fastener / Rivet Dots
+        ctx.fillStyle = "#334155";
+        for (let x = 36; x < 994; x += 18) {
+            ctx.fillRect(x, 32, 2, 2);
+            ctx.fillRect(x, 254, 2, 2);
+            ctx.fillRect(x, 480, 2, 2);
+        }
+
+        // Starlink Constellation Swoosh Logo 1 (Forward quadrant)
+        ctx.strokeStyle = "#0f172a";
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.arc(320, 140, 50, -0.6, 1.4);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(320, 140, 70, -0.3, 1.1);
+        ctx.stroke();
+
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "bold 20px monospace";
+        ctx.fillText("OPERATOR", 275, 175);
+        ctx.font = "14px monospace";
+        ctx.fillText("LEO-X182", 280, 195);
+
+        // Starlink Mission Marking 2 (Aft quadrant)
+        ctx.strokeStyle = "#0f172a";
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.arc(720, 360, 50, -0.6, 1.4);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(720, 360, 70, -0.3, 1.1);
+        ctx.stroke();
+
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "bold 20px monospace";
+        ctx.fillText("STARLINK LEO-345", 640, 420);
+        ctx.font = "14px monospace";
+        ctx.fillText("MISSION / DATA LINK", 640, 440);
+
+        // Service Access Hatch with Hazard Striping
+        ctx.fillStyle = "#94a3b8";
+        ctx.fillRect(840, 75, 120, 95);
+        ctx.strokeStyle = "#1e293b";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(840, 75, 120, 95);
+
+        ctx.fillStyle = "#eab308";
+        for (let s = 0; s < 110; s += 20) {
+            ctx.beginPath();
+            ctx.moveTo(845 + s, 80);
+            ctx.lineTo(860 + s, 80);
+            ctx.lineTo(850 + s, 165);
+            ctx.lineTo(835 + s, 165);
+            ctx.fill();
+        }
+
+        // Gold Conduit Cable route
+        ctx.strokeStyle = "#d97706";
+        ctx.lineWidth = 4;
+        ctx.beginPath();
+        ctx.moveTo(40, 490);
+        ctx.lineTo(980, 490);
+        ctx.stroke();
+
+        const tex = new THREE.CanvasTexture(canvas);
+        tex.anisotropy = 4;
+        return tex;
+    }
+
+    // 3. Procedural Crinkled Gold MLI (Multi-Layer Insulation) Foil Blanket
+    function createStarlinkGoldFoilTexture() {
+        const canvas = document.createElement("canvas");
+        canvas.width = 512;
+        canvas.height = 512;
+        const ctx = canvas.getContext("2d");
+
+        const grad = ctx.createLinearGradient(0, 0, 512, 512);
+        grad.addColorStop(0, "#ca8a04");
+        grad.addColorStop(0.3, "#eab308");
+        grad.addColorStop(0.6, "#a16207");
+        grad.addColorStop(0.85, "#fde047");
+        grad.addColorStop(1, "#854d0e");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 512, 512);
+
+        // Wrinkle highlights & shadow creases
+        ctx.lineWidth = 1.5;
+        for (let i = 0; i < 350; i++) {
+            const x1 = Math.random() * 512;
+            const y1 = Math.random() * 512;
+            const x2 = x1 + (Math.random() - 0.5) * 60;
+            const y2 = y1 + (Math.random() - 0.5) * 60;
+
+            ctx.strokeStyle = "rgba(254, 240, 138, 0.7)";
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+
+            ctx.strokeStyle = "rgba(69, 26, 3, 0.65)";
+            ctx.beginPath();
+            ctx.moveTo(x1 + 1.2, y1 + 1.2);
+            ctx.lineTo(x2 + 1.2, y2 + 1.2);
+            ctx.stroke();
+        }
+        return new THREE.CanvasTexture(canvas);
+    }
+
+    function createStarlinkGoldFoilBumpTexture() {
+        const canvas = document.createElement("canvas");
+        canvas.width = 512;
+        canvas.height = 512;
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#808080";
+        ctx.fillRect(0, 0, 512, 512);
+
+        for (let i = 0; i < 400; i++) {
+            const x1 = Math.random() * 512;
+            const y1 = Math.random() * 512;
+            const x2 = x1 + (Math.random() - 0.5) * 70;
+            const y2 = y1 + (Math.random() - 0.5) * 70;
+
+            ctx.strokeStyle = "rgba(255, 255, 255, 0.65)";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+
+            ctx.strokeStyle = "rgba(0, 0, 0, 0.65)";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(x1 + 2, y1 + 2);
+            ctx.lineTo(x2 + 2, y2 + 2);
+            ctx.stroke();
+        }
+        return new THREE.CanvasTexture(canvas);
+    }
+
+    // 4. 4-Point Star Anamorphic Lens Flare (Matching Image Red Strobe)
+    function createStarlinkFlareTexture() {
+        const canvas = document.createElement("canvas");
+        canvas.width = 256;
+        canvas.height = 256;
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, 256, 256);
+
+        const cx = 128;
+        const cy = 128;
+
+        // Soft outer red corona glow
+        const radialGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, 120);
+        radialGlow.addColorStop(0, "rgba(255, 30, 68, 0.95)");
+        radialGlow.addColorStop(0.2, "rgba(255, 20, 60, 0.6)");
+        radialGlow.addColorStop(0.6, "rgba(255, 0, 40, 0.15)");
+        radialGlow.addColorStop(1, "rgba(255, 0, 0, 0)");
+        ctx.fillStyle = radialGlow;
+        ctx.fillRect(0, 0, 256, 256);
+
+        function drawSpike(angle, length, width, color) {
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(angle);
+            const grad = ctx.createLinearGradient(-width / 2, 0, width / 2, 0);
+            grad.addColorStop(0, "rgba(255, 255, 255, 0)");
+            grad.addColorStop(0.5, color);
+            grad.addColorStop(1, "rgba(255, 255, 255, 0)");
+
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.moveTo(-width / 2, 0);
+            ctx.lineTo(0, -length);
+            ctx.lineTo(width / 2, 0);
+            ctx.lineTo(0, length);
+            ctx.closePath();
+            ctx.fill();
+            ctx.restore();
+        }
+
+        // Primary Horizontal & Vertical Spikes (Long & Brilliant)
+        drawSpike(0, 124, 7, "rgba(255, 230, 240, 0.95)");
+        drawSpike(Math.PI / 2, 124, 7, "rgba(255, 230, 240, 0.95)");
+
+        // Secondary Diagonal Spikes
+        drawSpike(Math.PI / 4, 60, 4, "rgba(255, 80, 100, 0.7)");
+        drawSpike(-Math.PI / 4, 60, 4, "rgba(255, 80, 100, 0.7)");
+
+        // Brilliant White-Hot Center Core
+        const coreGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, 18);
+        coreGlow.addColorStop(0, "rgba(255, 255, 255, 1.0)");
+        coreGlow.addColorStop(0.5, "rgba(255, 240, 245, 0.9)");
+        coreGlow.addColorStop(1, "rgba(255, 50, 80, 0)");
+        ctx.fillStyle = coreGlow;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 18, 0, Math.PI * 2);
+        ctx.fill();
+
+        return new THREE.CanvasTexture(canvas);
+    }
+
+    // 5. Hall-Effect Ion Thruster Plasma Plume Gradient
+    function createThrusterPlasmaTexture() {
+        const canvas = document.createElement("canvas");
+        canvas.width = 128;
+        canvas.height = 256;
+        const ctx = canvas.getContext("2d");
+        const grad = ctx.createLinearGradient(64, 0, 64, 256);
+        grad.addColorStop(0, "rgba(255, 255, 255, 0.95)");
+        grad.addColorStop(0.15, "rgba(56, 189, 248, 0.85)");
+        grad.addColorStop(0.5, "rgba(2, 132, 199, 0.45)");
+        grad.addColorStop(1, "rgba(30, 58, 138, 0)");
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.moveTo(40, 0);
+        ctx.lineTo(88, 0);
+        ctx.lineTo(110, 250);
+        ctx.lineTo(18, 250);
+        ctx.closePath();
+        ctx.fill();
+        return new THREE.CanvasTexture(canvas);
+    }
+
+    // ============================================================
     // Active Starlink Satellite (Single Large Solar Array Chassis)
     // Modeled 1:1 after Starlink v1.5 / v2 Mini seen in Image 4
     // ============================================================
     function buildActiveStarlinkSatellite() {
         activeSatelliteGroup = new THREE.Group();
 
-        // 1. Flat Rectangular Satellite Chassis (Stacked bus)
-        const busGeo = new THREE.BoxGeometry(0.85, 0.22, 1.4);
-        const busMat = new THREE.MeshStandardMaterial({
-            color: 0xd1d5db,
-            metalness: 0.9,
-            roughness: 0.25,
+        // 1. Procedural PBR Textures
+        const solarTex = createStarlinkSolarTexture();
+        const solarBump = createStarlinkSolarBumpTexture();
+        const chassisTopTex = createStarlinkChassisTopTexture();
+        const goldFoilTex = createStarlinkGoldFoilTexture();
+        const goldFoilBump = createStarlinkGoldFoilBumpTexture();
+        const flareTex = createStarlinkFlareTexture();
+        const plasmaTex = createThrusterPlasmaTexture();
+
+        // 2. Main Bus / Satellite Chassis
+        const busWidth = 1.35;
+        const busHeight = 0.32;
+        const busLength = 2.45;
+
+        // PBR Materials for Chassis
+        const sideMat = new THREE.MeshStandardMaterial({
+            color: 0xdde2ea,
+            metalness: 0.85,
+            roughness: 0.3,
         });
-        const busMesh = new THREE.Mesh(busGeo, busMat);
+        const topMat = new THREE.MeshStandardMaterial({
+            map: chassisTopTex,
+            metalness: 0.8,
+            roughness: 0.28,
+        });
+        const bottomMat = new THREE.MeshStandardMaterial({
+            color: 0x94a3b8,
+            metalness: 0.9,
+            roughness: 0.2,
+        });
+
+        // Chassis Box: [right, left, top, bottom, front, back]
+        const busMaterials = [sideMat, sideMat, topMat, bottomMat, sideMat, sideMat];
+        const busGeo = new THREE.BoxGeometry(busWidth, busHeight, busLength);
+        const busMesh = new THREE.Mesh(busGeo, busMaterials);
         activeSatelliteGroup.add(busMesh);
 
-        // Gold Thermal Foil Underbelly Shield
-        const foilGeo = new THREE.BoxGeometry(0.86, 0.05, 1.41);
+        // 3. Gold MLI Crinkled Thermal Foil Blanket
         const foilMat = new THREE.MeshStandardMaterial({
-            color: 0xb4821a,
-            emissive: 0x785309,
-            emissiveIntensity: 0.35,
+            color: 0xd4af37,
+            map: goldFoilTex,
+            bumpMap: goldFoilBump,
+            bumpScale: 0.06,
+            metalness: 0.92,
+            roughness: 0.22,
+        });
+        const foilUnderbelly = new THREE.Mesh(new THREE.BoxGeometry(1.37, 0.08, 2.47), foilMat);
+        foilUnderbelly.position.y = -busHeight / 2 - 0.02;
+        activeSatelliteGroup.add(foilUnderbelly);
+
+        // Gold foil corner skirts & wraps
+        const foilAftCradle = new THREE.Mesh(new THREE.BoxGeometry(1.36, 0.25, 0.42), foilMat);
+        foilAftCradle.position.set(0, -0.06, -busLength / 2 + 0.18);
+        activeSatelliteGroup.add(foilAftCradle);
+
+        // 4. Gold Conduit Harness Pipes (Running along lateral edges)
+        const conduitMat = new THREE.MeshStandardMaterial({
+            color: 0xeab308,
             metalness: 0.95,
             roughness: 0.15,
         });
-        const foilMesh = new THREE.Mesh(foilGeo, foilMat);
-        foilMesh.position.y = -0.11;
-        activeSatelliteGroup.add(foilMesh);
+        [-busWidth / 2 - 0.02, busWidth / 2 + 0.02].forEach((xPos) => {
+            const pipeGeo = new THREE.CylinderGeometry(0.025, 0.025, 2.15, 8);
+            const pipe = new THREE.Mesh(pipeGeo, conduitMat);
+            pipe.rotation.x = Math.PI / 2;
+            pipe.position.set(xPos, 0.06, 0);
+            activeSatelliteGroup.add(pipe);
 
-        // 2. Single Tall Vertical Solar Wing (Starlink signature!)
-        const solarGeo = new THREE.BoxGeometry(0.78, 1.8, 0.03);
-        const solarMat = new THREE.MeshStandardMaterial({
-            color: 0x1d4ed8,
-            emissive: 0x1e40af,
-            emissiveIntensity: 0.45,
-            metalness: 0.8,
-            roughness: 0.2,
+            // Bracket clamps
+            for (let z = -0.8; z <= 0.8; z += 0.4) {
+                const clamp = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.06, 0.04), new THREE.MeshStandardMaterial({ color: 0x334155 }));
+                clamp.position.set(xPos, 0.06, z);
+                activeSatelliteGroup.add(clamp);
+            }
         });
-        activeSatSolarWing = new THREE.Mesh(solarGeo, solarMat);
-        // Erected vertically like real Starlink in Image 4
-        activeSatSolarWing.position.set(0, 1.02, -0.65);
-        activeSatelliteGroup.add(activeSatSolarWing);
 
-        // Solar Array Boom Hinge
-        const boomGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.25, 8);
-        const boomMat = new THREE.MeshStandardMaterial({ color: 0x475569 });
-        const boom = new THREE.Mesh(boomGeo, boomMat);
-        boom.position.set(0, 0.13, -0.65);
-        activeSatelliteGroup.add(boom);
+        // 5. Dual Hall-Effect Krypton/Argon Ion Thrusters (Stern)
+        const thrusterMountMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.9, roughness: 0.3 });
+        const thrusterNozzleMat = new THREE.MeshStandardMaterial({
+            color: 0x334155,
+            metalness: 0.95,
+            roughness: 0.15,
+        });
+        const anodeGlowMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8 });
 
-        // 3. Optical Laser Communications Terminal (Downlink Emitter)
-        const emitterGeo = new THREE.CylinderGeometry(0.12, 0.18, 0.18, 12);
-        const emitterMat = new THREE.MeshStandardMaterial({
+        const thrusterSpacing = 0.38;
+        activeSatPlumes = [];
+
+        [-thrusterSpacing, thrusterSpacing].forEach((xOffset) => {
+            // Bracket base
+            const bracket = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.18, 0.15), thrusterMountMat);
+            bracket.position.set(xOffset, -0.08, -busLength / 2 - 0.07);
+            activeSatelliteGroup.add(bracket);
+
+            // Conical Nozzle Bell
+            const nozzleGeo = new THREE.CylinderGeometry(0.12, 0.18, 0.22, 16, 1, true);
+            const nozzle = new THREE.Mesh(nozzleGeo, thrusterNozzleMat);
+            nozzle.rotation.x = Math.PI / 2;
+            nozzle.position.set(xOffset, -0.08, -busLength / 2 - 0.18);
+            activeSatelliteGroup.add(nozzle);
+
+            // Inner Anode Ring
+            const anode = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.02, 16), anodeGlowMat);
+            anode.rotation.x = Math.PI / 2;
+            anode.position.set(xOffset, -0.08, -busLength / 2 - 0.14);
+            activeSatelliteGroup.add(anode);
+
+            // Ion Thruster Plasma Plume (Exhaust glow)
+            const plumeGeo = new THREE.ConeGeometry(0.16, 0.72, 16, 1, true);
+            const plumeMat = new THREE.MeshBasicMaterial({
+                map: plasmaTex,
+                transparent: true,
+                opacity: 0.85,
+                blending: THREE.AdditiveBlending,
+                side: THREE.DoubleSide,
+            });
+            const plume = new THREE.Mesh(plumeGeo, plumeMat);
+            plume.rotation.x = -Math.PI / 2;
+            plume.position.set(xOffset, -0.08, -busLength / 2 - 0.54);
+            activeSatelliteGroup.add(plume);
+            activeSatPlumes.push(plume);
+        });
+
+        // 6. Giant Single Vertical Solar Array Wing (Signature Starlink Design!)
+        const solarGroup = new THREE.Group();
+        solarGroup.position.set(0, busHeight / 2, -0.4);
+
+        // Articulated Solar Array Drive Hinge (SADA)
+        const hingeCylinder = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.08, 0.08, 0.45, 16),
+            new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.9, roughness: 0.2 })
+        );
+        hingeCylinder.rotation.z = Math.PI / 2;
+        hingeCylinder.position.set(0, 0.08, 0);
+        solarGroup.add(hingeCylinder);
+
+        // Structural Support Struts
+        const strutMat = new THREE.MeshStandardMaterial({ color: 0x64748b, metalness: 0.85 });
+        const leftStrut = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.35, 8), strutMat);
+        leftStrut.position.set(-0.25, 0.18, 0);
+        leftStrut.rotation.z = -0.3;
+        solarGroup.add(leftStrut);
+
+        const rightStrut = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.35, 8), strutMat);
+        rightStrut.position.set(0.25, 0.18, 0);
+        rightStrut.rotation.z = 0.3;
+        solarGroup.add(rightStrut);
+
+        // Solar Array Wing Mesh
+        const wingWidth = 1.15;
+        const wingHeight = 3.6;
+        const wingThick = 0.028;
+
+        const solarFrontMat = new THREE.MeshStandardMaterial({
+            map: solarTex,
+            bumpMap: solarBump,
+            bumpScale: 0.03,
+            metalness: 0.85,
+            roughness: 0.22,
+        });
+
+        const solarBackMat = new THREE.MeshStandardMaterial({
+            color: 0x0f172a,
+            metalness: 0.6,
+            roughness: 0.6,
+        });
+
+        const frameEdgeMat = new THREE.MeshStandardMaterial({
+            color: 0x1e293b,
+            metalness: 0.9,
+            roughness: 0.3,
+        });
+
+        // Wing Box Materials: [right, left, top, bottom, front, back]
+        const wingMaterials = [frameEdgeMat, frameEdgeMat, frameEdgeMat, frameEdgeMat, solarFrontMat, solarBackMat];
+        const wingMesh = new THREE.Mesh(new THREE.BoxGeometry(wingWidth, wingHeight, wingThick), wingMaterials);
+        wingMesh.position.set(0, wingHeight / 2 + 0.2, 0);
+        solarGroup.add(wingMesh);
+
+        // Angle the solar array upward and back (~72° tilt) exactly as in the user's reference image!
+        solarGroup.rotation.x = -0.35;
+        solarGroup.rotation.y = 0.12;
+        activeSatelliteGroup.add(solarGroup);
+        activeSatSolarWing = solarGroup;
+
+        // 7. Optical Inter-Satellite Laser Communications Downlink Turret
+        const laserTurretGroup = new THREE.Group();
+        laserTurretGroup.position.set(0.3, -busHeight / 2 - 0.06, 0.6);
+
+        const turretBase = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.12, 0.14, 0.08, 16),
+            new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.9, roughness: 0.2 })
+        );
+        laserTurretGroup.add(turretBase);
+
+        const turretSphere = new THREE.Mesh(
+            new THREE.SphereGeometry(0.11, 16, 16),
+            new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.92, roughness: 0.15 })
+        );
+        turretSphere.position.y = -0.06;
+        laserTurretGroup.add(turretSphere);
+
+        // Ruby Laser Aperture Lens
+        const lensGeo = new THREE.CylinderGeometry(0.06, 0.06, 0.03, 16);
+        const lensMat = new THREE.MeshStandardMaterial({
             color: 0xef4444,
             emissive: 0xef4444,
-            emissiveIntensity: 0.8,
+            emissiveIntensity: 0.9,
+            metalness: 0.95,
+            roughness: 0.05,
         });
-        const emitter = new THREE.Mesh(emitterGeo, emitterMat);
-        emitter.position.set(0, -0.15, 0.3);
-        activeSatelliteGroup.add(emitter);
+        const lensMesh = new THREE.Mesh(lensGeo, lensMat);
+        lensMesh.position.set(0, -0.15, 0.04);
+        lensMesh.rotation.x = 0.4;
+        laserTurretGroup.add(lensMesh);
+        activeSatelliteGroup.add(laserTurretGroup);
 
-        // 4. Strobe Navigation Beacon
-        const strobeGeo = new THREE.SphereGeometry(0.06, 8, 8);
-        const strobeMat = new THREE.MeshBasicMaterial({ color: 0xff0033 });
-        activeSatStrobe = new THREE.Mesh(strobeGeo, strobeMat);
-        activeSatStrobe.position.set(0, 0.14, 0.65);
+        // 8. Forward Star Tracker Sensor Hoods & Nose Detail
+        const noseMat = new THREE.MeshStandardMaterial({ color: 0xc8d0dc, metalness: 0.85, roughness: 0.3 });
+        const noseBevel = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.2, 0.3), noseMat);
+        noseBevel.position.set(0, 0.02, busLength / 2 + 0.12);
+        noseBevel.rotation.x = 0.25;
+        activeSatelliteGroup.add(noseBevel);
+
+        // Star Tracker Cameras
+        [-0.32, 0.32].forEach((x) => {
+            const trackerHood = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.04, 0.06, 0.1, 12, 1, true),
+                new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.95 })
+            );
+            trackerHood.rotation.x = -Math.PI / 4;
+            trackerHood.position.set(x, busHeight / 2 + 0.05, busLength / 2 + 0.05);
+            activeSatelliteGroup.add(trackerHood);
+        });
+
+        // 9. High-Intensity Flashing Red Strobe Beacon with 4-Point Star Lens Flare!
+        // Positioned at top-right forward corner exactly as in user's image
+        const strobeX = busWidth / 2 - 0.12;
+        const strobeY = busHeight / 2 + 0.06;
+        const strobeZ = busLength / 2 - 0.25;
+
+        // Machined Beacon Base
+        const beaconBase = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.055, 0.07, 0.06, 12),
+            new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.95, roughness: 0.1 })
+        );
+        beaconBase.position.set(strobeX, strobeY, strobeZ);
+        activeSatelliteGroup.add(beaconBase);
+
+        // Beacon Bulb
+        const bulbGeo = new THREE.SphereGeometry(0.045, 12, 12);
+        const bulbMat = new THREE.MeshBasicMaterial({ color: 0xff0033 });
+        activeSatStrobe = new THREE.Mesh(bulbGeo, bulbMat);
+        activeSatStrobe.position.set(strobeX, strobeY + 0.05, strobeZ);
         activeSatelliteGroup.add(activeSatStrobe);
 
-        // Initial Orbit Position
-        activeSatelliteGroup.scale.set(0.9, 0.9, 0.9);
+        // Dynamic Red Point Light illuminating chassis
+        activeSatBeaconLight = new THREE.PointLight(0xff0033, 2.8, 5.0);
+        activeSatBeaconLight.position.set(strobeX, strobeY + 0.06, strobeZ);
+        activeSatelliteGroup.add(activeSatBeaconLight);
+
+        // 4-Point Star Anamorphic Lens Flare Sprite!
+        const flareMat = new THREE.SpriteMaterial({
+            map: flareTex,
+            transparent: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+        });
+        activeSatFlareSprite = new THREE.Sprite(flareMat);
+        activeSatFlareSprite.scale.set(1.4, 1.4, 1.4);
+        activeSatFlareSprite.position.set(strobeX, strobeY + 0.06, strobeZ);
+        activeSatelliteGroup.add(activeSatFlareSprite);
+
+        // Initial Orbit Scale
+        activeSatelliteGroup.scale.set(0.95, 0.95, 0.95);
         scene.add(activeSatelliteGroup);
     }
 
@@ -857,6 +1449,19 @@
     function setCameraModeActive(btn) {
         document.querySelectorAll(".btn-sat-cam").forEach((b) => b.classList.remove("active"));
         if (btn) btn.classList.add("active");
+
+        if (container) {
+            if (cameraMode === "chase") {
+                container.classList.add("sat-cam-active");
+            } else {
+                container.classList.remove("sat-cam-active");
+            }
+        }
+
+        const tacticalHud = document.getElementById("satCamTacticalHud");
+        if (tacticalHud) {
+            tacticalHud.style.display = cameraMode === "chase" ? "flex" : "none";
+        }
     }
 
     function onResizeHandler() {
@@ -915,22 +1520,58 @@
             interSatLinkLines.geometry.setDrawRange(0, linkCount * 2);
         }
 
-        // 4. Animate Active Starlink Satellite Orbit
+        // 4. Animate Active Starlink Satellite Orbit with Authentic Orthonormal Orientation
         if (activeSatelliteGroup) {
-            currentOrbitAngle += 0.0035;
+            currentOrbitAngle += 0.0032;
             const satX = Math.cos(currentOrbitAngle) * SATELLITE_ORBIT_RADIUS;
             const satZ = Math.sin(currentOrbitAngle) * SATELLITE_ORBIT_RADIUS;
             const satY = Math.sin(currentOrbitAngle) * 3.8;
             activeSatelliteGroup.position.set(satX, satY, satZ);
 
-            // Satellite faces Earth center
-            activeSatelliteGroup.lookAt(0, 0, 0);
+            // Compute realistic orbital velocity vector (prograde direction)
+            const nextAngle = currentOrbitAngle + 0.01;
+            const nextX = Math.cos(nextAngle) * SATELLITE_ORBIT_RADIUS;
+            const nextZ = Math.sin(nextAngle) * SATELLITE_ORBIT_RADIUS;
+            const nextY = Math.sin(nextAngle) * 3.8;
+            const forwardVec = new THREE.Vector3(nextX - satX, nextY - satY, nextZ - satZ).normalize();
 
-            // Flashing navigation strobe
-            strobeTick += 0.05;
+            // Nadir vector (down to Earth center)
+            const nadirVec = new THREE.Vector3(-satX, -satY, -satZ).normalize();
+            // Zenith vector (upward into space)
+            const zenithVec = nadirVec.clone().negate();
+            // Right lateral axis
+            const rightVec = new THREE.Vector3().crossVectors(forwardVec, zenithVec).normalize();
+            // True orthogonal up vector
+            const trueUp = new THREE.Vector3().crossVectors(rightVec, forwardVec).normalize();
+
+            // Set satellite orientation: [right: +X, up: +Y, forward: +Z]
+            const rotMatrix = new THREE.Matrix4().makeBasis(rightVec, trueUp, forwardVec);
+            activeSatelliteGroup.quaternion.setFromRotationMatrix(rotMatrix);
+
+            // Dynamic Navigation Strobe, Point Light, & 4-Point Star Lens Flare!
+            strobeTick += 0.06;
+            const isStrobeOn = Math.sin(strobeTick * 6) > 0.35;
             if (activeSatStrobe) {
-                activeSatStrobe.material.opacity = Math.sin(strobeTick * 7) > 0.4 ? 1.0 : 0.15;
-                activeSatStrobe.material.transparent = true;
+                activeSatStrobe.material.color.setHex(isStrobeOn ? 0xff0033 : 0x330011);
+            }
+            if (activeSatBeaconLight) {
+                activeSatBeaconLight.intensity = isStrobeOn ? 3.0 : 0.15;
+            }
+            if (activeSatFlareSprite) {
+                activeSatFlareSprite.visible = isStrobeOn;
+                if (isStrobeOn) {
+                    const flareScale = 1.35 + Math.sin(strobeTick * 12) * 0.25;
+                    activeSatFlareSprite.scale.set(flareScale, flareScale, flareScale);
+                }
+            }
+
+            // Hall-Effect Ion Thruster Plasma Plume Shimmer
+            if (activeSatPlumes && activeSatPlumes.length > 0) {
+                const plumeScale = 0.85 + Math.sin(strobeTick * 10) * 0.15;
+                activeSatPlumes.forEach((p) => {
+                    p.scale.set(1, plumeScale, 1);
+                    p.material.opacity = 0.75 + Math.sin(strobeTick * 8) * 0.2;
+                });
             }
         }
 
@@ -978,10 +1619,23 @@
 
         // 6. Camera Modes
         if (cameraMode === "chase" && activeSatelliteGroup) {
-            const chaseOffset = new THREE.Vector3(0, 2.2, 4.2).applyQuaternion(activeSatelliteGroup.quaternion);
-            const desiredPos = activeSatelliteGroup.position.clone().add(chaseOffset);
-            camera.position.lerp(desiredPos, 0.05);
-            camera.lookAt(0, 0, 0);
+            // Position camera offset to reproduce the exact cinematic Starlink angle from reference image:
+            // satellite chassis in center-left, solar wing pointing up-left, Earth horizon curving in lower right
+            const satPos = activeSatelliteGroup.position.clone();
+            const satRot = activeSatelliteGroup.quaternion;
+
+            // Offset in satellite's local frame:
+            // X: +3.2 (starboard), Y: +1.6 (above), Z: +4.2 (forward)
+            const localCamOffset = new THREE.Vector3(3.2, 1.6, 4.2);
+            const worldCamOffset = localCamOffset.clone().applyQuaternion(satRot);
+            const targetCamPos = satPos.clone().add(worldCamOffset);
+
+            camera.position.lerp(targetCamPos, 0.08);
+
+            // Look at satellite center, slightly offset to keep Earth in frame
+            const localLookOffset = new THREE.Vector3(-0.35, 0.2, 0);
+            const worldLookTarget = satPos.clone().add(localLookOffset.applyQuaternion(satRot));
+            camera.lookAt(worldLookTarget);
         } else if (cameraMode === "target" && activeInterception) {
             const desiredPos = activeInterception.worldTargetPos.clone().multiplyScalar(2.1);
             camera.position.lerp(desiredPos, 0.04);
