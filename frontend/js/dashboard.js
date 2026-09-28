@@ -107,9 +107,9 @@
 
         // Liquidity Beziers (Flowing Wire Waves)
         const WAVES = [
-            { yRatio: 0.25, speed: 0.0008, amp: 55, color: "rgba(56, 189, 248, 0.09)", sparkOffset: 0 },
-            { yRatio: 0.52, speed: 0.0012, amp: 85, color: "rgba(37, 99, 235, 0.08)", sparkOffset: 0.4 },
-            { yRatio: 0.78, speed: 0.0009, amp: 65, color: "rgba(244, 63, 94, 0.07)", sparkOffset: 0.7 },
+            { yRatio: 0.25, speed: 0.0008, amp: 55, sparkOffset: 0, type: "gold" },
+            { yRatio: 0.52, speed: 0.0012, amp: 85, sparkOffset: 0.4, type: "crimson" },
+            { yRatio: 0.78, speed: 0.0009, amp: 65, sparkOffset: 0.7, type: "emerald" },
         ];
 
         let tick = 0;
@@ -122,16 +122,65 @@
             const mouseOffsetX = (mouseX / width - 0.5) * 25;
             const mouseOffsetY = (mouseY / height - 0.5) * 25;
 
-            // Deep space background with subtle clear
-            ctx.fillStyle = "#050811";
+            const theme = document.body.getAttribute("data-theme") || "gold";
+
+            // Theme-calibrated color maps
+            let bgFill = "#070a12";
+            let orb1Color = "rgba(212, 175, 55, 0.14)";
+            let orb2Color = "rgba(239, 68, 68, 0.10)";
+            let threatNodeColor = "#ef4444";
+            let threatShadow = "rgba(239, 68, 68, 0.8)";
+            let standardNodeColor = "#d4af37";
+            let standardShadow = "rgba(212, 175, 55, 0.65)";
+            let waveGoldColor = "rgba(212, 175, 55, 0.16)";
+            let waveCrimsonColor = "rgba(239, 68, 68, 0.14)";
+            let waveEmeraldColor = "rgba(16, 185, 129, 0.14)";
+
+            if (theme === "cyber") {
+                bgFill = "#030408";
+                orb1Color = "rgba(255, 0, 85, 0.16)";
+                orb2Color = "rgba(0, 255, 136, 0.12)";
+                threatNodeColor = "#ff0033";
+                threatShadow = "rgba(255, 0, 51, 0.85)";
+                standardNodeColor = "#00ff88";
+                standardShadow = "rgba(0, 255, 136, 0.7)";
+                waveGoldColor = "rgba(255, 0, 85, 0.18)";
+                waveCrimsonColor = "rgba(255, 0, 51, 0.18)";
+                waveEmeraldColor = "rgba(0, 255, 136, 0.16)";
+            } else if (theme === "obsidian") {
+                bgFill = "#040406";
+                orb1Color = "rgba(255, 255, 255, 0.10)";
+                orb2Color = "rgba(255, 51, 75, 0.12)";
+                threatNodeColor = "#ff334b";
+                threatShadow = "rgba(255, 51, 75, 0.8)";
+                standardNodeColor = "#e2e8f0";
+                standardShadow = "rgba(255, 255, 255, 0.6)";
+                waveGoldColor = "rgba(226, 232, 240, 0.14)";
+                waveCrimsonColor = "rgba(255, 51, 75, 0.14)";
+                waveEmeraldColor = "rgba(16, 185, 129, 0.12)";
+            } else if (theme === "light") {
+                bgFill = "#f4f6fa";
+                orb1Color = "rgba(184, 134, 11, 0.08)";
+                orb2Color = "rgba(220, 38, 38, 0.06)";
+                threatNodeColor = "#dc2626";
+                threatShadow = "rgba(220, 38, 38, 0.4)";
+                standardNodeColor = "#b8860b";
+                standardShadow = "rgba(184, 134, 11, 0.4)";
+                waveGoldColor = "rgba(184, 134, 11, 0.12)";
+                waveCrimsonColor = "rgba(220, 38, 38, 0.10)";
+                waveEmeraldColor = "rgba(5, 150, 105, 0.10)";
+            }
+
+            // 0. Space background with theme clear
+            ctx.fillStyle = bgFill;
             ctx.fillRect(0, 0, width, height);
 
             // 1. Ambient Breathing Radial Orbs
             const orb1X = width * 0.2 + Math.sin(tick * 0.008) * 60 + mouseOffsetX;
             const orb1Y = height * 0.3 + Math.cos(tick * 0.007) * 40 + mouseOffsetY;
             const grad1 = ctx.createRadialGradient(orb1X, orb1Y, 10, orb1X, orb1Y, width * 0.45);
-            grad1.addColorStop(0, "rgba(37, 99, 235, 0.13)");
-            grad1.addColorStop(0.5, "rgba(14, 23, 42, 0.06)");
+            grad1.addColorStop(0, orb1Color);
+            grad1.addColorStop(0.5, "rgba(0, 0, 0, 0.05)");
             grad1.addColorStop(1, "transparent");
             ctx.fillStyle = grad1;
             ctx.fillRect(0, 0, width, height);
@@ -139,9 +188,8 @@
             const orb2X = width * 0.8 + Math.cos(tick * 0.009) * 50 - mouseOffsetX;
             const orb2Y = height * 0.7 + Math.sin(tick * 0.006) * 50 - mouseOffsetY;
             const grad2 = ctx.createRadialGradient(orb2X, orb2Y, 10, orb2X, orb2Y, width * 0.38);
-            grad2.addColorStop(0, "rgba(244, 63, 94, 0.08)");
-            grad2.addColorStop(0.6, "rgba(37, 99, 235, 0.04)");
-            grad2.addColorStop(1, "transparent");
+            grad2.addColorStop(0, orb2Color);
+            grad2.addColorStop(0.6, "transparent");
             ctx.fillStyle = grad2;
             ctx.fillRect(0, 0, width, height);
 
@@ -154,7 +202,8 @@
                     const y = baseY + Math.sin(x * 0.003 + tick * wave.speed * 60) * wave.amp + Math.cos(x * 0.002 + tick * 0.01) * 20;
                     ctx.lineTo(x, y);
                 }
-                ctx.strokeStyle = wave.color;
+                const waveStroke = wave.type === "gold" ? waveGoldColor : (wave.type === "crimson" ? waveCrimsonColor : waveEmeraldColor);
+                ctx.strokeStyle = waveStroke;
                 ctx.lineWidth = 1.8;
                 ctx.stroke();
 
@@ -164,7 +213,7 @@
                 const sparkY = baseY + Math.sin(sparkX * 0.003 + tick * wave.speed * 60) * wave.amp + Math.cos(sparkX * 0.002 + tick * 0.01) * 20;
                 ctx.beginPath();
                 ctx.arc(sparkX, sparkY, 3, 0, Math.PI * 2);
-                ctx.fillStyle = wave.color.includes("244") ? "#f43f5e" : "#38bdf8";
+                ctx.fillStyle = wave.type === "crimson" ? threatNodeColor : (wave.type === "emerald" ? "#10b981" : standardNodeColor);
                 ctx.shadowColor = ctx.fillStyle;
                 ctx.shadowBlur = 10;
                 ctx.fill();
@@ -195,8 +244,8 @@
                         ctx.moveTo(node.x, node.y);
                         ctx.lineTo(other.x, other.y);
                         ctx.strokeStyle = (node.isThreat || other.isThreat)
-                            ? `rgba(244, 63, 94, ${alpha * 1.3})`
-                            : `rgba(56, 189, 248, ${alpha})`;
+                            ? `rgba(239, 68, 68, ${alpha * 1.5})`
+                            : (theme === "cyber" ? `rgba(0, 255, 136, ${alpha})` : `rgba(212, 175, 55, ${alpha})`);
                         ctx.lineWidth = 0.8;
                         ctx.stroke();
                     }
@@ -208,12 +257,12 @@
                 ctx.arc(node.x, node.y, Math.max(currentRadius, 1), 0, Math.PI * 2);
 
                 if (node.isThreat) {
-                    ctx.fillStyle = "#f43f5e";
-                    ctx.shadowColor = "rgba(244, 63, 94, 0.7)";
+                    ctx.fillStyle = threatNodeColor;
+                    ctx.shadowColor = threatShadow;
                     ctx.shadowBlur = 12;
                 } else {
-                    ctx.fillStyle = "#38bdf8";
-                    ctx.shadowColor = "rgba(56, 189, 248, 0.6)";
+                    ctx.fillStyle = standardNodeColor;
+                    ctx.shadowColor = standardShadow;
                     ctx.shadowBlur = 8;
                 }
                 ctx.fill();
@@ -1362,6 +1411,26 @@
         if (btnCloseGuideModal && guideExplainerModal) {
             btnCloseGuideModal.addEventListener("click", () => {
                 guideExplainerModal.classList.add("hidden");
+            });
+        }
+
+        // Color Theme Palette Switcher
+        const themeSelector = document.getElementById("themeSelector");
+        const savedTheme = localStorage.getItem("bankingTheme") || "gold";
+        document.body.setAttribute("data-theme", savedTheme);
+        if (themeSelector) {
+            themeSelector.value = savedTheme;
+            themeSelector.addEventListener("change", (e) => {
+                const newTheme = e.target.value;
+                document.body.setAttribute("data-theme", newTheme);
+                localStorage.setItem("bankingTheme", newTheme);
+                const themeNames = {
+                    gold: "Executive Gold",
+                    cyber: "Cyber Threat (Red/Neon)",
+                    obsidian: "Platinum Obsidian",
+                    light: "Swiss Institutional Light"
+                };
+                showToast(`Color Palette: ${themeNames[newTheme] || newTheme} activated`, "success");
             });
         }
     }
