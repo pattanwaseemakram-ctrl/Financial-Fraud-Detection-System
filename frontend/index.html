@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Enterprise Banking Stylesheet (Cache-Busted) -->
-    <link rel="stylesheet" href="css/style.css?v=20260928v4">
+    <link rel="stylesheet" href="css/style.css?v=20260928v5">
 </head>
 <body class="banking-theme" data-theme="gold">
 
@@ -194,117 +194,44 @@
         =================================================== -->
         <section id="authPortalSection" class="auth-portal-section">
             <div class="auth-modal glass-card">
-                <!-- Top Security Clearance Ribbon -->
-                <div class="security-access-ribbon">
-                    <span class="hazard-dot"></span>
-                    <span>RESTRICTED ACCESS // LEVEL-4 FINANCIAL RISK GATEWAY</span>
-                </div>
-
                 <div class="auth-header">
-                    <div class="vault-emblem">
-                        <svg class="vault-emblem-svg" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="32" cy="32" r="30" stroke="rgba(212, 175, 55, 0.3)" stroke-width="1.5" stroke-dasharray="4 3"/>
-                            <circle cx="32" cy="32" r="23" stroke="rgba(239, 68, 68, 0.4)" stroke-width="1.5"/>
-                            <circle cx="32" cy="32" r="16" fill="rgba(16, 24, 40, 0.9)" stroke="#d4af37" stroke-width="2"/>
-                            <!-- Padlock Body -->
-                            <rect x="25" y="27" width="14" height="11" rx="2" fill="#162136" stroke="#fef08a" stroke-width="1.5"/>
-                            <!-- Shackle -->
-                            <path d="M28 27V23C28 20.7909 29.7909 19 32 19C34.2091 19 36 20.7909 36 23V27" stroke="#d4af37" stroke-width="2" stroke-linecap="round"/>
-                            <circle cx="32" cy="32.5" r="1.5" fill="#ef4444"/>
-                        </svg>
-                        <span class="vault-radar-spin"></span>
+                    <div class="auth-mini-icon">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                     </div>
-                    <h2>Institutional Risk Access</h2>
-                    <p>Enter certified cryptographic credentials to unlock real-time transaction scoring, model threshold control, and PostgreSQL case management.</p>
+                    <h2>Operator Sign In</h2>
+                    <p class="auth-sub">Enter credentials to unlock terminal</p>
                 </div>
 
-                <!-- 1-Click Role Login Shortcuts (Smart Keycards) -->
-                <div class="quick-credentials-box">
-                    <div class="quick-cred-title">
-                        <span>SELECT OPERATOR DESK:</span>
-                        <small>Single-Click Instant Login</small>
-                    </div>
-                    <div class="quick-cred-grid">
-                        <button type="button" class="btn-operator-card cro-card" id="btnAdminQuickLogin">
-                            <div class="role-icon-box gold">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                            </div>
-                            <div class="role-details">
-                                <div class="role-title-row">
-                                    <strong>Chief Risk Officer</strong>
-                                    <span class="badge-access tier-1">Tier-1 Sovereign Access</span>
-                                </div>
-                                <div class="role-sub">Full Interception Control • T=0.42 Threshold Override</div>
-                                <div class="role-creds font-mono"><code>admin</code> / <code>admin123</code></div>
-                            </div>
-                            <div class="role-arrow">&rarr;</div>
-                        </button>
-
-                        <button type="button" class="btn-operator-card analyst-card" id="btnAnalystQuickLogin">
-                            <div class="role-icon-box cyan">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                            </div>
-                            <div class="role-details">
-                                <div class="role-title-row">
-                                    <strong>Fraud Case Investigator</strong>
-                                    <span class="badge-access tier-2">Tier-2 Triage Desk</span>
-                                </div>
-                                <div class="role-sub">PostgreSQL Alert Docket • SAR Compliance Filing</div>
-                                <div class="role-creds font-mono"><code>analyst</code> / <code>analyst123</code></div>
-                            </div>
-                            <div class="role-arrow">&rarr;</div>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Standard Credentials Form -->
                 <form id="bankingAuthForm" class="banking-form">
                     <div class="terminal-field">
-                        <label for="authUsername">Operator Identifier (Username)</label>
+                        <label for="authUsername">Username</label>
                         <div class="input-box">
                             <span class="input-icon">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                             </span>
-                            <input id="authUsername" type="text" class="font-mono" placeholder="Enter banking user ID (e.g. admin)" autocomplete="username" required>
+                            <input id="authUsername" type="text" class="font-mono" placeholder="Username (e.g. admin)" autocomplete="username" value="admin" required>
                         </div>
                     </div>
 
                     <div class="terminal-field">
-                        <label for="authPassword">Security Key / Password</label>
+                        <label for="authPassword">Password</label>
                         <div class="input-box">
                             <span class="input-icon">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                             </span>
-                            <input id="authPassword" type="password" class="font-mono" placeholder="Enter authentication key" autocomplete="current-password" required>
+                            <input id="authPassword" type="password" class="font-mono" placeholder="Password" autocomplete="current-password" value="admin123" required>
                         </div>
                     </div>
 
                     <button id="authSubmitBtn" class="btn btn-primary btn-full btn-lg btn-auth" type="submit">
                         <span class="btn-sheen"></span>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                        <span>Authenticate & Unlock Terminal</span>
+                        <span>Sign In</span>
                     </button>
 
                     <div id="authErrorMessage" class="auth-feedback" role="alert"></div>
 
-                    <!-- Security Trust Seals -->
-                    <div class="auth-trust-footer">
-                        <div class="trust-badge">
-                            <span class="trust-dot green"></span>
-                            <span>256-BIT SHA-3 ECDSA</span>
-                        </div>
-                        <div class="trust-badge">
-                            <span class="trust-dot blue"></span>
-                            <span>BASEL-III RISK ENGINE</span>
-                        </div>
-                        <div class="trust-badge">
-                            <span class="trust-dot yellow"></span>
-                            <span>98.5% RECALL CALIBRATION</span>
-                        </div>
-                        <div class="trust-badge">
-                            <span class="trust-dot green"></span>
-                            <span>POSTGRESQL AUDIT</span>
-                        </div>
+                    <div class="auth-quick-hint">
+                        <span>Demo Account: <code>admin</code> / <code>admin123</code></span>
                     </div>
                 </form>
             </div>
