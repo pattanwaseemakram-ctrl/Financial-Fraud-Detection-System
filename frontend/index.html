@@ -390,6 +390,142 @@
                     </div>
                 </div>
 
+                <!-- ======================================================
+                     SATELLITE INTELLIGENCE & GLOBAL FRAUD DEFENSE THEATER (Image 4 Style)
+                ======================================================= -->
+                <div class="satellite-defense-theater glass-card">
+                    <!-- Theater Header Strip -->
+                    <div class="sat-theater-header">
+                        <div class="sat-brand-block">
+                            <div class="sat-icon-circle">
+                                <span>🛰️</span>
+                            </div>
+                            <div>
+                                <div class="sat-badge-row">
+                                    <span class="sat-prefix">ORBITAL RECONNAISSANCE</span>
+                                    <span id="satStatusPill" class="sat-telemetry-badge success">READY // MONITORING</span>
+                                    <span class="sat-badge-pass">PASS: LEO-550KM</span>
+                                </div>
+                                <h3 class="sat-theater-title">Satellite Intelligence & Global Fraud Defense Center</h3>
+                                <p class="sat-theater-sub">Real-time geospatial telemetry: satellite laser beam locks onto predicted fraud locations across world financial coordinates.</p>
+                            </div>
+                        </div>
+
+                        <!-- Top Right Live Controls -->
+                        <div class="sat-theater-actions">
+                            <div class="sat-camera-controls" role="group" aria-label="Camera Perspectives">
+                                <button type="button" id="btnCamOrbital" class="btn-sat-cam active" title="3D Orbital Perspective">🌐 Orbit</button>
+                                <button type="button" id="btnCamChase" class="btn-sat-cam" title="Satellite Chase Camera">🛰️ Sat Cam</button>
+                                <button type="button" id="btnCamTarget" class="btn-sat-cam" title="Target City Lock">🎯 Target</button>
+                            </div>
+                            <button type="button" id="btnTestFireSatellite" class="btn btn-primary btn-sm sat-fire-btn" title="Simulate Real-Time Satellite Laser Interception">
+                                <span class="btn-sheen"></span>
+                                <span>⚡ Intercept Test Fraud (Laser Lock)</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 3D Three.js Globe Stage -->
+                    <div id="satelliteTheaterContainer" class="sat-viewport-container">
+                        <!-- Three.js Canvas injected here -->
+
+                        <!-- Floating HUD Metric Overlay Left -->
+                        <div class="sat-hud-overlay-left">
+                            <div class="sat-hud-metric-box">
+                                <span class="hud-m-label">DOWNLINK VELOCITY</span>
+                                <strong id="satSpeedVal" class="font-mono text-cyan">27,420 km/h</strong>
+                            </div>
+                            <div class="sat-hud-metric-box">
+                                <span class="hud-m-label">OPTICAL RESOLUTION</span>
+                                <strong class="font-mono text-white">0.15 m/px</strong>
+                            </div>
+                            <div class="sat-hud-metric-box">
+                                <span class="hud-m-label">BEAM EMITTER</span>
+                                <strong id="satBeamPowerVal" class="font-mono text-green">99.8% Nominal</strong>
+                            </div>
+                        </div>
+
+                        <!-- Floating HUD Target Overlay Right -->
+                        <div class="sat-hud-overlay-right">
+                            <div class="sat-hud-target-card">
+                                <span class="hud-target-sub">ACTIVE TARGET COORDINATE</span>
+                                <strong id="satTargetLocPill" class="font-mono text-yellow">Scanning Earth...</strong>
+                                <span class="hud-target-note">Precision Laser Lockdown System</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Lower Telemetry Deck (Matching Image 3 & 4) -->
+                    <div class="sat-telemetry-deck">
+                        <!-- Frequency Spectrum Seismograph Waveform -->
+                        <div class="sat-waveform-box">
+                            <div class="sat-deck-title-row">
+                                <span class="sat-deck-title">SATELLITE FREQUENCY TELEMETRY (RF SPECTRUM)</span>
+                                <span class="font-mono sat-freq-num">14.2 GHz Ku-Band</span>
+                            </div>
+                            <canvas id="satWaveformCanvas" class="sat-waveform-canvas"></canvas>
+                        </div>
+
+                        <!-- Live Tracked Locations Table -->
+                        <div class="sat-location-docket-box">
+                            <div class="sat-deck-title-row">
+                                <span class="sat-deck-title">PROJECT LOCATIONS & TELEMETRY STREAM</span>
+                                <span class="sat-live-indicator"><span class="pulse-beacon"></span> LIVE TRACKING</span>
+                            </div>
+                            <div class="sat-docket-table-wrap">
+                                <table class="sat-docket-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Location</th>
+                                            <th>Transaction ID</th>
+                                            <th>Coordinates</th>
+                                            <th>Verdict</th>
+                                            <th>Latency</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="satLocationDocketBody">
+                                        <tr class="sat-docket-row-danger">
+                                            <td><span class="docket-beacon danger"></span> <strong>🇺🇸 Texas, USA</strong></td>
+                                            <td class="font-mono">WIRE-9896</td>
+                                            <td class="font-mono">31.96° N, 99.90° W</td>
+                                            <td><span class="status-pill-badge badge-sev high">🚨 FRAUD</span></td>
+                                            <td class="font-mono text-muted">14ms</td>
+                                        </tr>
+                                        <tr class="sat-docket-row-danger">
+                                            <td><span class="docket-beacon danger"></span> <strong>🇺🇸 California, USA</strong></td>
+                                            <td class="font-mono">WIRE-3227</td>
+                                            <td class="font-mono">36.77° N, 119.41° W</td>
+                                            <td><span class="status-pill-badge badge-sev high">🚨 FRAUD</span></td>
+                                            <td class="font-mono text-muted">18ms</td>
+                                        </tr>
+                                        <tr class="sat-docket-row-clean">
+                                            <td><span class="docket-beacon clean"></span> <strong>🇬🇧 London, UK</strong></td>
+                                            <td class="font-mono">WIRE-9841</td>
+                                            <td class="font-mono">51.50° N, 0.12° W</td>
+                                            <td><span class="status-pill-badge badge-sev low">✔ CLEARED</span></td>
+                                            <td class="font-mono text-muted">21ms</td>
+                                        </tr>
+                                        <tr class="sat-docket-row-danger">
+                                            <td><span class="docket-beacon danger"></span> <strong>🇺🇸 New York, USA</strong></td>
+                                            <td class="font-mono">WIRE-4812</td>
+                                            <td class="font-mono">40.71° N, 74.00° W</td>
+                                            <td><span class="status-pill-badge badge-sev high">🚨 FRAUD</span></td>
+                                            <td class="font-mono text-muted">16ms</td>
+                                        </tr>
+                                        <tr class="sat-docket-row-clean">
+                                            <td><span class="docket-beacon clean"></span> <strong>🇨🇭 Zurich, Switzerland</strong></td>
+                                            <td class="font-mono">WIRE-1102</td>
+                                            <td class="font-mono">47.37° N, 8.54° E</td>
+                                            <td><span class="status-pill-badge badge-sev low">✔ CLEARED</span></td>
+                                            <td class="font-mono text-muted">24ms</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Cockpit Split View: Risk Radar & Live Interception Feed -->
                 <div class="cockpit-split-grid">
                     <!-- Left: Portfolio Exposure Distribution -->
@@ -1275,7 +1411,9 @@
     </div>
 
     <!-- Scripts -->
+    <script src="js/three.min.js"></script>
     <script src="js/api.js"></script>
+    <script src="js/satellite_globe.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
 </html>

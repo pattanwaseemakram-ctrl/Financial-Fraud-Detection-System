@@ -447,6 +447,11 @@
             loadTriageCases();
         } else if (tabName === "cockpit") {
             loadCockpitData();
+            if (window.SatelliteDefense && typeof window.SatelliteDefense.init === "function") {
+                setTimeout(() => {
+                    window.dispatchEvent(new Event("resize"));
+                }, 80);
+            }
         }
     }
 
@@ -799,6 +804,23 @@
             // Populate XAI Bullet Reasons
             renderHudXaiSignals(payload, isSuspicious, riskScore);
 
+            // Trigger 3D Satellite Global Interception Laser Strike
+            if (window.SatelliteDefense && typeof window.SatelliteDefense.triggerInterception === "function") {
+                window.SatelliteDefense.triggerInterception({
+                    transaction_id: payload.transaction_id,
+                    location: payload.location,
+                    amount: payload.amount,
+                    risk_score: riskScore,
+                    fraud_probability: fraudProb,
+                    prediction: result.prediction,
+                    risk_level: result.risk_level,
+                    is_fraud: isSuspicious,
+                    threat_flag: payload.known_threat_flag,
+                    device_id: payload.device_id,
+                    ip_address: payload.ip_address
+                });
+            }
+
             // Background reload cockpit counters
             loadAlertSummaryData();
 
@@ -1003,6 +1025,23 @@
             `;
 
             streamTableBody.insertBefore(row, streamTableBody.firstChild);
+
+            // Trigger 3D Satellite Global Interception Laser Strike
+            if (window.SatelliteDefense && typeof window.SatelliteDefense.triggerInterception === "function") {
+                window.SatelliteDefense.triggerInterception({
+                    transaction_id: payload.transaction_id,
+                    location: payload.location,
+                    amount: payload.amount,
+                    risk_score: res.risk_score !== undefined ? res.risk_score : (isSuspicious ? 98.4 : 8.2),
+                    fraud_probability: res.fraud_probability,
+                    prediction: res.prediction,
+                    risk_level: res.risk_level || (isSuspicious ? "high" : "low"),
+                    is_fraud: isSuspicious,
+                    threat_flag: threatFlag,
+                    device_id: payload.device_id,
+                    ip_address: payload.ip_address
+                });
+            }
 
             // Cap stream table at 25 rows for memory stability
             if (streamTableBody.children.length > 25) {
