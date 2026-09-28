@@ -948,7 +948,7 @@
         const rand = Math.floor(1000 + Math.random() * 9000);
         const isFraudProfile = Math.random() < 0.35; // 35% chance to simulate a fraud attack
 
-        const locations = ["California", "New York", "Texas", "Florida", "Illinois"];
+        const locations = ["California", "New York", "Texas", "Florida"];
         const loc = locations[Math.floor(Math.random() * locations.length)];
 
         let amount, balance, devRecog, threatFlag, geoMatch, deviation;

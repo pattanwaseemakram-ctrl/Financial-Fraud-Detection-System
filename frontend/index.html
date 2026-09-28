@@ -553,15 +553,15 @@
                             </div>
                         </div>
 
-                        <!-- Middle Column: Towers & Active Fixtures List -->
+                        <!-- Middle Column: Project Locations & Telemetry Stream (California, Texas, New York, Florida) -->
                         <div class="deck-col deck-col-towers">
                             <div class="towers-top-bar">
                                 <div class="towers-title-wrap">
-                                    <span class="t-badge font-mono">TOWERS: 6</span>
-                                    <span class="t-badge font-mono active">ACTIVE FIXTURES: 25</span>
+                                    <span class="t-badge font-mono">PROJECT LOCATIONS: 4</span>
+                                    <span class="t-badge font-mono active">ML TRAINED REGIONS: 4</span>
                                 </div>
                                 <div class="towers-search-wrap">
-                                    <input type="text" placeholder="Search fixtures..." class="towers-search-input" />
+                                    <input type="text" placeholder="Filter locations..." class="towers-search-input" />
                                 </div>
                             </div>
                             <div class="towers-table-wrap">
@@ -569,24 +569,24 @@
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Location</th>
-                                            <th>Load</th>
-                                            <th>Devices</th>
+                                            <th>Project Location</th>
+                                            <th>Velocity</th>
+                                            <th>Transactions</th>
                                         </tr>
                                     </thead>
                                     <tbody id="satLocationDocketBody">
                                         <tr class="towers-row">
-                                            <td><span class="tower-dot danger"></span> <strong class="font-mono">T48-001</strong></td>
-                                            <td>Portland, OR</td>
+                                            <td><span class="tower-dot danger"></span> <strong class="font-mono">LOC-CA-01</strong></td>
+                                            <td>California, USA</td>
                                             <td>
-                                                <div class="tower-load-bar"><div class="load-fill" style="width: 45%;"></div></div>
-                                                <small class="font-mono">45%</small>
+                                                <div class="tower-load-bar"><div class="load-fill fill-danger" style="width: 95%;"></div></div>
+                                                <small class="font-mono">95%</small>
                                             </td>
-                                            <td class="font-mono">1,258</td>
+                                            <td class="font-mono">1,884</td>
                                         </tr>
                                         <tr class="towers-row">
-                                            <td><span class="tower-dot warning"></span> <strong class="font-mono">R2-05</strong></td>
-                                            <td>Seattle, WA</td>
+                                            <td><span class="tower-dot warning"></span> <strong class="font-mono">LOC-TX-02</strong></td>
+                                            <td>Texas, USA</td>
                                             <td>
                                                 <div class="tower-load-bar"><div class="load-fill fill-warning" style="width: 81%;"></div></div>
                                                 <small class="font-mono">81%</small>
@@ -594,13 +594,22 @@
                                             <td class="font-mono">1,738</td>
                                         </tr>
                                         <tr class="towers-row">
-                                            <td><span class="tower-dot danger"></span> <strong class="font-mono">H18-406</strong></td>
-                                            <td>San Francisco, CA</td>
+                                            <td><span class="tower-dot danger"></span> <strong class="font-mono">LOC-NY-03</strong></td>
+                                            <td>New York, USA</td>
                                             <td>
-                                                <div class="tower-load-bar"><div class="load-fill fill-danger" style="width: 95%;"></div></div>
-                                                <small class="font-mono">95%</small>
+                                                <div class="tower-load-bar"><div class="load-fill" style="width: 72%;"></div></div>
+                                                <small class="font-mono">72%</small>
                                             </td>
-                                            <td class="font-mono">1,884</td>
+                                            <td class="font-mono">2,140</td>
+                                        </tr>
+                                        <tr class="towers-row">
+                                            <td><span class="tower-dot clean"></span> <strong class="font-mono">LOC-FL-04</strong></td>
+                                            <td>Florida, USA</td>
+                                            <td>
+                                                <div class="tower-load-bar"><div class="load-fill" style="width: 45%;"></div></div>
+                                                <small class="font-mono">45%</small>
+                                            </td>
+                                            <td class="font-mono">1,258</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -610,7 +619,7 @@
                         <!-- Right Column: Chance of Failure Seismograph -->
                         <div class="deck-col deck-col-failure">
                             <div class="failure-top-bar">
-                                <span class="failure-title">CHANCE OF FAILURE</span>
+                                <span class="failure-title">CHANCE OF FAILURE (VELOCITY)</span>
                                 <div class="failure-legend">
                                     <span class="f-dot cyan"></span> Normal
                                     <span class="f-dot red"></span> Spike
@@ -638,22 +647,27 @@
                                     <circle cx="145" cy="25" r="3.5" fill="#ffffff" stroke="#38bdf8" stroke-width="2" />
                                     <circle cx="285" cy="15" r="4" fill="#ef4444" stroke="#ffffff" stroke-width="1.8" />
                                 </svg>
-                                <!-- City callout tags matching Image 4 -->
+                                <!-- City callout tags matching Image 4 (Strictly Project Locations) -->
                                 <div class="failure-pins-row">
                                     <div class="pin-tag">
-                                        <span class="pin-badge">ST 389</span>
-                                        <span class="pin-loc">Los Angeles, CA</span>
+                                        <span class="pin-badge">CA-01</span>
+                                        <span class="pin-loc">California, USA</span>
                                         <small class="pin-time">21-11-02T 13:43:18</small>
                                     </div>
                                     <div class="pin-tag">
-                                        <span class="pin-badge">ST 389</span>
-                                        <span class="pin-loc">Chicago, IL</span>
+                                        <span class="pin-badge">NY-03</span>
+                                        <span class="pin-loc">New York, USA</span>
                                         <small class="pin-time">LAST DOWNLINK</small>
                                     </div>
                                     <div class="pin-tag">
-                                        <span class="pin-badge alert">ST 389</span>
-                                        <span class="pin-loc text-danger">St. Louis, MO</span>
-                                        <small class="pin-time">COLLISION ALERT</small>
+                                        <span class="pin-badge alert">TX-02</span>
+                                        <span class="pin-loc text-danger">Texas, USA</span>
+                                        <small class="pin-time">INTERCEPT ALERT</small>
+                                    </div>
+                                    <div class="pin-tag">
+                                        <span class="pin-badge">FL-04</span>
+                                        <span class="pin-loc">Florida, USA</span>
+                                        <small class="pin-time">CLEARED 14ms</small>
                                     </div>
                                 </div>
                             </div>

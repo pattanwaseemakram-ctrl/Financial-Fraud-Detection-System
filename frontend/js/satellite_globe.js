@@ -7,21 +7,55 @@
 (function () {
     "use strict";
 
-    // Known Coordinates for Project Financial Centers & Image 4 Locations
-    const FINANCIAL_LOCATIONS = {
-        "california": { lat: 36.7783, lon: -119.4179, city: "San Francisco, CA", region: "North America", flag: "🇺🇸", ipPrefix: "240.44", tag: "H18-406" },
-        "texas": { lat: 31.9686, lon: -99.9018, city: "Dallas / Austin, TX", region: "North America", flag: "🇺🇸", ipPrefix: "28.75", tag: "TX-770" },
-        "new york": { lat: 40.7128, lon: -74.0060, city: "New York, NY", region: "North America", flag: "🇺🇸", ipPrefix: "198.51", tag: "NY-501" },
-        "florida": { lat: 27.6648, lon: -81.5158, city: "Miami / Orlando, FL", region: "North America", flag: "🇺🇸", ipPrefix: "172.56", tag: "FL-330" },
-        "illinois": { lat: 40.6331, lon: -89.3985, city: "Chicago, IL", region: "North America", flag: "🇺🇸", ipPrefix: "192.0", tag: "CH-112" },
-        "washington": { lat: 47.7511, lon: -120.7401, city: "Shane Woods, WA", region: "North America", flag: "🇺🇸", ipPrefix: "204.79", tag: "TKV-945K" },
-        "portland": { lat: 45.5152, lon: -122.6784, city: "Portland, OR", region: "North America", flag: "🇺🇸", ipPrefix: "198.22", tag: "T48-001" },
-        "seattle": { lat: 47.6062, lon: -122.3321, city: "Seattle, WA", region: "North America", flag: "🇺🇸", ipPrefix: "204.88", tag: "R2-05" },
-        "los angeles": { lat: 34.0522, lon: -118.2437, city: "Los Angeles, CA", region: "North America", flag: "🇺🇸", ipPrefix: "173.24", tag: "LA-389" },
-        "st louis": { lat: 38.6270, lon: -90.1994, city: "St. Louis, MO", region: "North America", flag: "🇺🇸", ipPrefix: "199.30", tag: "MO-389" },
-        "london": { lat: 51.5074, lon: -0.1278, city: "London, UK", region: "Europe", flag: "🇬🇧", ipPrefix: "185.86", tag: "UK-LON" },
-        "zurich": { lat: 47.3769, lon: 8.5417, city: "Zurich, Switzerland", region: "Europe", flag: "🇨🇭", ipPrefix: "193.134", tag: "CH-ZUR" },
-        "tokyo": { lat: 35.6762, lon: 139.6503, city: "Tokyo, Japan", region: "Asia-Pacific", flag: "🇯🇵", ipPrefix: "133.242", tag: "JP-TYO" },
+    // ============================================================
+    // Strict Project Locations (California, Texas, New York, Florida)
+    // Directly mapped from final_model training features & 197 batch
+    // ============================================================
+    const PROJECT_LOCATIONS = {
+        "california": {
+            lat: 36.7783,
+            lon: -119.4179,
+            city: "California, USA",
+            hub: "Silicon Valley Tech & Banking Hub",
+            flag: "🇺🇸",
+            ipPrefix: "240.44",
+            tag: "LOC-CA-01",
+            load: 95,
+            devices: 1884
+        },
+        "texas": {
+            lat: 31.9686,
+            lon: -99.9018,
+            city: "Texas, USA",
+            hub: "Dallas / Austin Financial District",
+            flag: "🇺🇸",
+            ipPrefix: "28.75",
+            tag: "LOC-TX-02",
+            load: 81,
+            devices: 1738
+        },
+        "new york": {
+            lat: 40.7128,
+            lon: -74.0060,
+            city: "New York, USA",
+            hub: "Wall Street Clearing Center",
+            flag: "🇺🇸",
+            ipPrefix: "198.51",
+            tag: "LOC-NY-03",
+            load: 72,
+            devices: 2140
+        },
+        "florida": {
+            lat: 27.6648,
+            lon: -81.5158,
+            city: "Florida, USA",
+            hub: "Miami Interbank Corridor",
+            flag: "🇺🇸",
+            ipPrefix: "172.56",
+            tag: "LOC-FL-04",
+            load: 45,
+            devices: 1258
+        }
     };
 
     // Core Constants
@@ -95,12 +129,17 @@
     }
 
     function resolveLocation(locStr) {
-        if (!locStr) return FINANCIAL_LOCATIONS["california"];
+        if (!locStr) return PROJECT_LOCATIONS["california"];
         const lower = String(locStr).toLowerCase().trim();
-        for (const key in FINANCIAL_LOCATIONS) {
-            if (lower.includes(key)) return FINANCIAL_LOCATIONS[key];
-        }
-        return FINANCIAL_LOCATIONS["texas"];
+        if (lower.includes("california") || lower.includes("ca")) return PROJECT_LOCATIONS["california"];
+        if (lower.includes("texas") || lower.includes("tx")) return PROJECT_LOCATIONS["texas"];
+        if (lower.includes("new york") || lower.includes("ny")) return PROJECT_LOCATIONS["new york"];
+        if (lower.includes("florida") || lower.includes("fl")) return PROJECT_LOCATIONS["florida"];
+
+        const keys = ["california", "texas", "new york", "florida"];
+        let hash = 0;
+        for (let i = 0; i < lower.length; i++) hash = (hash * 31 + lower.charCodeAt(i)) & 0xffffffff;
+        return PROJECT_LOCATIONS[keys[Math.abs(hash) % keys.length]];
     }
 
     // ============================================================
@@ -458,15 +497,18 @@
     // 1. Red Target Reticle with Leader Line to HUD Box
     // 2. Amber Location Tag: TKV - 945K / Shane Woods, WA
     // ============================================================
+    // ============================================================
+    // Persistent Ground Markers (Strictly Project Locations)
+    // Pins ONLY California, Texas, New York, Florida
+    // ============================================================
     function buildGroundMarkers() {
         groundMarkerGroup = new THREE.Group();
         earthMesh.add(groundMarkerGroup);
 
-        // Default primary target on Texas / North America (Image 4 location)
-        const primaryLoc = FINANCIAL_LOCATIONS["texas"];
+        // 1. Primary Texas Target Reticle (Default Image 4 Project Target)
+        const primaryLoc = PROJECT_LOCATIONS["texas"];
         const pPos = latLonToVector3(primaryLoc.lat, primaryLoc.lon, GLOBE_RADIUS);
 
-        // Red Ground Reticle Crosshair
         const reticleGeo = new THREE.RingGeometry(0.12, 0.16, 24);
         const reticleMat = new THREE.MeshBasicMaterial({
             color: 0xef4444,
@@ -479,28 +521,44 @@
         reticleMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), pPos.clone().normalize());
         groundMarkerGroup.add(reticleMesh);
 
-        // Secondary Tag: Shane Woods, WA (TKV - 945K) as seen in Image 4
-        const waLoc = FINANCIAL_LOCATIONS["washington"];
-        const waPos = latLonToVector3(waLoc.lat, waLoc.lon, GLOBE_RADIUS);
-        const waDotGeo = new THREE.SphereGeometry(0.06, 8, 8);
-        const waDotMat = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
-        const waDot = new THREE.Mesh(waDotGeo, waDotMat);
-        waDot.position.copy(waPos);
-        groundMarkerGroup.add(waDot);
+        // 2. Secondary Amber Beacon on California (Silicon Valley Tech Hub)
+        const caLoc = PROJECT_LOCATIONS["california"];
+        const caPos = latLonToVector3(caLoc.lat, caLoc.lon, GLOBE_RADIUS);
+        const caDotGeo = new THREE.SphereGeometry(0.065, 8, 8);
+        const caDotMat = new THREE.MeshBasicMaterial({ color: 0xf59e0b });
+        const caDot = new THREE.Mesh(caDotGeo, caDotMat);
+        caDot.position.copy(caPos);
+        groundMarkerGroup.add(caDot);
 
-        // Subtly illuminate financial hubs with golden pin lights
-        Object.keys(FINANCIAL_LOCATIONS).forEach((key) => {
-            const loc = FINANCIAL_LOCATIONS[key];
+        // 3. Mark ALL 4 Project Locations with high-visibility glowing beacon pins
+        Object.keys(PROJECT_LOCATIONS).forEach((key) => {
+            const loc = PROJECT_LOCATIONS[key];
             const pos = latLonToVector3(loc.lat, loc.lon, GLOBE_RADIUS);
-            const dotGeo = new THREE.SphereGeometry(0.035, 6, 6);
-            const dotMat = new THREE.MeshBasicMaterial({
-                color: key === "california" || key === "texas" ? 0xef4444 : 0xffd060,
+
+            // Light needle
+            const needleGeo = new THREE.CylinderGeometry(0.012, 0.012, 0.45, 6);
+            const needleMat = new THREE.MeshBasicMaterial({
+                color: key === "texas" ? 0xef4444 : 0x38bdf8,
                 transparent: true,
-                opacity: 0.75,
+                opacity: 0.85,
             });
-            const dot = new THREE.Mesh(dotGeo, dotMat);
-            dot.position.copy(pos);
-            groundMarkerGroup.add(dot);
+            const needle = new THREE.Mesh(needleGeo, needleMat);
+            needle.position.copy(pos.clone().multiplyScalar(1.035));
+            needle.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), pos.clone().normalize());
+            groundMarkerGroup.add(needle);
+
+            // Glowing base ring
+            const baseGeo = new THREE.RingGeometry(0.035, 0.075, 16);
+            const baseMat = new THREE.MeshBasicMaterial({
+                color: key === "texas" ? 0xef4444 : 0x38bdf8,
+                side: THREE.DoubleSide,
+                transparent: true,
+                opacity: 0.9,
+            });
+            const baseMesh = new THREE.Mesh(baseGeo, baseMat);
+            baseMesh.position.copy(pos.clone().multiplyScalar(1.002));
+            baseMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), pos.clone().normalize());
+            groundMarkerGroup.add(baseMesh);
         });
     }
 
@@ -649,7 +707,7 @@
         if (activeInterception) {
             targetPos = activeInterception.localTargetPos.clone().applyEuler(earthMesh.rotation);
         } else {
-            const loc = FINANCIAL_LOCATIONS["texas"];
+            const loc = PROJECT_LOCATIONS["texas"];
             targetPos = latLonToVector3(loc.lat, loc.lon, GLOBE_RADIUS).applyEuler(earthMesh.rotation);
         }
 
@@ -683,20 +741,24 @@
             satStatusPill.className = `sat-telemetry-badge ${isFraud ? 'danger' : 'success'}`;
         }
 
-        // Add row to location tracking docket
+        // Add row to location tracking docket matching Image 4 columns
         const tableBody = document.getElementById("satLocationDocketBody");
         if (tableBody) {
             const row = document.createElement("tr");
-            row.className = isFraud ? "sat-docket-row-danger" : "sat-docket-row-clean";
+            row.className = "towers-row";
+            const loadPct = loc.load || (isFraud ? 95 : 45);
+            const loadClass = isFraud ? "fill-danger" : (loadPct > 70 ? "fill-warning" : "");
             row.innerHTML = `
-                <td><span class="docket-beacon ${isFraud ? 'danger' : 'clean'}"></span> <strong>${loc.flag} ${loc.city}</strong></td>
-                <td class="font-mono">${txId}</td>
-                <td class="font-mono">${loc.lat.toFixed(2)}°, ${loc.lon.toFixed(2)}°</td>
-                <td><span class="status-pill-badge ${isFraud ? 'badge-sev high' : 'badge-sev low'}">${isFraud ? '🚨 FRAUD' : '✔ CLEARED'}</span></td>
-                <td class="font-mono text-muted">14ms</td>
+                <td><span class="tower-dot ${isFraud ? 'danger' : 'warning'}"></span> <strong class="font-mono">${loc.tag}</strong></td>
+                <td>${loc.city}</td>
+                <td>
+                    <div class="tower-load-bar"><div class="load-fill ${loadClass}" style="width: ${loadPct}%;"></div></div>
+                    <small class="font-mono">${loadPct}%</small>
+                </td>
+                <td class="font-mono">${(loc.devices || 1400).toLocaleString()}</td>
             `;
             tableBody.insertBefore(row, tableBody.firstChild);
-            if (tableBody.children.length > 5) tableBody.removeChild(tableBody.lastChild);
+            if (tableBody.children.length > 4) tableBody.removeChild(tableBody.lastChild);
         }
     }
 
@@ -748,16 +810,17 @@
             camera.position.set(0, 4.5, 23);
         });
 
-        // Test Fire Button
+        // Test Fire Button (Certified 197 Transactions from Dataset)
         const btnTestFire = document.getElementById("btnTestFireSatellite");
         if (btnTestFire) {
             btnTestFire.addEventListener("click", () => {
                 const sampleFrauds = [
-                    { transaction_id: "WIRE-9896", location: "Texas", amount: 8450.00, risk_score: 89.0, prediction: "Fraud" },
-                    { transaction_id: "WIRE-3227", location: "California", amount: 12500.00, risk_score: 96.4, prediction: "Fraud" },
-                    { transaction_id: "WIRE-4812", location: "New York", amount: 4890.00, risk_score: 91.2, prediction: "Fraud" },
-                    { transaction_id: "WIRE-7731", location: "London", amount: 32000.00, risk_score: 94.8, prediction: "Fraud" },
-                    { transaction_id: "WIRE-5509", location: "Zurich", amount: 76000.00, risk_score: 98.1, prediction: "Fraud" },
+                    { transaction_id: "T9896", location: "Texas", amount: 1508.20, risk_score: 89.0, prediction: "Fraud" },
+                    { transaction_id: "T3227", location: "California", amount: 91.62, risk_score: 96.4, prediction: "Fraud" },
+                    { transaction_id: "T6414", location: "Florida", amount: 9593.98, risk_score: 98.7, prediction: "Fraud" },
+                    { transaction_id: "T6711", location: "New York", amount: 3921.94, risk_score: 91.2, prediction: "Fraud" },
+                    { transaction_id: "T6369", location: "California", amount: 1712.69, risk_score: 94.1, prediction: "Fraud" },
+                    { transaction_id: "T7768", location: "New York", amount: 4852.90, risk_score: 93.5, prediction: "Fraud" },
                 ];
                 const picked = sampleFrauds[Math.floor(Math.random() * sampleFrauds.length)];
                 triggerSatelliteInterception(picked);
@@ -942,7 +1005,7 @@
         triggerInterception: triggerSatelliteInterception,
         resolveLocation: resolveLocation,
         onResize: onResizeHandler,
-        locations: FINANCIAL_LOCATIONS,
+        locations: PROJECT_LOCATIONS,
     };
 
     if (document.readyState === "loading") {
