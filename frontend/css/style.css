@@ -2846,6 +2846,357 @@ input[type="range"] {
 }
 
 /* ============================================================
+   13.B Project-7: 9-Step Operations Showcase & Docket Styles
+   ============================================================ */
+.project-operations-showcase {
+    position: relative;
+    padding: 26px 30px;
+    margin-bottom: 26px;
+    background: radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.08) 0%, rgba(11, 15, 25, 0.95) 70%);
+    border: 1px solid var(--gold-border);
+    border-radius: var(--radius-md);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(254, 240, 138, 0.2);
+    overflow: hidden;
+}
+
+.project-operations-showcase::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2.5px;
+    background: linear-gradient(90deg, transparent, #38bdf8, #d4af37, #ef4444, transparent);
+}
+
+.showcase-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.showcase-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: #38bdf8;
+    letter-spacing: 0.5px;
+}
+
+.showcase-tech-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.tech-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 3px 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: #cbd5e1;
+}
+
+.tech-tag.primary {
+    background: rgba(212, 175, 55, 0.15);
+    border-color: rgba(212, 175, 55, 0.4);
+    color: #fef08a;
+    font-weight: 600;
+}
+
+.showcase-headline {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1.25;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+
+.showcase-problem-box {
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-left: 3px solid #d4af37;
+    border-radius: 4px;
+    padding: 10px 16px;
+    margin: 10px 0 16px 0;
+    font-size: 12.5px;
+    color: #94a3b8;
+    line-height: 1.5;
+}
+
+.showcase-problem-box strong {
+    color: #e2e8f0;
+}
+
+.showcase-cta-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+}
+
+/* 9-Step Operations Matrix */
+.operations-architecture-strip {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 18px;
+}
+
+.operations-strip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.operations-strip-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--gold-light);
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+}
+
+.operations-grid-9 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+}
+
+.operation-card {
+    background: rgba(11, 17, 30, 0.72);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+}
+
+.operation-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3.5px;
+    height: 100%;
+    background: #475569;
+    transition: background 0.25s ease;
+}
+
+.operation-card:hover {
+    background: rgba(18, 28, 48, 0.9);
+    border-color: rgba(56, 189, 248, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+}
+
+.operation-card:hover::before {
+    background: #38bdf8;
+}
+
+.operation-card.active-step::before {
+    background: #22c55e;
+}
+
+.operation-card.warning-step::before {
+    background: #d4af37;
+}
+
+.operation-card.danger-step::before {
+    background: #ef4444;
+}
+
+.op-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.op-step-badge {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    font-weight: 800;
+    padding: 2px 7px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #38bdf8;
+    letter-spacing: 0.5px;
+}
+
+.op-step-icon {
+    font-size: 15px;
+}
+
+.op-title {
+    font-family: var(--font-heading);
+    font-size: 13px;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 4px;
+}
+
+.op-desc {
+    font-size: 11px;
+    color: #94a3b8;
+    line-height: 1.45;
+    margin-bottom: 10px;
+    flex-grow: 1;
+}
+
+.op-action-link {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--gold-light);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: gap 0.2s ease;
+}
+
+.operation-card:hover .op-action-link {
+    color: #38bdf8;
+    gap: 7px;
+}
+
+/* Project-7 Specification Docket Card (Tab 6) */
+.project-docket-card {
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    border-color: rgba(212, 175, 55, 0.3);
+    background: rgba(12, 18, 30, 0.88);
+}
+
+.docket-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.docket-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.docket-icon {
+    font-size: 24px;
+}
+
+.docket-brand h3 {
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0;
+}
+
+.docket-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.docket-pill {
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 4px;
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    color: #38bdf8;
+}
+
+.docket-meta-table {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.d-meta-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    background: rgba(10, 16, 26, 0.9);
+}
+
+.d-meta-row:nth-child(even) {
+    background: rgba(14, 21, 35, 0.9);
+}
+
+.d-meta-cell {
+    padding: 12px 18px;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.d-meta-cell.label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: #94a3b8;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    background: rgba(6, 10, 18, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.d-meta-cell.value {
+    color: #e2e8f0;
+}
+
+@media (max-width: 1100px) {
+    .operations-grid-9 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .d-meta-row {
+        grid-template-columns: 1fr;
+    }
+    .d-meta-cell.label {
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+}
+
+@media (max-width: 700px) {
+    .operations-grid-9 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================================
    14. Toast Hub
    ============================================================ */
 .toast-hub {
