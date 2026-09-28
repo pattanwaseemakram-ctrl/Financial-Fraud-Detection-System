@@ -68,10 +68,14 @@
     let constellationGroup, constellationSatellites = [], orbitalRings = [];
     let interSatLinkLines;
     let activeSatelliteGroup, activeSatSolarWing, activeSatStrobe, activeSatBeaconLight, activeSatFlareSprite, activeSatPlumes = [];
-    let laserBeamMesh, laserSparks = [];
+    let laserBeamMesh, downlinkAuraMesh, laserSparks = [];
+    let uplinkBeamMesh, uplinkAuraMesh, uplinkPackets = [];
+    let groundLaunchGroup, launchRings = [];
+    let satelliteNeuralHalo, satelliteComputeRings = [], activeSatComputeLight;
     let groundPingGroup, pingRings = [];
     let groundMarkerGroup;
     let activeInterception = null;
+    let activeMovieSequence = null; // Master 3-Phase Cinematic State
 
     // Interaction & Animation State
     let isUserDragging = false;
@@ -82,40 +86,142 @@
     let targetCameraLook = null;
     let currentOrbitAngle = 0.85;
 
-    // Laser Web Audio Synthesizer
+    // ============================================================
+    // Cinematic Movie Web Audio Synthesizer (Uplink -> Inference -> Downlink)
+    // ============================================================
     let audioCtx = null;
-    function playLaserAudio(isFraud) {
+    function playMovieAudio(phase, isFraud) {
         try {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             if (audioCtx.state === "suspended") audioCtx.resume();
             const now = audioCtx.currentTime;
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
 
-            if (isFraud) {
-                // High-priority satellite laser interception chirp
+            if (phase === "uplink") {
+                // Scene 1: Ground-to-Space Doppler Uplink Sweep
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
                 osc.type = "sawtooth";
-                osc.frequency.setValueAtTime(1600, now);
-                osc.frequency.exponentialRampToValueAtTime(140, now + 0.35);
-                gain.gain.setValueAtTime(0.18, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+                osc.frequency.setValueAtTime(220, now);
+                osc.frequency.exponentialRampToValueAtTime(1450, now + 0.85);
+                gain.gain.setValueAtTime(0.01, now);
+                gain.gain.linearRampToValueAtTime(0.14, now + 0.2);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.85);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
                 osc.start(now);
-                osc.stop(now + 0.35);
-            } else {
-                // Low-risk downlink lock
-                osc.type = "sine";
-                osc.frequency.setValueAtTime(680, now);
-                osc.frequency.exponentialRampToValueAtTime(1250, now + 0.2);
-                gain.gain.setValueAtTime(0.1, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
-                osc.start(now);
-                osc.stop(now + 0.2);
+                osc.stop(now + 0.85);
+
+                // Digital data chirp bursts (Ku-Band telemetry packets)
+                [0.1, 0.25, 0.42, 0.6].forEach((delay, idx) => {
+                    const chirp = audioCtx.createOscillator();
+                    const cGain = audioCtx.createGain();
+                    chirp.type = "sine";
+                    chirp.frequency.setValueAtTime(1400 + idx * 280, now + delay);
+                    cGain.gain.setValueAtTime(0.07, now + delay);
+                    cGain.gain.exponentialRampToValueAtTime(0.001, now + delay + 0.08);
+                    chirp.connect(cGain);
+                    cGain.connect(audioCtx.destination);
+                    chirp.start(now + delay);
+                    chirp.stop(now + delay + 0.08);
+                });
+
+            } else if (phase === "inference") {
+                // Scene 2: Deep Orbital Neural Computing Hum + AI Resonance
+                const subOsc = audioCtx.createOscillator();
+                const subGain = audioCtx.createGain();
+                subOsc.type = "triangle";
+                subOsc.frequency.setValueAtTime(85, now);
+                subOsc.frequency.linearRampToValueAtTime(120, now + 0.5);
+                subOsc.frequency.linearRampToValueAtTime(95, now + 1.0);
+                subGain.gain.setValueAtTime(0.02, now);
+                subGain.gain.linearRampToValueAtTime(0.12, now + 0.3);
+                subGain.gain.exponentialRampToValueAtTime(0.001, now + 1.1);
+                subOsc.connect(subGain);
+                subGain.connect(audioCtx.destination);
+                subOsc.start(now);
+                subOsc.stop(now + 1.1);
+
+                // Processing Harmonic Arpeggio
+                [1760, 2200, 2640, 3520].forEach((freq, i) => {
+                    const tick = audioCtx.createOscillator();
+                    const tGain = audioCtx.createGain();
+                    tick.type = "sine";
+                    tick.frequency.setValueAtTime(freq, now + 0.2 + i * 0.12);
+                    tGain.gain.setValueAtTime(0.04, now + 0.2 + i * 0.12);
+                    tGain.gain.exponentialRampToValueAtTime(0.001, now + 0.2 + i * 0.12 + 0.07);
+                    tick.connect(tGain);
+                    tGain.connect(audioCtx.destination);
+                    tick.start(now + 0.2 + i * 0.12);
+                    tick.stop(now + 0.2 + i * 0.12 + 0.07);
+                });
+
+            } else if (phase === "downlink") {
+                // Scene 3: Satellite Return Laser Downlink
+                if (isFraud) {
+                    // Massive Sci-Fi Laser Discharge + Ground Zero Shockwave Boom
+                    const laserOsc = audioCtx.createOscillator();
+                    const laserGain = audioCtx.createGain();
+                    laserOsc.type = "sawtooth";
+                    laserOsc.frequency.setValueAtTime(1850, now);
+                    laserOsc.frequency.exponentialRampToValueAtTime(90, now + 0.45);
+                    laserGain.gain.setValueAtTime(0.22, now);
+                    laserGain.gain.exponentialRampToValueAtTime(0.001, now + 0.45);
+                    laserOsc.connect(laserGain);
+                    laserGain.connect(audioCtx.destination);
+                    laserOsc.start(now);
+                    laserOsc.stop(now + 0.45);
+
+                    // Low-Frequency Ground Impact Boom (Sub-bass rumble)
+                    const boomOsc = audioCtx.createOscillator();
+                    const boomGain = audioCtx.createGain();
+                    boomOsc.type = "sine";
+                    boomOsc.frequency.setValueAtTime(58, now + 0.12);
+                    boomOsc.frequency.exponentialRampToValueAtTime(26, now + 0.9);
+                    boomGain.gain.setValueAtTime(0.28, now + 0.12);
+                    boomGain.gain.exponentialRampToValueAtTime(0.001, now + 0.9);
+                    boomOsc.connect(boomGain);
+                    boomGain.connect(audioCtx.destination);
+                    boomOsc.start(now + 0.12);
+                    boomOsc.stop(now + 0.9);
+
+                    // Urgent Dual Interception Alarm Warble
+                    [0.4, 0.65].forEach((d) => {
+                        const warn = audioCtx.createOscillator();
+                        const wGain = audioCtx.createGain();
+                        warn.type = "square";
+                        warn.frequency.setValueAtTime(880, now + d);
+                        warn.frequency.setValueAtTime(740, now + d + 0.09);
+                        wGain.gain.setValueAtTime(0.06, now + d);
+                        wGain.gain.exponentialRampToValueAtTime(0.001, now + d + 0.18);
+                        warn.connect(wGain);
+                        wGain.connect(audioCtx.destination);
+                        warn.start(now + d);
+                        warn.stop(now + d + 0.18);
+                    });
+                } else {
+                    // Harmonious Emerald Clearance Chime (C-Maj Chord)
+                    [523.25, 659.25, 783.99, 1046.5].forEach((freq, idx) => {
+                        const note = audioCtx.createOscillator();
+                        const nGain = audioCtx.createGain();
+                        note.type = "sine";
+                        note.frequency.setValueAtTime(freq, now + idx * 0.08);
+                        nGain.gain.setValueAtTime(0.09, now + idx * 0.08);
+                        nGain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.6);
+                        note.connect(nGain);
+                        nGain.connect(audioCtx.destination);
+                        note.start(now + idx * 0.08);
+                        note.stop(now + idx * 0.08 + 0.6);
+                    });
+                }
             }
         } catch (e) {
             // Audio policy silently handled
         }
+    }
+
+    // Alias for backward compatibility
+    function playLaserAudio(isFraud) {
+        playMovieAudio("downlink", isFraud);
     }
 
     // Convert Lat/Lon to 3D Cartesian coordinates
@@ -1032,11 +1138,112 @@
     }
 
     // ============================================================
-    // Laser Beam & Ground Concentric Shockwave Rings
+    // Laser Beam, Ground Uplink & Neural Computation Systems
     // ============================================================
     function buildLaserTargetingSystem() {
-        // Red Laser Cylinder
-        const beamGeo = new THREE.CylinderGeometry(0.035, 0.05, 1, 12, 1, true);
+        // --------------------------------------------------------
+        // 1. Scene 1: Ground Uplink Beam & Atmospheric Ionization Aura
+        // --------------------------------------------------------
+        const upGeo = new THREE.CylinderGeometry(0.04, 0.04, 1, 16, 1, true);
+        const upMat = new THREE.MeshBasicMaterial({
+            color: 0x00f0ff,
+            transparent: true,
+            opacity: 0,
+            blending: THREE.AdditiveBlending,
+            side: THREE.DoubleSide,
+        });
+        uplinkBeamMesh = new THREE.Mesh(upGeo, upMat);
+        uplinkBeamMesh.visible = false;
+        scene.add(uplinkBeamMesh);
+
+        const upAuraGeo = new THREE.CylinderGeometry(0.14, 0.14, 1, 16, 1, true);
+        const upAuraMat = new THREE.MeshBasicMaterial({
+            color: 0x38bdf8,
+            transparent: true,
+            opacity: 0,
+            blending: THREE.AdditiveBlending,
+            side: THREE.DoubleSide,
+        });
+        uplinkAuraMesh = new THREE.Mesh(upAuraGeo, upAuraMat);
+        uplinkAuraMesh.visible = false;
+        scene.add(uplinkAuraMesh);
+
+        // Ground Launch Concentric Rings (Radiating upwards from Earth)
+        groundLaunchGroup = new THREE.Group();
+        launchRings = [];
+        for (let i = 0; i < 4; i++) {
+            const ringGeo = new THREE.RingGeometry(0.08, 0.14, 32);
+            const ringMat = new THREE.MeshBasicMaterial({
+                color: 0x00f0ff,
+                transparent: true,
+                opacity: 0,
+                side: THREE.DoubleSide,
+                blending: THREE.AdditiveBlending,
+            });
+            const ring = new THREE.Mesh(ringGeo, ringMat);
+            ring.visible = false;
+            groundLaunchGroup.add(ring);
+            launchRings.push({ mesh: ring, progress: -i * 0.25 });
+        }
+        scene.add(groundLaunchGroup);
+
+        // Traveling Uplink Data Packets (Earth -> Satellite)
+        uplinkPackets = [];
+        for (let i = 0; i < 8; i++) {
+            const pktGeo = new THREE.SphereGeometry(0.085, 8, 8);
+            const pktMat = new THREE.MeshBasicMaterial({
+                color: 0xffffff,
+                transparent: true,
+                opacity: 0.95,
+                blending: THREE.AdditiveBlending,
+            });
+            const pkt = new THREE.Mesh(pktGeo, pktMat);
+            pkt.visible = false;
+            pkt.userData = { prog: (i * 0.125) % 1.0 };
+            scene.add(pkt);
+            uplinkPackets.push(pkt);
+        }
+
+        // --------------------------------------------------------
+        // 2. Scene 2: Satellite Neural Computing Halo & Processor Light
+        // --------------------------------------------------------
+        if (activeSatelliteGroup) {
+            satelliteNeuralHalo = new THREE.Group();
+
+            const ring1Geo = new THREE.TorusGeometry(0.75, 0.024, 12, 48);
+            const ring1Mat = new THREE.MeshBasicMaterial({
+                color: 0x38bdf8,
+                transparent: true,
+                opacity: 0.85,
+                blending: THREE.AdditiveBlending,
+            });
+            const ring1 = new THREE.Mesh(ring1Geo, ring1Mat);
+            satelliteNeuralHalo.add(ring1);
+            satelliteComputeRings.push(ring1);
+
+            const ring2Geo = new THREE.TorusGeometry(0.52, 0.018, 12, 40);
+            const ring2Mat = new THREE.MeshBasicMaterial({
+                color: 0xf59e0b,
+                transparent: true,
+                opacity: 0.9,
+                blending: THREE.AdditiveBlending,
+            });
+            const ring2 = new THREE.Mesh(ring2Geo, ring2Mat);
+            ring2.rotation.x = Math.PI / 4;
+            satelliteNeuralHalo.add(ring2);
+            satelliteComputeRings.push(ring2);
+
+            activeSatComputeLight = new THREE.PointLight(0x38bdf8, 0, 14);
+            satelliteNeuralHalo.add(activeSatComputeLight);
+
+            satelliteNeuralHalo.visible = false;
+            activeSatelliteGroup.add(satelliteNeuralHalo);
+        }
+
+        // --------------------------------------------------------
+        // 3. Scene 3: Satellite Return Laser Downlink & Ground Impact Rings
+        // --------------------------------------------------------
+        const beamGeo = new THREE.CylinderGeometry(0.045, 0.065, 1, 16, 1, true);
         const beamMat = new THREE.MeshBasicMaterial({
             color: 0xef4444,
             transparent: true,
@@ -1048,18 +1255,31 @@
         laserBeamMesh.visible = false;
         scene.add(laserBeamMesh);
 
-        // Traveling Energy Sparks along the beam
+        const downAuraGeo = new THREE.CylinderGeometry(0.18, 0.22, 1, 16, 1, true);
+        const downAuraMat = new THREE.MeshBasicMaterial({
+            color: 0xef4444,
+            transparent: true,
+            opacity: 0,
+            blending: THREE.AdditiveBlending,
+            side: THREE.DoubleSide,
+        });
+        downlinkAuraMesh = new THREE.Mesh(downAuraGeo, downAuraMat);
+        downlinkAuraMesh.visible = false;
+        scene.add(downlinkAuraMesh);
+
+        // Traveling Downlink Sparks along the beam
         laserSparks = [];
-        for (let i = 0; i < 6; i++) {
-            const sparkGeo = new THREE.SphereGeometry(0.075, 8, 8);
+        for (let i = 0; i < 8; i++) {
+            const sparkGeo = new THREE.SphereGeometry(0.08, 8, 8);
             const sparkMat = new THREE.MeshBasicMaterial({
                 color: 0xffffff,
                 transparent: true,
-                opacity: 0,
+                opacity: 0.95,
                 blending: THREE.AdditiveBlending,
             });
             const spark = new THREE.Mesh(sparkGeo, sparkMat);
             spark.visible = false;
+            spark.userData = { prog: (i * 0.125) % 1.0 };
             scene.add(spark);
             laserSparks.push(spark);
         }
@@ -1067,8 +1287,8 @@
         // Concentric Shockwave Rings at Target Ground Zero
         groundPingGroup = new THREE.Group();
         pingRings = [];
-        for (let i = 0; i < 4; i++) {
-            const ringGeo = new THREE.RingGeometry(0.08, 0.12, 32);
+        for (let i = 0; i < 5; i++) {
+            const ringGeo = new THREE.RingGeometry(0.08, 0.14, 32);
             const ringMat = new THREE.MeshBasicMaterial({
                 color: 0xef4444,
                 transparent: true,
@@ -1155,73 +1375,95 @@
     }
 
     // ============================================================
-    // Real-Time Laser Interception Strike on Fraud Detection
+    // Cinematic Movie Simulation Engine (Earth Uplink -> Satellite AI -> Downlink)
     // ============================================================
-    function triggerSatelliteInterception(txData) {
-        if (!scene || !earthMesh) return;
+    function updateMovieHudScene(sceneNum, seq) {
+        const letterbox = document.getElementById("satMovieLetterbox");
+        const movieSceneTag = document.getElementById("movieSceneTag");
+        const movieSubPhase = document.getElementById("movieSubPhase");
+        const movieSubText = document.getElementById("movieSubText");
+        const movieTxIdDisplay = document.getElementById("movieTxIdDisplay");
+        const movieLocDisplay = document.getElementById("movieLocDisplay");
+        const movieDecisionDisplay = document.getElementById("movieDecisionDisplay");
+        const movieTelemetryTag = document.getElementById("movieTelemetryTag");
+
+        if (letterbox) letterbox.style.display = "flex";
+        if (movieTxIdDisplay) movieTxIdDisplay.textContent = seq.txId;
+        if (movieLocDisplay) movieLocDisplay.textContent = seq.loc.city;
+
+        if (sceneNum === 1) {
+            if (movieSceneTag) movieSceneTag.textContent = "SCENE 01: GROUND UPLINK";
+            if (movieSubPhase) movieSubPhase.textContent = "PHASE 1: GROUND TRANSMISSION";
+            if (movieSubText) movieSubText.textContent = `Broadcasting 30 transaction features from ${seq.loc.city} terminal (${seq.loc.ipPrefix}.x) via Ku-Band to Starlink LEO Defense constellation...`;
+            if (movieDecisionDisplay) {
+                movieDecisionDisplay.textContent = "UPLINK TRANSMITTING...";
+                movieDecisionDisplay.className = "text-cyan";
+            }
+            if (movieTelemetryTag) movieTelemetryTag.textContent = "Ku-BAND 14.25 GHz • LATENCY: 12ms";
+        } else if (sceneNum === 2) {
+            if (movieSceneTag) movieSceneTag.textContent = "SCENE 02: ORBITAL ML INFERENCE";
+            if (movieSubPhase) movieSubPhase.textContent = "PHASE 2: SATELLITE NEURAL INFERENCE";
+            if (movieSubText) movieSubText.textContent = `Starlink Project-7 ML Core (Random Forest + Logistic Regression, SMOTE calibrated) computing risk score at T=0.42 cutoff...`;
+            if (movieDecisionDisplay) {
+                movieDecisionDisplay.textContent = "NEURAL INFERENCE ACTIVE...";
+                movieDecisionDisplay.className = "text-yellow";
+            }
+            if (movieTelemetryTag) movieTelemetryTag.textContent = "ORBITAL TPU CORE • LATENCY: 14ms";
+        } else if (sceneNum === 3) {
+            if (movieSceneTag) movieSceneTag.textContent = "SCENE 03: DOWNLINK DIRECTIVE RETURN";
+            if (movieSubPhase) movieSubPhase.textContent = seq.isFraud ? "PHASE 3: THREAT INTERCEPTION & FREEZE" : "PHASE 3: CLEARANCE AUTHORIZATION";
+            if (movieSubText) {
+                movieSubText.textContent = seq.isFraud
+                    ? `VERDICT: SUSPICIOUS (RISK: ${seq.score}%) — AUTOMATED SETTLEMENT FREEZE EXECUTED • ALERT STORED IN POSTGRESQL`
+                    : `VERDICT: LEGITIMATE (RISK: ${seq.score}%) — TRANSACTION AUTHORIZED • CLEARED FOR LEDGER SETTLEMENT`;
+            }
+            if (movieDecisionDisplay) {
+                movieDecisionDisplay.textContent = seq.isFraud ? "THREAT BLOCKED // FROZEN" : "CLEARED // APPROVED";
+                movieDecisionDisplay.className = seq.isFraud ? "text-danger" : "text-green";
+            }
+            if (movieTelemetryTag) movieTelemetryTag.textContent = seq.isFraud ? "INTERCEPTION LOCK: ACTIVE" : "SETTLEMENT: CONFIRMED";
+        }
+    }
+
+    function playCinematicMovie(txData) {
+        if (!scene || !earthMesh || !activeSatelliteGroup) return;
 
         const loc = resolveLocation(txData?.location || txData?.city || "Texas");
-        const isFraud = txData?.prediction === "Fraud" || (txData?.risk_score && txData.risk_score >= 42) || txData?.is_fraud;
+        const isFraud = txData?.prediction === "Fraud" || txData?.prediction === "Suspicious" || (txData?.risk_score !== undefined && Number(txData.risk_score) >= 42) || Boolean(txData?.is_fraud);
         const txId = txData?.transaction_id || `TX-WIRE-${Math.floor(1000 + Math.random() * 9000)}`;
         const amount = Number(txData?.amount || 8450.0).toLocaleString("en-US", { style: "currency", currency: "USD" });
         const score = txData?.risk_score !== undefined ? Number(txData.risk_score).toFixed(1) : (isFraud ? "89.0" : "4.2");
 
-        // 1. Target Vector on Earth Surface
         const localTargetPos = latLonToVector3(loc.lat, loc.lon, GLOBE_RADIUS);
         const worldTargetPos = localTargetPos.clone().applyEuler(earthMesh.rotation);
 
-        // 2. Play Audio Cue
-        playLaserAudio(isFraud);
+        // Position Active Satellite directly above target prograde
+        currentOrbitAngle = Math.atan2(worldTargetPos.z, worldTargetPos.x) + 0.38;
 
-        // 3. Configure Laser Colors
-        const beamColor = isFraud ? 0xef4444 : 0x10b981;
-        laserBeamMesh.material.color.setHex(beamColor);
-        laserBeamMesh.visible = true;
-        laserBeamMesh.material.opacity = 1.0;
-
-        // Position Active Satellite directly above the target region
-        currentOrbitAngle = Math.atan2(worldTargetPos.z, worldTargetPos.x) + 0.35;
-
-        // Configure Traveling Energy Sparks
-        laserSparks.forEach((spark, idx) => {
-            spark.visible = true;
-            spark.material.color.setHex(0xffffff);
-            spark.userData = { prog: (idx * 0.18) % 1.0 };
-        });
-
-        // Configure Concentric Impact Rings
-        groundPingGroup.position.copy(worldTargetPos);
-        groundPingGroup.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), worldTargetPos.clone().normalize());
-        pingRings.forEach((p, idx) => {
-            p.mesh.visible = true;
-            p.mesh.material.color.setHex(beamColor);
-            p.mesh.material.opacity = 1.0;
-            p.mesh.scale.set(1, 1, 1);
-            p.progress = -idx * 0.25;
-        });
-
-        // 4. Save Interception State
-        activeInterception = {
-            duration: 210, // ~3.5 seconds at 60 FPS
+        activeMovieSequence = {
+            totalDuration: 380,
             frame: 0,
-            worldTargetPos: worldTargetPos,
-            localTargetPos: localTargetPos,
-            locData: loc,
+            phase: 1,
+            loc: loc,
+            isFraud: isFraud,
             txId: txId,
             amount: amount,
             score: score,
-            isFraud: isFraud,
+            localTargetPos: localTargetPos,
+            worldTargetPos: worldTargetPos,
         };
 
-        // 5. Smoothly Rotate Earth so Target Faces Viewer (Matching Image 4 Angle)
+        // Initialize HUD & Scene 1 Audio
+        updateMovieHudScene(1, activeMovieSequence);
+        playMovieAudio("uplink");
+
+        // Smoothly rotate Earth so target faces viewer
         const targetRotY = -(loc.lon * Math.PI) / 180 + Math.PI * 0.95;
-        smoothRotateEarthTo(targetRotY, 1100);
+        smoothRotateEarthTo(targetRotY, 1200);
+    }
 
-        // 6. Update Image 4 Floating HUD Box
-        updateImage4HudCard(loc, txId, amount, score, isFraud);
-
-        // 7. Update Telemetry UI Displays
-        updateHeaderAndDeckTelemetry(loc, txId, isFraud);
+    function triggerSatelliteInterception(txData) {
+        playCinematicMovie(txData);
     }
 
     // Smooth Earth Rotation Helper
@@ -1402,20 +1644,29 @@
             camera.position.set(0, 4.5, 23);
         });
 
-        // Test Fire Button (Certified 197 Transactions from Dataset)
+        // Cinematic Movie Play Button & Test Fire Button
+        const sampleFrauds = [
+            { transaction_id: "T9896", location: "Texas", amount: 1508.20, risk_score: 89.0, prediction: "Fraud" },
+            { transaction_id: "T3227", location: "California", amount: 91.62, risk_score: 96.4, prediction: "Fraud" },
+            { transaction_id: "T6414", location: "Florida", amount: 9593.98, risk_score: 98.7, prediction: "Fraud" },
+            { transaction_id: "T6711", location: "New York", amount: 3921.94, risk_score: 91.2, prediction: "Fraud" },
+            { transaction_id: "T6369", location: "California", amount: 1712.69, risk_score: 94.1, prediction: "Fraud" },
+            { transaction_id: "T7768", location: "New York", amount: 4852.90, risk_score: 93.5, prediction: "Fraud" },
+        ];
+
+        const btnPlayMovie = document.getElementById("btnPlayMovieInterception");
+        if (btnPlayMovie) {
+            btnPlayMovie.addEventListener("click", () => {
+                const picked = sampleFrauds[Math.floor(Math.random() * sampleFrauds.length)];
+                playCinematicMovie(picked);
+            });
+        }
+
         const btnTestFire = document.getElementById("btnTestFireSatellite");
         if (btnTestFire) {
             btnTestFire.addEventListener("click", () => {
-                const sampleFrauds = [
-                    { transaction_id: "T9896", location: "Texas", amount: 1508.20, risk_score: 89.0, prediction: "Fraud" },
-                    { transaction_id: "T3227", location: "California", amount: 91.62, risk_score: 96.4, prediction: "Fraud" },
-                    { transaction_id: "T6414", location: "Florida", amount: 9593.98, risk_score: 98.7, prediction: "Fraud" },
-                    { transaction_id: "T6711", location: "New York", amount: 3921.94, risk_score: 91.2, prediction: "Fraud" },
-                    { transaction_id: "T6369", location: "California", amount: 1712.69, risk_score: 94.1, prediction: "Fraud" },
-                    { transaction_id: "T7768", location: "New York", amount: 4852.90, risk_score: 93.5, prediction: "Fraud" },
-                ];
                 const picked = sampleFrauds[Math.floor(Math.random() * sampleFrauds.length)];
-                triggerSatelliteInterception(picked);
+                playCinematicMovie(picked);
             });
         }
 
@@ -1575,8 +1826,215 @@
             }
         }
 
-        // 5. Active Laser Interception Lifecycle
-        if (activeInterception) {
+        // 5. Cinematic 3-Phase Movie Sequence Engine (Earth Uplink -> Orbital AI -> Return Downlink)
+        if (activeMovieSequence) {
+            const seq = activeMovieSequence;
+            seq.frame++;
+
+            const currentGroundTarget = seq.localTargetPos
+                ? seq.localTargetPos.clone().applyEuler(earthMesh.rotation)
+                : seq.worldTargetPos;
+
+            const satPos = activeSatelliteGroup.position.clone();
+            const beamDist = satPos.distanceTo(currentGroundTarget);
+            const beamMidpoint = satPos.clone().add(currentGroundTarget).multiplyScalar(0.5);
+            const beamNormal = currentGroundTarget.clone().sub(satPos).normalize();
+
+            // -------------------------------------------------------------
+            // SCENE 1: Ground-to-Satellite Uplink (Frames 1 to 110, ~1.8s)
+            // -------------------------------------------------------------
+            if (seq.frame <= 110) {
+                seq.phase = 1;
+
+                // Ground Launch Concentric Rings radiating upwards from Earth
+                groundLaunchGroup.position.copy(currentGroundTarget);
+                groundLaunchGroup.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), currentGroundTarget.clone().normalize());
+                launchRings.forEach((lr) => {
+                    lr.mesh.visible = true;
+                    lr.progress += 0.035;
+                    const rProg = (lr.progress > 0) ? (lr.progress % 1.0) : 0;
+                    lr.mesh.scale.set(1 + rProg * 4.2, 1 + rProg * 4.2, 1);
+                    lr.mesh.material.opacity = Math.max(0, 0.95 - rProg * 0.95);
+                });
+
+                // Uplink beam grows from Earth upward toward satellite
+                const growthProg = Math.min(seq.frame / 75, 1.0);
+                const currentUplinkEnd = currentGroundTarget.clone().lerp(satPos, growthProg);
+                const upDist = currentGroundTarget.distanceTo(currentUplinkEnd);
+                const upMid = currentGroundTarget.clone().add(currentUplinkEnd).multiplyScalar(0.5);
+                const upDir = currentUplinkEnd.clone().sub(currentGroundTarget).normalize();
+
+                uplinkBeamMesh.visible = true;
+                uplinkAuraMesh.visible = true;
+                uplinkBeamMesh.scale.set(1, upDist, 1);
+                uplinkAuraMesh.scale.set(1, upDist, 1);
+                uplinkBeamMesh.position.copy(upMid);
+                uplinkAuraMesh.position.copy(upMid);
+                const upQuat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), upDir);
+                uplinkBeamMesh.quaternion.copy(upQuat);
+                uplinkAuraMesh.quaternion.copy(upQuat);
+                uplinkBeamMesh.material.opacity = 0.95;
+                uplinkAuraMesh.material.opacity = 0.35 + Math.sin(seq.frame * 0.2) * 0.15;
+
+                // Uplink packets surge upward from Earth to Space
+                uplinkPackets.forEach((pkt) => {
+                    pkt.visible = true;
+                    pkt.userData.prog = (pkt.userData.prog + 0.045) % 1.0;
+                    const pktPos = currentGroundTarget.clone().lerp(satPos, pkt.userData.prog * growthProg);
+                    pkt.position.copy(pktPos);
+                });
+
+                // Camera Scene 1: Dramatic Low Orbital Launch Perspective (Track upward from Earth to Space)
+                const scene1CamTarget = currentGroundTarget.clone().multiplyScalar(1.68).add(new THREE.Vector3(2.6, 2.2, 2.8));
+                camera.position.lerp(scene1CamTarget, 0.065);
+                const scene1Look = currentGroundTarget.clone().add(satPos.clone().sub(currentGroundTarget).multiplyScalar(0.42));
+                camera.lookAt(scene1Look);
+
+                // Ensure downlink elements are hidden during Scene 1
+                laserBeamMesh.visible = false;
+                downlinkAuraMesh.visible = false;
+                laserSparks.forEach((s) => (s.visible = false));
+                pingRings.forEach((p) => (p.mesh.visible = false));
+                if (activeSatComputeLight) activeSatComputeLight.intensity = 0;
+                if (satelliteNeuralHalo) satelliteNeuralHalo.visible = false;
+
+            // -------------------------------------------------------------
+            // SCENE 2: Orbital Satellite ML Inference (Frames 111 to 220, ~1.8s)
+            // -------------------------------------------------------------
+            } else if (seq.frame <= 220) {
+                if (seq.phase === 1) {
+                    seq.phase = 2;
+                    playMovieAudio("inference");
+                    updateMovieHudScene(2, seq);
+                }
+
+                // Dissolve uplink elements
+                uplinkBeamMesh.visible = false;
+                uplinkAuraMesh.visible = false;
+                uplinkPackets.forEach((p) => (p.visible = false));
+                launchRings.forEach((lr) => (lr.mesh.visible = false));
+
+                // Spin satellite neural computation rings
+                if (satelliteNeuralHalo) {
+                    satelliteNeuralHalo.visible = true;
+                    satelliteComputeRings.forEach((ring, idx) => {
+                        ring.rotation.x += (idx === 0 ? 0.08 : -0.11);
+                        ring.rotation.y += (idx === 0 ? 0.06 : 0.09);
+                        ring.rotation.z += 0.04;
+                    });
+                }
+
+                // Pulse computing processor light
+                if (activeSatComputeLight) {
+                    activeSatComputeLight.intensity = 2.8 + Math.sin(seq.frame * 0.45) * 1.8;
+                    activeSatComputeLight.color.setHex(0x38bdf8);
+                }
+
+                // Camera Scene 2: Cinematic Satellite Chase View (Look over satellite wing with Earth below)
+                const satRot = activeSatelliteGroup.quaternion;
+                const localChaseOffset = new THREE.Vector3(3.2, 1.6, 4.4);
+                const worldChaseCam = satPos.clone().add(localChaseOffset.applyQuaternion(satRot));
+                camera.position.lerp(worldChaseCam, 0.075);
+                const lookSatOffset = new THREE.Vector3(-0.35, 0.2, 0).applyQuaternion(satRot);
+                camera.lookAt(satPos.clone().add(lookSatOffset));
+
+            // -------------------------------------------------------------
+            // SCENE 3: Downlink Return & Ground Interception (Frames 221 to 350, ~2.2s)
+            // -------------------------------------------------------------
+            } else if (seq.frame <= 350) {
+                if (seq.phase === 2) {
+                    seq.phase = 3;
+                    playMovieAudio("downlink", seq.isFraud);
+                    updateMovieHudScene(3, seq);
+
+                    // Trigger Image 4 floating callout card & location docket
+                    updateImage4HudCard(seq.loc, seq.txId, seq.amount, seq.score, seq.isFraud);
+                    updateHeaderAndDeckTelemetry(seq.loc, seq.txId, seq.isFraud);
+                }
+
+                // Satellite Neural Halo flashes in result color
+                const resultColor = seq.isFraud ? 0xef4444 : 0x10b981;
+                if (activeSatComputeLight) {
+                    activeSatComputeLight.color.setHex(resultColor);
+                    activeSatComputeLight.intensity = 3.5;
+                }
+
+                // Fire Downlink Return Beam from Satellite to Earth
+                laserBeamMesh.visible = true;
+                downlinkAuraMesh.visible = true;
+                laserBeamMesh.material.color.setHex(resultColor);
+                downlinkAuraMesh.material.color.setHex(resultColor);
+
+                laserBeamMesh.scale.set(1, beamDist, 1);
+                downlinkAuraMesh.scale.set(1, beamDist, 1);
+                laserBeamMesh.position.copy(beamMidpoint);
+                downlinkAuraMesh.position.copy(beamMidpoint);
+                const downQuat = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), beamNormal);
+                laserBeamMesh.quaternion.copy(downQuat);
+                downlinkAuraMesh.quaternion.copy(downQuat);
+                laserBeamMesh.material.opacity = 1.0;
+                downlinkAuraMesh.material.opacity = 0.45;
+
+                // Downward sparks racing toward Earth
+                laserSparks.forEach((spark) => {
+                    spark.visible = true;
+                    spark.material.color.setHex(0xffffff);
+                    spark.userData.prog = (spark.userData.prog + 0.05) % 1.0;
+                    spark.position.copy(satPos.clone().lerp(currentGroundTarget, spark.userData.prog));
+                });
+
+                // Concentric Shockwave Rings on Target Ground Zero
+                groundPingGroup.position.copy(currentGroundTarget);
+                groundPingGroup.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), currentGroundTarget.clone().normalize());
+                pingRings.forEach((p) => {
+                    p.mesh.visible = true;
+                    p.mesh.material.color.setHex(resultColor);
+                    p.progress += 0.03;
+                    if (p.progress > 0) {
+                        const ringProg = p.progress % 1.0;
+                        p.mesh.scale.set(1 + ringProg * 4.8, 1 + ringProg * 4.8, 1);
+                        p.mesh.material.opacity = Math.max(0, 1 - ringProg);
+                    }
+                });
+
+                // Camera Scene 3: Wide Panoramic Orbital Lock (Frames both satellite in high orbit and glowing Earth target)
+                const scene3CamTarget = currentGroundTarget.clone().multiplyScalar(2.15).add(new THREE.Vector3(-1.8, 4.2, 4.0));
+                camera.position.lerp(scene3CamTarget, 0.045);
+                camera.lookAt(currentGroundTarget.clone().add(satPos).multiplyScalar(0.5));
+
+            // -------------------------------------------------------------
+            // SCENE 4: Fade-out & Cinematic Wrap-up (Frames 351 to 380)
+            // -------------------------------------------------------------
+            } else if (seq.frame <= 380) {
+                const fadeProg = (seq.frame - 350) / 30;
+                laserBeamMesh.material.opacity = Math.max(0, 1 - fadeProg);
+                downlinkAuraMesh.material.opacity = Math.max(0, 0.45 * (1 - fadeProg));
+                if (activeSatComputeLight) activeSatComputeLight.intensity = Math.max(0, 3.5 * (1 - fadeProg));
+                if (satelliteNeuralHalo) satelliteNeuralHalo.visible = false;
+                laserSparks.forEach((s) => (s.visible = false));
+                pingRings.forEach((p) => (p.mesh.visible = false));
+
+                // Return camera smoothly toward user default
+                camera.position.lerp(new THREE.Vector3(0, 4.5, 23), 0.03);
+                camera.lookAt(0, 0, 0);
+
+            } else {
+                // Complete Sequence
+                laserBeamMesh.visible = false;
+                downlinkAuraMesh.visible = false;
+                activeMovieSequence = null;
+
+                // Auto-hide letterbox after 4 seconds
+                const letterbox = document.getElementById("satMovieLetterbox");
+                if (letterbox) {
+                    setTimeout(() => {
+                        if (!activeMovieSequence) letterbox.style.display = "none";
+                    }, 4000);
+                }
+            }
+
+        // Fallback for standard interception if activeMovieSequence is not set
+        } else if (activeInterception) {
             activeInterception.frame++;
 
             const currentGroundTarget = activeInterception.localTargetPos
@@ -1584,20 +2042,16 @@
                 : activeInterception.worldTargetPos;
 
             const satPos = activeSatelliteGroup.position.clone();
-
-            // Connect cylinder beam between active Starlink satellite and ground zero
             const beamDist = satPos.distanceTo(currentGroundTarget);
             laserBeamMesh.scale.set(1, beamDist, 1);
             laserBeamMesh.position.copy(satPos.clone().add(currentGroundTarget).multiplyScalar(0.5));
             laserBeamMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), currentGroundTarget.clone().sub(satPos).normalize());
 
-            // Animate Traveling Spark Packets
             laserSparks.forEach((spark) => {
                 spark.userData.prog = (spark.userData.prog + 0.04) % 1.0;
                 spark.position.copy(satPos.clone().lerp(currentGroundTarget, spark.userData.prog));
             });
 
-            // Animate Concentric Shockwave Rings on Target
             groundPingGroup.position.copy(currentGroundTarget);
             pingRings.forEach((p) => {
                 p.progress += 0.025;
@@ -1608,7 +2062,6 @@
                 }
             });
 
-            // Expire laser
             if (activeInterception.frame > activeInterception.duration) {
                 laserBeamMesh.visible = false;
                 laserSparks.forEach((s) => (s.visible = false));
@@ -1617,31 +2070,27 @@
             }
         }
 
-        // 6. Camera Modes
-        if (cameraMode === "chase" && activeSatelliteGroup) {
-            // Position camera offset to reproduce the exact cinematic Starlink angle from reference image:
-            // satellite chassis in center-left, solar wing pointing up-left, Earth horizon curving in lower right
-            const satPos = activeSatelliteGroup.position.clone();
-            const satRot = activeSatelliteGroup.quaternion;
+        // 6. Camera Modes (Only active when movie sequence is not controlling the camera)
+        if (!activeMovieSequence) {
+            if (cameraMode === "chase" && activeSatelliteGroup) {
+                const satPos = activeSatelliteGroup.position.clone();
+                const satRot = activeSatelliteGroup.quaternion;
+                const localCamOffset = new THREE.Vector3(3.2, 1.6, 4.2);
+                const worldCamOffset = localCamOffset.clone().applyQuaternion(satRot);
+                const targetCamPos = satPos.clone().add(worldCamOffset);
 
-            // Offset in satellite's local frame:
-            // X: +3.2 (starboard), Y: +1.6 (above), Z: +4.2 (forward)
-            const localCamOffset = new THREE.Vector3(3.2, 1.6, 4.2);
-            const worldCamOffset = localCamOffset.clone().applyQuaternion(satRot);
-            const targetCamPos = satPos.clone().add(worldCamOffset);
-
-            camera.position.lerp(targetCamPos, 0.08);
-
-            // Look at satellite center, slightly offset to keep Earth in frame
-            const localLookOffset = new THREE.Vector3(-0.35, 0.2, 0);
-            const worldLookTarget = satPos.clone().add(localLookOffset.applyQuaternion(satRot));
-            camera.lookAt(worldLookTarget);
-        } else if (cameraMode === "target" && activeInterception) {
-            const desiredPos = activeInterception.worldTargetPos.clone().multiplyScalar(2.1);
-            camera.position.lerp(desiredPos, 0.04);
-            camera.lookAt(activeInterception.worldTargetPos);
-        } else {
-            camera.lookAt(0, 0, 0);
+                camera.position.lerp(targetCamPos, 0.08);
+                const localLookOffset = new THREE.Vector3(-0.35, 0.2, 0);
+                const worldLookTarget = satPos.clone().add(localLookOffset.applyQuaternion(satRot));
+                camera.lookAt(worldLookTarget);
+            } else if (cameraMode === "target" && (activeInterception || activeMovieSequence)) {
+                const targetRef = activeMovieSequence ? activeMovieSequence.worldTargetPos : activeInterception.worldTargetPos;
+                const desiredPos = targetRef.clone().multiplyScalar(2.1);
+                camera.position.lerp(desiredPos, 0.04);
+                camera.lookAt(targetRef);
+            } else {
+                camera.lookAt(0, 0, 0);
+            }
         }
 
         // 7. Update Projected 2D HUD Box Location
@@ -1657,6 +2106,7 @@
     window.SatelliteDefense = {
         init: initSatelliteTheater,
         triggerInterception: triggerSatelliteInterception,
+        playCinematicMovie: playCinematicMovie,
         resolveLocation: resolveLocation,
         onResize: onResizeHandler,
         locations: PROJECT_LOCATIONS,

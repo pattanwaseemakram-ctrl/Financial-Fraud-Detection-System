@@ -4281,3 +4281,205 @@ input[type="range"] {
     .sat-theater-actions { width: 100%; justify-content: space-between; }
     .sat-viewport-container { height: 400px; min-height: 400px; }
 }
+
+/* ============================================================
+   17. Cinematic Movie Mode & Orbital Defense Letterbox
+   ============================================================ */
+.sat-movie-btn {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.9), rgba(217, 119, 6, 0.95)) !important;
+    border: 1px solid #f59e0b !important;
+    color: #0b0f19 !important;
+    font-weight: 700 !important;
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.45) !important;
+    letter-spacing: 0.5px;
+    transition: all 0.25s ease;
+}
+
+.sat-movie-btn:hover {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 0 24px rgba(245, 158, 11, 0.7) !important;
+}
+
+.sat-movie-letterbox {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 30;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    animation: movieFadeIn 0.4s ease-out;
+}
+
+@keyframes movieFadeIn {
+    from { opacity: 0; transform: scale(0.99); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.movie-bar-top {
+    height: 46px;
+    background: rgba(4, 8, 18, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(56, 189, 248, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+.movie-meta-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.movie-rec-dot {
+    color: #ef4444;
+    font-size: 16px;
+    line-height: 1;
+    animation: movieRecPulse 1.1s infinite ease-in-out;
+}
+
+@keyframes movieRecPulse {
+    0%, 100% { opacity: 1; filter: drop-shadow(0 0 7px #ef4444); }
+    50% { opacity: 0.2; filter: none; }
+}
+
+.movie-rec-txt {
+    color: #ef4444;
+    font-weight: 800;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+.movie-scene-tag {
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.45);
+    color: #38bdf8;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+}
+
+.movie-meta-center {
+    color: #f59e0b;
+    font-size: 11.5px;
+    font-weight: 800;
+    letter-spacing: 1.8px;
+    text-shadow: 0 0 10px rgba(245, 158, 11, 0.35);
+}
+
+.movie-meta-right {
+    color: #94a3b8;
+    font-size: 11px;
+    letter-spacing: 0.8px;
+}
+
+/* Center Cinematic Crosshair Brackets */
+.movie-reticle-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    pointer-events: none;
+}
+
+.movie-crosshair-bracket {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: rgba(56, 189, 248, 0.7);
+    border-style: solid;
+}
+
+.movie-crosshair-bracket.tl { top: 0; left: 0; border-width: 2px 0 0 2px; }
+.movie-crosshair-bracket.tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
+.movie-crosshair-bracket.bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+.movie-crosshair-bracket.br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+
+.movie-center-pip {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 4px;
+    height: 4px;
+    background: #38bdf8;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #38bdf8;
+}
+
+/* Bottom Cinema Subtitle Bar */
+.movie-bar-bottom {
+    background: rgba(4, 8, 18, 0.94);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid rgba(56, 189, 248, 0.3);
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.7);
+}
+
+.movie-subtitle-card {
+    flex: 1;
+    min-width: 0;
+}
+
+.movie-sub-phase {
+    color: #f59e0b;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    text-shadow: 0 0 8px rgba(245, 158, 11, 0.3);
+}
+
+.movie-sub-text {
+    color: #f8fafc;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.45;
+    letter-spacing: 0.3px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
+}
+
+.movie-live-metrics {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 220px;
+    font-size: 11.5px;
+    text-align: right;
+    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    padding-left: 18px;
+}
+
+.movie-metric-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+@media (max-width: 768px) {
+    .movie-bar-top { flex-direction: column; height: auto; padding: 8px 12px; gap: 4px; }
+    .movie-meta-center { display: none; }
+    .movie-bar-bottom { flex-direction: column; align-items: flex-start; gap: 10px; padding: 10px 14px; }
+    .movie-live-metrics { border-left: none; padding-left: 0; text-align: left; width: 100%; }
+    .movie-metric-row { justify-content: flex-start; }
+}

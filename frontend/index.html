@@ -509,6 +509,10 @@
                                 <button type="button" id="btnCamChase" class="btn-sat-cam" title="Satellite Chase Camera">🛰️ Sat Cam</button>
                                 <button type="button" id="btnCamTarget" class="btn-sat-cam" title="Target City Lock">🎯 Target</button>
                             </div>
+                            <button type="button" id="btnPlayMovieInterception" class="btn btn-warning btn-sm sat-fire-btn sat-movie-btn" title="Watch full 3-phase cinematic movie: Earth Uplink -> Orbital AI Inference -> Satellite Downlink Strike">
+                                <span class="btn-sheen"></span>
+                                <span>🎬 Play Cinematic Movie</span>
+                            </button>
                             <button type="button" id="btnTestFireSatellite" class="btn btn-primary btn-sm sat-fire-btn" title="Simulate Real-Time Satellite Laser Interception">
                                 <span class="btn-sheen"></span>
                                 <span>⚡ Intercept Test Fraud</span>
@@ -519,6 +523,51 @@
                     <!-- 3D Three.js Globe Stage with Image 4 Glass Overlays -->
                     <div id="satelliteTheaterContainer" class="sat-viewport-container">
                         <!-- Three.js Canvas injected dynamically here -->
+
+                        <!-- Cinematic 4K Movie Letterbox & Director HUD (Real-Time Earth <-> Satellite Stream) -->
+                        <div id="satMovieLetterbox" class="sat-movie-letterbox" style="display: none;">
+                            <!-- Top Cinema Bar -->
+                            <div class="movie-bar-top">
+                                <div class="movie-meta-left">
+                                    <span class="movie-rec-dot">●</span>
+                                    <span class="movie-rec-txt font-mono">REC LIVE</span>
+                                    <span class="movie-scene-tag font-mono" id="movieSceneTag">SCENE 01: GROUND UPLINK</span>
+                                </div>
+                                <div class="movie-meta-center font-mono">PROJECT-7: SATELLITE FRAUD INTERCEPTION CINEMA</div>
+                                <div class="movie-meta-right font-mono" id="movieTelemetryTag">Ku-BAND 14.25 GHz • LATENCY: 14ms</div>
+                            </div>
+
+                            <!-- Center Reticle Framing -->
+                            <div class="movie-reticle-center">
+                                <div class="movie-crosshair-bracket tl"></div>
+                                <div class="movie-crosshair-bracket tr"></div>
+                                <div class="movie-crosshair-bracket bl"></div>
+                                <div class="movie-crosshair-bracket br"></div>
+                                <div class="movie-center-pip"></div>
+                            </div>
+
+                            <!-- Bottom Cinema Bar with Live Dynamic Subtitles -->
+                            <div class="movie-bar-bottom">
+                                <div class="movie-subtitle-card">
+                                    <div class="movie-sub-phase font-mono" id="movieSubPhase">PHASE 1: GROUND TRANSMISSION</div>
+                                    <div class="movie-sub-text" id="movieSubText">Transmitting transaction telemetry from ground station to Starlink LEO Defense constellation...</div>
+                                </div>
+                                <div class="movie-live-metrics font-mono">
+                                    <div class="movie-metric-row">
+                                        <span class="text-muted">WIRE:</span>
+                                        <strong id="movieTxIdDisplay" class="text-white">TX-WIRE-9896</strong>
+                                    </div>
+                                    <div class="movie-metric-row">
+                                        <span class="text-muted">NODE:</span>
+                                        <strong id="movieLocDisplay" class="text-cyan">Texas, USA</strong>
+                                    </div>
+                                    <div class="movie-metric-row">
+                                        <span class="text-muted">STATUS:</span>
+                                        <strong id="movieDecisionDisplay" class="text-warning">UPLINK TRANSMITTING...</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- 1:1 Tactical Starlink Flight HUD Overlay (Activated in 🛰️ Sat Cam Mode) -->
                         <div id="satCamTacticalHud" class="sat-cam-tactical-hud" style="display: none;">
@@ -1068,7 +1117,6 @@
                                         <option value="New York">New York, USA</option>
                                         <option value="Texas">Texas, USA</option>
                                         <option value="Florida" selected>Florida, USA</option>
-                                        <option value="Illinois">Illinois, USA</option>
                                     </select>
                                 </div>
                             </div>
@@ -1136,9 +1184,14 @@
                                 <input id="wireThreshold" type="range" min="0.10" max="0.90" step="0.01" value="0.42">
                             </div>
 
-                            <button id="btnExecuteScoring" class="btn btn-primary btn-full btn-lg" type="submit">
-                                <span class="btn-icon">⚡</span> Intercept & Score Payment via Machine Learning
-                            </button>
+                            <div class="wire-action-group" style="display:flex;gap:12px;margin-top:16px;">
+                                <button id="btnExecuteScoring" class="btn btn-primary btn-lg" type="submit" style="flex:1;">
+                                    <span class="btn-icon">⚡</span> Intercept &amp; Score
+                                </button>
+                                <button id="btnExecuteMoviePrediction" class="btn btn-warning btn-lg" type="button" style="flex:1;" title="Trigger the full Earth-to-Satellite Uplink, Orbital ML inference, and Downlink return laser movie!">
+                                    <span class="btn-icon">🎬</span> Predict &amp; Watch Cinema
+                                </button>
+                            </div>
                         </form>
                     </div>
 

@@ -828,7 +828,7 @@
             showToast(`Scoring Error: ${error.message}`, "error");
         } finally {
             btnExecuteScoring.disabled = false;
-            btnExecuteScoring.innerHTML = `<span class="btn-icon">⚡</span> Intercept & Score Payment via Machine Learning`;
+            btnExecuteScoring.innerHTML = `<span class="btn-icon">⚡</span> Intercept &amp; Score`;
         }
     }
 
@@ -1418,6 +1418,24 @@
 
         // Payment Scoring Form
         if (wireTransferForm) wireTransferForm.addEventListener("submit", executeWireScoring);
+
+        const btnExecuteMoviePrediction = document.getElementById("btnExecuteMoviePrediction");
+        if (btnExecuteMoviePrediction) {
+            btnExecuteMoviePrediction.addEventListener("click", async () => {
+                // Trigger live wire payment scoring & prediction
+                await executeWireScoring();
+                // Smoothly focus on Step 9 3D Orbital Theater to watch the full cinematic movie!
+                if (window.BankingTerminal && typeof window.BankingTerminal.switchTab === "function") {
+                    window.BankingTerminal.switchTab("cockpit");
+                }
+                setTimeout(() => {
+                    const theater = document.getElementById("satelliteTheaterContainer");
+                    if (theater) {
+                        theater.scrollIntoView({ behavior: "smooth", block: "center" });
+                    }
+                }, 200);
+            });
+        }
 
         // Live Feed Controls
         if (btnToggleLiveFeed) btnToggleLiveFeed.addEventListener("click", toggleLiveFeed);
