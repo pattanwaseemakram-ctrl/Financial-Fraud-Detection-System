@@ -393,22 +393,29 @@
                 <!-- ======================================================
                      SATELLITE INTELLIGENCE & GLOBAL FRAUD DEFENSE THEATER (Image 4 Style)
                 ======================================================= -->
+                <!-- ======================================================
+                     SATELLITE INTELLIGENCE & GLOBAL FRAUD DEFENSE THEATER
+                     (1:1 Fuselab Creative CyberDefend Starlink Architecture)
+                ======================================================= -->
                 <div class="satellite-defense-theater glass-card">
-                    <!-- Theater Header Strip -->
+                    <!-- Theater Header Strip (Matching Image 4) -->
                     <div class="sat-theater-header">
                         <div class="sat-brand-block">
                             <div class="sat-icon-circle">
-                                <span>🛰️</span>
+                                <span>⬢</span>
                             </div>
-                            <div>
-                                <div class="sat-badge-row">
-                                    <span class="sat-prefix">ORBITAL RECONNAISSANCE</span>
-                                    <span id="satStatusPill" class="sat-telemetry-badge success">READY // MONITORING</span>
-                                    <span class="sat-badge-pass">PASS: LEO-550KM</span>
-                                </div>
-                                <h3 class="sat-theater-title">Satellite Intelligence & Global Fraud Defense Center</h3>
-                                <p class="sat-theater-sub">Real-time geospatial telemetry: satellite laser beam locks onto predicted fraud locations across world financial coordinates.</p>
+                            <div class="sat-brand-text">
+                                <span class="sat-cyberdefend-title">CYBERDEFEND</span>
+                                <span class="sat-brand-sub">ORBITAL INTELLIGENCE &amp; DEFENSE SYSTEM</span>
                             </div>
+                        </div>
+
+                        <!-- Center Navigation Tabs (Image 4) -->
+                        <div class="fuselab-center-nav">
+                            <button type="button" class="fuselab-tab active" onclick="window.BankingTerminal && window.BankingTerminal.switchTab('cockpit')">Overview</button>
+                            <button type="button" class="fuselab-tab" onclick="window.BankingTerminal && window.BankingTerminal.switchTab('transfer')">Firewall</button>
+                            <button type="button" class="fuselab-tab" onclick="window.BankingTerminal && window.BankingTerminal.switchTab('live')">Alerts</button>
+                            <button type="button" class="fuselab-tab" onclick="window.BankingTerminal && window.BankingTerminal.switchTab('triage')">Affects</button>
                         </div>
 
                         <!-- Top Right Live Controls -->
@@ -420,107 +427,235 @@
                             </div>
                             <button type="button" id="btnTestFireSatellite" class="btn btn-primary btn-sm sat-fire-btn" title="Simulate Real-Time Satellite Laser Interception">
                                 <span class="btn-sheen"></span>
-                                <span>⚡ Intercept Test Fraud (Laser Lock)</span>
+                                <span>⚡ Intercept Test Fraud</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- 3D Three.js Globe Stage -->
+                    <!-- 3D Three.js Globe Stage with Image 4 Glass Overlays -->
                     <div id="satelliteTheaterContainer" class="sat-viewport-container">
-                        <!-- Three.js Canvas injected here -->
+                        <!-- Three.js Canvas injected dynamically here -->
 
-                        <!-- Floating HUD Metric Overlay Left -->
-                        <div class="sat-hud-overlay-left">
-                            <div class="sat-hud-metric-box">
-                                <span class="hud-m-label">DOWNLINK VELOCITY</span>
-                                <strong id="satSpeedVal" class="font-mono text-cyan">27,420 km/h</strong>
+                        <!-- Top Left: Aerial Radar Scan Sensor Tile (Image 4) -->
+                        <div class="sat-radar-scan-box">
+                            <div class="radar-scan-img-wrap">
+                                <img src="assets/images/satellite_radar_scan.jpg" alt="Aerial Satellite Reconnaissance" class="radar-scan-img" />
+                                <div class="radar-coord-overlay">108.39.0.532</div>
                             </div>
-                            <div class="sat-hud-metric-box">
-                                <span class="hud-m-label">OPTICAL RESOLUTION</span>
-                                <strong class="font-mono text-white">0.15 m/px</strong>
-                            </div>
-                            <div class="sat-hud-metric-box">
-                                <span class="hud-m-label">BEAM EMITTER</span>
-                                <strong id="satBeamPowerVal" class="font-mono text-green">99.8% Nominal</strong>
+                            <div class="radar-scan-meta">
+                                <span class="radar-scan-code">SAT-Error: ST-25854-54</span>
+                                <div class="radar-scan-metrics">
+                                    <span>R: 14/100</span>
+                                    <span class="text-green">99.95%</span>
+                                    <span>120 Mbps</span>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Floating HUD Target Overlay Right -->
-                        <div class="sat-hud-overlay-right">
-                            <div class="sat-hud-target-card">
-                                <span class="hud-target-sub">ACTIVE TARGET COORDINATE</span>
-                                <strong id="satTargetLocPill" class="font-mono text-yellow">Scanning Earth...</strong>
-                                <span class="hud-target-note">Precision Laser Lockdown System</span>
+                        <!-- Left Mid: Simulation Layer Controls (Image 4) -->
+                        <div class="sat-sim-layer-box">
+                            <span class="sim-layer-title">SIMULATE</span>
+                            <div class="sim-layer-item">
+                                <input type="checkbox" id="simChkSat" checked />
+                                <label for="simChkSat"><span class="sim-dot cyan"></span> Satellites</label>
                             </div>
+                            <div class="sim-layer-item">
+                                <input type="checkbox" id="simChkTowers" />
+                                <label for="simChkTowers"><span class="sim-dot gold"></span> Towers</label>
+                            </div>
+                            <span class="sim-layer-filter-title">FILTER</span>
+                            <span class="sim-layer-link active">Flight path</span>
+                            <span class="sim-layer-link">Space trash</span>
+                        </div>
+
+                        <!-- Top Right: Starlink-1753A Satellite Preview Card (Image 4) -->
+                        <div class="sat-starlink-card">
+                            <div class="starlink-card-img-wrap">
+                                <img src="assets/images/starlink_satellite.jpg" alt="Starlink Satellite Preview" class="starlink-card-img" />
+                                <span class="starlink-status-badge">ONLINE</span>
+                            </div>
+                            <div class="starlink-card-info">
+                                <div class="starlink-card-title">Starlink-1753A</div>
+                                <div class="starlink-metric-row">
+                                    <span class="s-label">Signal</span>
+                                    <strong class="s-val text-green">98% <span class="signal-bars">||||</span></strong>
+                                </div>
+                                <div class="starlink-metric-row">
+                                    <span class="s-label">Frequency</span>
+                                    <strong class="s-val font-mono">12.4 GHz</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Mid: Circular Gyro Compass & Attitude Dial (Image 4) -->
+                        <div class="sat-gyro-dial-box">
+                            <svg class="sat-gyro-svg" viewBox="0 0 80 80">
+                                <circle cx="40" cy="40" r="36" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" />
+                                <circle cx="40" cy="40" r="30" fill="none" stroke="rgba(56,189,248,0.25)" stroke-width="1.2" stroke-dasharray="4 2" />
+                                <circle cx="40" cy="40" r="8" fill="none" stroke="#d4af37" stroke-width="1.5" />
+                                <line x1="40" y1="2" x2="40" y2="78" stroke="rgba(255,255,255,0.12)" stroke-width="1" />
+                                <line x1="2" y1="40" x2="78" y2="40" stroke="rgba(255,255,255,0.12)" stroke-width="1" />
+                                <text x="40" y="14" fill="#38bdf8" font-size="7" font-family="monospace" text-anchor="middle">N 0°</text>
+                                <text x="68" y="43" fill="#64748b" font-size="6" font-family="monospace" text-anchor="middle">90°</text>
+                                <text x="40" y="72" fill="#64748b" font-size="6" font-family="monospace" text-anchor="middle">180°</text>
+                                <text x="12" y="43" fill="#64748b" font-size="6" font-family="monospace" text-anchor="middle">270°</text>
+                            </svg>
                         </div>
                     </div>
 
-                    <!-- Lower Telemetry Deck (Matching Image 3 & 4) -->
-                    <div class="sat-telemetry-deck">
-                        <!-- Frequency Spectrum Seismograph Waveform -->
-                        <div class="sat-waveform-box">
-                            <div class="sat-deck-title-row">
-                                <span class="sat-deck-title">SATELLITE FREQUENCY TELEMETRY (RF SPECTRUM)</span>
-                                <span class="font-mono sat-freq-num">14.2 GHz Ku-Band</span>
+                    <!-- Lower 3-Column Telemetry Deck (Matching Image 4 1:1) -->
+                    <div class="sat-image4-deck">
+                        <!-- Left Column: Starlink-E80 Controller & Speed Dials -->
+                        <div class="deck-col deck-col-controller">
+                            <div class="controller-card-inner">
+                                <div class="controller-top-row">
+                                    <div class="starlink-thumb-box">
+                                        <img src="assets/images/starlink_satellite.jpg" alt="Starlink E80" class="starlink-thumb-img" />
+                                        <div class="starlink-thumb-label">
+                                            <span class="st-brand">STARLINK-E80</span>
+                                            <span class="st-sub font-mono">SPACEX DEFENSE</span>
+                                        </div>
+                                    </div>
+                                    <div class="controller-speed-box">
+                                        <div class="speed-dial-item">
+                                            <span class="speed-val font-mono">9k <small>km/h</small></span>
+                                            <span class="speed-lbl">Current Speed</span>
+                                        </div>
+                                        <div class="speed-dial-item">
+                                            <span class="speed-val font-mono text-cyan">27k <small>km/h</small></span>
+                                            <span class="speed-lbl">Target Speed</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- D-Pad Attitude Gimbal Controller -->
+                                <div class="gimbal-controls-row">
+                                    <div class="gimbal-dpad">
+                                        <button type="button" id="btnDpadUp" class="dpad-btn up" title="Pitch Up">▲</button>
+                                        <div class="dpad-mid-row">
+                                            <button type="button" id="btnDpadLeft" class="dpad-btn left" title="Yaw Left">◄</button>
+                                            <button type="button" id="btnDpadCenter" class="dpad-btn center" title="Recenter View">⦿</button>
+                                            <button type="button" id="btnDpadRight" class="dpad-btn right" title="Yaw Right">►</button>
+                                        </div>
+                                        <button type="button" id="btnDpadDown" class="dpad-btn down" title="Pitch Down">▼</button>
+                                    </div>
+                                    <div class="gimbal-meta">
+                                        <div class="meta-item">
+                                            <span class="meta-label">Targets Detected</span>
+                                            <strong class="meta-value font-mono">2 Satellites</strong>
+                                        </div>
+                                        <div class="meta-item">
+                                            <span class="meta-label">Next Contact</span>
+                                            <strong class="meta-value font-mono text-yellow">2h 30m 13s</strong>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <canvas id="satWaveformCanvas" class="sat-waveform-canvas"></canvas>
                         </div>
 
-                        <!-- Live Tracked Locations Table -->
-                        <div class="sat-location-docket-box">
-                            <div class="sat-deck-title-row">
-                                <span class="sat-deck-title">PROJECT LOCATIONS & TELEMETRY STREAM</span>
-                                <span class="sat-live-indicator"><span class="pulse-beacon"></span> LIVE TRACKING</span>
+                        <!-- Middle Column: Towers & Active Fixtures List -->
+                        <div class="deck-col deck-col-towers">
+                            <div class="towers-top-bar">
+                                <div class="towers-title-wrap">
+                                    <span class="t-badge font-mono">TOWERS: 6</span>
+                                    <span class="t-badge font-mono active">ACTIVE FIXTURES: 25</span>
+                                </div>
+                                <div class="towers-search-wrap">
+                                    <input type="text" placeholder="Search fixtures..." class="towers-search-input" />
+                                </div>
                             </div>
-                            <div class="sat-docket-table-wrap">
-                                <table class="sat-docket-table">
+                            <div class="towers-table-wrap">
+                                <table class="towers-table">
                                     <thead>
                                         <tr>
+                                            <th>ID</th>
                                             <th>Location</th>
-                                            <th>Transaction ID</th>
-                                            <th>Coordinates</th>
-                                            <th>Verdict</th>
-                                            <th>Latency</th>
+                                            <th>Load</th>
+                                            <th>Devices</th>
                                         </tr>
                                     </thead>
                                     <tbody id="satLocationDocketBody">
-                                        <tr class="sat-docket-row-danger">
-                                            <td><span class="docket-beacon danger"></span> <strong>🇺🇸 Texas, USA</strong></td>
-                                            <td class="font-mono">WIRE-9896</td>
-                                            <td class="font-mono">31.96° N, 99.90° W</td>
-                                            <td><span class="status-pill-badge badge-sev high">🚨 FRAUD</span></td>
-                                            <td class="font-mono text-muted">14ms</td>
+                                        <tr class="towers-row">
+                                            <td><span class="tower-dot danger"></span> <strong class="font-mono">T48-001</strong></td>
+                                            <td>Portland, OR</td>
+                                            <td>
+                                                <div class="tower-load-bar"><div class="load-fill" style="width: 45%;"></div></div>
+                                                <small class="font-mono">45%</small>
+                                            </td>
+                                            <td class="font-mono">1,258</td>
                                         </tr>
-                                        <tr class="sat-docket-row-danger">
-                                            <td><span class="docket-beacon danger"></span> <strong>🇺🇸 California, USA</strong></td>
-                                            <td class="font-mono">WIRE-3227</td>
-                                            <td class="font-mono">36.77° N, 119.41° W</td>
-                                            <td><span class="status-pill-badge badge-sev high">🚨 FRAUD</span></td>
-                                            <td class="font-mono text-muted">18ms</td>
+                                        <tr class="towers-row">
+                                            <td><span class="tower-dot warning"></span> <strong class="font-mono">R2-05</strong></td>
+                                            <td>Seattle, WA</td>
+                                            <td>
+                                                <div class="tower-load-bar"><div class="load-fill fill-warning" style="width: 81%;"></div></div>
+                                                <small class="font-mono">81%</small>
+                                            </td>
+                                            <td class="font-mono">1,738</td>
                                         </tr>
-                                        <tr class="sat-docket-row-clean">
-                                            <td><span class="docket-beacon clean"></span> <strong>🇬🇧 London, UK</strong></td>
-                                            <td class="font-mono">WIRE-9841</td>
-                                            <td class="font-mono">51.50° N, 0.12° W</td>
-                                            <td><span class="status-pill-badge badge-sev low">✔ CLEARED</span></td>
-                                            <td class="font-mono text-muted">21ms</td>
-                                        </tr>
-                                        <tr class="sat-docket-row-danger">
-                                            <td><span class="docket-beacon danger"></span> <strong>🇺🇸 New York, USA</strong></td>
-                                            <td class="font-mono">WIRE-4812</td>
-                                            <td class="font-mono">40.71° N, 74.00° W</td>
-                                            <td><span class="status-pill-badge badge-sev high">🚨 FRAUD</span></td>
-                                            <td class="font-mono text-muted">16ms</td>
-                                        </tr>
-                                        <tr class="sat-docket-row-clean">
-                                            <td><span class="docket-beacon clean"></span> <strong>🇨🇭 Zurich, Switzerland</strong></td>
-                                            <td class="font-mono">WIRE-1102</td>
-                                            <td class="font-mono">47.37° N, 8.54° E</td>
-                                            <td><span class="status-pill-badge badge-sev low">✔ CLEARED</span></td>
-                                            <td class="font-mono text-muted">24ms</td>
+                                        <tr class="towers-row">
+                                            <td><span class="tower-dot danger"></span> <strong class="font-mono">H18-406</strong></td>
+                                            <td>San Francisco, CA</td>
+                                            <td>
+                                                <div class="tower-load-bar"><div class="load-fill fill-danger" style="width: 95%;"></div></div>
+                                                <small class="font-mono">95%</small>
+                                            </td>
+                                            <td class="font-mono">1,884</td>
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Chance of Failure Seismograph -->
+                        <div class="deck-col deck-col-failure">
+                            <div class="failure-top-bar">
+                                <span class="failure-title">CHANCE OF FAILURE</span>
+                                <div class="failure-legend">
+                                    <span class="f-dot cyan"></span> Normal
+                                    <span class="f-dot red"></span> Spike
+                                </div>
+                            </div>
+                            <div class="failure-chart-wrap">
+                                <svg class="failure-chart-svg" viewBox="0 0 360 90" preserveAspectRatio="none">
+                                    <defs>
+                                        <linearGradient id="failureGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.3" />
+                                            <stop offset="60%" stop-color="#ef4444" stop-opacity="0.25" />
+                                            <stop offset="100%" stop-color="#ef4444" stop-opacity="0.0" />
+                                        </linearGradient>
+                                    </defs>
+                                    <!-- Grid lines & Y axis markers -->
+                                    <line x1="25" y1="20" x2="355" y2="20" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3" />
+                                    <line x1="25" y1="55" x2="355" y2="55" stroke="rgba(255,255,255,0.06)" stroke-dasharray="3" />
+                                    <text x="5" y="24" fill="#64748b" font-size="7" font-family="monospace">200</text>
+                                    <text x="5" y="59" fill="#64748b" font-size="7" font-family="monospace">100</text>
+                                    <!-- Waveform curves -->
+                                    <path d="M 25 70 Q 55 60 85 45 T 145 25 T 205 60 T 265 20 T 325 45 L 355 50 L 355 85 L 25 85 Z" fill="url(#failureGrad)" />
+                                    <path d="M 25 70 Q 55 60 85 45 T 145 25 T 205 60 T 265 20 T 325 45 L 355 50" fill="none" stroke="#38bdf8" stroke-width="2" />
+                                    <path d="M 115 50 Q 145 25 175 35 T 235 65 T 285 15 L 355 40" fill="none" stroke="#ef4444" stroke-width="1.8" />
+                                    <!-- Peak callout pins matching Image 4 -->
+                                    <circle cx="145" cy="25" r="3.5" fill="#ffffff" stroke="#38bdf8" stroke-width="2" />
+                                    <circle cx="285" cy="15" r="4" fill="#ef4444" stroke="#ffffff" stroke-width="1.8" />
+                                </svg>
+                                <!-- City callout tags matching Image 4 -->
+                                <div class="failure-pins-row">
+                                    <div class="pin-tag">
+                                        <span class="pin-badge">ST 389</span>
+                                        <span class="pin-loc">Los Angeles, CA</span>
+                                        <small class="pin-time">21-11-02T 13:43:18</small>
+                                    </div>
+                                    <div class="pin-tag">
+                                        <span class="pin-badge">ST 389</span>
+                                        <span class="pin-loc">Chicago, IL</span>
+                                        <small class="pin-time">LAST DOWNLINK</small>
+                                    </div>
+                                    <div class="pin-tag">
+                                        <span class="pin-badge alert">ST 389</span>
+                                        <span class="pin-loc text-danger">St. Louis, MO</span>
+                                        <small class="pin-time">COLLISION ALERT</small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
