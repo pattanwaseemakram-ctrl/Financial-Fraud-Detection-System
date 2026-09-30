@@ -197,6 +197,8 @@ alerts_table = Table(
         "transaction_id",
         String(255),
         nullable=False,
+        unique=True,
+        index=True,
     ),
 
     Column(
@@ -254,11 +256,15 @@ def initialize_database():
     """
     Verifies the PostgreSQL connection and creates the
     fraud_alerts table if it does not already exist.
+    Also ensures unique index on transaction_id to prevent duplicates.
     """
 
     try:
         engine = get_engine()
         metadata.create_all(engine)
+
+        with engine.begin() as conn:
+            conn.execute(text("CREATE UNIQUE INDEX IF NOT EXISTS uq_fraud_alerts_tx ON fraud_alerts (transaction_id);"))
 
         logger.info(
             "PostgreSQL database initialized successfully."
@@ -348,9 +354,13 @@ def create_alert(
     prediction: str,
     risk_score: float,
     risk_level: str,
+    status: str = "New",
 ) -> Dict[str, Any]:
     """
-    Creates an alert for a suspicious transaction.
+    Creates or updates an alert for a suspicious transaction.
+    Initial status upon prediction is 'New'.
+    Guarantees deduplication: if transaction_id already exists,
+    its risk telemetry is refreshed without duplicating records.
     """
 
     if prediction != "Suspicious":
@@ -366,22 +376,50 @@ def create_alert(
     engine = get_engine()
 
     try:
-
-        stmt = insert(alerts_table).values(
-            transaction_id=transaction_id,
-            fraud_probability=fraud_probability,
-            prediction=prediction,
-            risk_score=risk_score,
-            risk_level=risk_level,
-            status="New",
-            created_at=current_time,
-            updated_at=current_time,
-        )
-
         with engine.begin() as connection:
+            # Check if an alert for this transaction already exists
+            existing = connection.execute(
+                select(alerts_table.c.id, alerts_table.c.status).where(
+                    alerts_table.c.transaction_id == transaction_id
+                )
+            ).fetchone()
 
+            if existing:
+                alert_id, existing_status = existing
+                target_status = status or "New"
+                connection.execute(
+                    update(alerts_table)
+                    .where(alerts_table.c.id == alert_id)
+                    .values(
+                        fraud_probability=fraud_probability,
+                        prediction=prediction,
+                        risk_score=risk_score,
+                        risk_level=risk_level,
+                        status=target_status,
+                        updated_at=current_time,
+                    )
+                )
+                return {
+                    "alert_created": False,
+                    "alert_updated": True,
+                    "alert_id": alert_id,
+                    "transaction_id": transaction_id,
+                    "alert_status": target_status,
+                    "message": f"Alert #{alert_id} for {transaction_id} updated with status '{target_status}'.",
+                }
+
+            target_status = status or "New"
+            stmt = insert(alerts_table).values(
+                transaction_id=transaction_id,
+                fraud_probability=fraud_probability,
+                prediction=prediction,
+                risk_score=risk_score,
+                risk_level=risk_level,
+                status=target_status,
+                created_at=current_time,
+                updated_at=current_time,
+            )
             result = connection.execute(stmt)
-
             alert_id = (
                 result.inserted_primary_key[0]
                 if result.inserted_primary_key
@@ -392,16 +430,96 @@ def create_alert(
             "alert_created": True,
             "alert_id": alert_id,
             "transaction_id": transaction_id,
-            "alert_status": "New",
-            "message": (
-                "Suspicious transaction flagged successfully."
-            ),
+            "alert_status": target_status,
+            "message": f"Suspicious transaction flagged and recorded with status '{target_status}'.",
         }
 
     except Exception as error:
-
         raise RuntimeError(
             f"Failed to create alert: {error}"
+        ) from error
+
+
+def upsert_alerts_batch(
+    alert_records: List[Dict[str, Any]]
+) -> Dict[str, int]:
+    """
+    Bulk upserts a list of alerts into PostgreSQL.
+    Transactions that already exist are updated with latest risk metrics.
+    New transactions are inserted. Duplicates are never created.
+    """
+    if not alert_records:
+        return {"total": 0, "inserted": 0, "updated": 0}
+
+    initialize_database()
+    current_time = datetime.now(timezone.utc)
+    engine = get_engine()
+
+    inserted_count = 0
+    updated_count = 0
+
+    try:
+        with engine.begin() as connection:
+            # Collect all candidate transaction IDs
+            candidate_records = [
+                r for r in alert_records
+                if r.get("prediction") == "Suspicious" and r.get("transaction_id")
+            ]
+            if not candidate_records:
+                return {"total": 0, "inserted": 0, "updated": 0}
+
+            tx_ids = [r["transaction_id"] for r in candidate_records]
+
+            # Find which transaction IDs already exist in the database
+            existing_rows = connection.execute(
+                select(alerts_table.c.id, alerts_table.c.transaction_id)
+                .where(alerts_table.c.transaction_id.in_(tx_ids))
+            ).fetchall()
+            existing_map = {row[1]: row[0] for row in existing_rows}
+
+            to_insert = []
+            for r in candidate_records:
+                tx_id = r["transaction_id"]
+                if tx_id in existing_map:
+                    # Refresh existing record without creating duplicate row
+                    alert_id = existing_map[tx_id]
+                    connection.execute(
+                        update(alerts_table)
+                        .where(alerts_table.c.id == alert_id)
+                        .values(
+                            fraud_probability=float(r.get("fraud_probability", 0.0)),
+                            prediction=r.get("prediction", "Suspicious"),
+                            risk_score=float(r.get("risk_score", 0.0)),
+                            risk_level=str(r.get("risk_level", "High")),
+                            updated_at=current_time,
+                        )
+                    )
+                    updated_count += 1
+                else:
+                    to_insert.append({
+                        "transaction_id": tx_id,
+                        "fraud_probability": float(r.get("fraud_probability", 0.0)),
+                        "prediction": r.get("prediction", "Suspicious"),
+                        "risk_score": float(r.get("risk_score", 0.0)),
+                        "risk_level": str(r.get("risk_level", "High")),
+                        "status": "New",
+                        "created_at": current_time,
+                        "updated_at": current_time,
+                    })
+                    inserted_count += 1
+
+            if to_insert:
+                connection.execute(insert(alerts_table), to_insert)
+
+        return {
+            "total": inserted_count + updated_count,
+            "inserted": inserted_count,
+            "updated": updated_count,
+        }
+
+    except Exception as error:
+        raise RuntimeError(
+            f"Failed to bulk upsert alerts: {error}"
         ) from error
 
 

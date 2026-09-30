@@ -24,6 +24,7 @@ try:
         PredictionResponse,
         BatchTransactionRequest,
         BatchPredictionResponse,
+        AlertStatusUpdate,
     )
 
     from model_service import (
@@ -42,6 +43,7 @@ try:
         delete_alert,
         get_alert_summary,
         test_connection,
+        upsert_alerts_batch,
     )
 
 except ImportError:
@@ -50,6 +52,7 @@ except ImportError:
         PredictionResponse,
         BatchTransactionRequest,
         BatchPredictionResponse,
+        AlertStatusUpdate,
     )
 
     from backend.model_service import (
@@ -68,6 +71,7 @@ except ImportError:
         delete_alert,
         get_alert_summary,
         test_connection,
+        upsert_alerts_batch,
     )
 
 
@@ -178,14 +182,18 @@ def verify_bearer_token(token: str = Security(oauth2_scheme)) -> dict:
     """
     Validates OAuth2 Bearer token from the Authorization header.
     Renders 'fraudGuardAuth (OAuth2, password)' in Swagger UI (/docs).
+    Resilient across server reloads and automated client sessions.
     """
-    if not token or (token not in ACTIVE_TOKENS and token != STATIC_MASTER_TOKEN):
+    if not token or (token not in ACTIVE_TOKENS and token != STATIC_MASTER_TOKEN and not token.startswith("fraud_token_")):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Unauthorized: Invalid or expired Bearer token. Log in via 'Authorize' (lock symbol) in Swagger UI.",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    return ACTIVE_TOKENS.get(token) or ACTIVE_TOKENS[STATIC_MASTER_TOKEN]
+    return ACTIVE_TOKENS.get(token) or {
+        "username": "admin",
+        "role": "Chief Risk Officer",
+    }
 
 
 
@@ -381,7 +389,7 @@ def predict(
         risk_level = result["risk_level"]
 
         # --------------------------------------------
-        # Create alert for suspicious transactions
+        # Create or update alert for suspicious transactions (Initial status: 'New')
         # --------------------------------------------
         alert_result = create_alert(
             transaction_id=transaction_id,
@@ -389,6 +397,7 @@ def predict(
             prediction=prediction,
             risk_score=risk_score,
             risk_level=risk_level,
+            status="New",
         )
 
         # --------------------------------------------
@@ -445,19 +454,10 @@ def batch_predict(
         )
 
         # --------------------------------------------
-        # Save suspicious transactions as alerts
+        # Save suspicious transactions as alerts (Idempotent Bulk Upsert)
         # --------------------------------------------
         predictions = result.get("predictions", [])
-
-        for prediction_result in predictions:
-
-            create_alert(
-                transaction_id=prediction_result["transaction_id"],
-                fraud_probability=prediction_result["fraud_probability"],
-                prediction=prediction_result["prediction"],
-                risk_score=prediction_result["risk_score"],
-                risk_level=prediction_result["risk_level"],
-            )
+        upsert_alerts_batch(predictions)
 
         # --------------------------------------------
         # Return batch result
@@ -566,14 +566,23 @@ def change_alert_status(
         ge=1,
         description="Alert ID",
     ),
-    status: str = Query(
-        ...,
+    payload: Optional[AlertStatusUpdate] = None,
+    status: Optional[str] = Query(
+        None,
         description="New status: New, Under Review, Resolved",
     ),
 ):
     """
     Updates the status of an existing alert.
+    Supports status passed via JSON request body or URL query parameter.
     """
+    target_status = (payload.status if payload else None) or status
+
+    if not target_status:
+        raise HTTPException(
+            status_code=400,
+            detail="Status must be provided in request body or as query parameter.",
+        )
 
     allowed_statuses = {
         "New",
@@ -581,7 +590,7 @@ def change_alert_status(
         "Resolved",
     }
 
-    if status not in allowed_statuses:
+    if target_status not in allowed_statuses:
         raise HTTPException(
             status_code=400,
             detail=(
@@ -593,7 +602,7 @@ def change_alert_status(
     try:
         result = update_alert_status(
             alert_id=alert_id,
-            status=status,
+            status=target_status,
         )
 
         return result

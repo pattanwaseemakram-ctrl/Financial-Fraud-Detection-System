@@ -156,3 +156,14 @@ class BatchPredictionResponse(BaseModel):
     summary: BatchSummary
     decision_threshold: float
     predictions: List[PredictionResponse]
+
+
+class AlertStatusUpdate(BaseModel):
+    """
+    Request payload to update an alert's investigation status.
+    """
+    status: str = Field(
+        ...,
+        description="New status: New, Under Review, Resolved",
+        example="Under Review"
+    )

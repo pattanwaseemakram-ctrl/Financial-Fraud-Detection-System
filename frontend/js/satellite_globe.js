@@ -1392,36 +1392,36 @@
         if (movieLocDisplay) movieLocDisplay.textContent = seq.loc.city;
 
         if (sceneNum === 1) {
-            if (movieSceneTag) movieSceneTag.textContent = "SCENE 01: GROUND UPLINK";
-            if (movieSubPhase) movieSubPhase.textContent = "PHASE 1: GROUND TRANSMISSION";
-            if (movieSubText) movieSubText.textContent = `Broadcasting 30 transaction features from ${seq.loc.city} terminal (${seq.loc.ipPrefix}.x) via Ku-Band to Starlink LEO Defense constellation...`;
+            if (movieSceneTag) movieSceneTag.textContent = "SCENE 01: GROUND TRANSACTION UPLINK";
+            if (movieSubPhase) movieSubPhase.textContent = "PHASE 1: TRANSACTION INGESTION & UPLINK";
+            if (movieSubText) movieSubText.textContent = `Transmitting 11 engineered features (Amount: ${seq.amount}, Spending Deviation, Location Deviation, Balance Ratio, Device Match) from ${seq.loc.city} terminal to satellite AI node...`;
             if (movieDecisionDisplay) {
-                movieDecisionDisplay.textContent = "UPLINK TRANSMITTING...";
+                movieDecisionDisplay.textContent = "TRANSMITTING TELEMETRY...";
                 movieDecisionDisplay.className = "text-cyan";
             }
-            if (movieTelemetryTag) movieTelemetryTag.textContent = "Ku-BAND 14.25 GHz • LATENCY: 12ms";
+            if (movieTelemetryTag) movieTelemetryTag.textContent = "FASTAPI REST • INLINE LATENCY: 14ms • THRESHOLD: T=0.42";
         } else if (sceneNum === 2) {
-            if (movieSceneTag) movieSceneTag.textContent = "SCENE 02: ORBITAL ML INFERENCE";
-            if (movieSubPhase) movieSubPhase.textContent = "PHASE 2: SATELLITE NEURAL INFERENCE";
-            if (movieSubText) movieSubText.textContent = `Starlink Project-7 ML Core (Random Forest + Logistic Regression, SMOTE calibrated) computing risk score at T=0.42 cutoff...`;
+            if (movieSceneTag) movieSceneTag.textContent = "SCENE 02: REAL-TIME ML INFERENCE";
+            if (movieSubPhase) movieSubPhase.textContent = "PHASE 2: REAL-TIME ML INFERENCE";
+            if (movieSubText) movieSubText.textContent = `Executing trained pipeline (Random Forest & Logistic Regression with SMOTE/ROS) on 11 behavioral features at T=0.42 cutoff...`;
             if (movieDecisionDisplay) {
-                movieDecisionDisplay.textContent = "NEURAL INFERENCE ACTIVE...";
+                movieDecisionDisplay.textContent = "SCORING MODEL INLINE...";
                 movieDecisionDisplay.className = "text-yellow";
             }
-            if (movieTelemetryTag) movieTelemetryTag.textContent = "ORBITAL TPU CORE • LATENCY: 14ms";
+            if (movieTelemetryTag) movieTelemetryTag.textContent = "FASTAPI REST • ML MODEL: RF + LOGISTIC REGRESSION";
         } else if (sceneNum === 3) {
-            if (movieSceneTag) movieSceneTag.textContent = "SCENE 03: DOWNLINK DIRECTIVE RETURN";
-            if (movieSubPhase) movieSubPhase.textContent = seq.isFraud ? "PHASE 3: THREAT INTERCEPTION & FREEZE" : "PHASE 3: CLEARANCE AUTHORIZATION";
+            if (movieSceneTag) movieSceneTag.textContent = "SCENE 03: PREDICTION RETURN & INTERCEPTION";
+            if (movieSubPhase) movieSubPhase.textContent = seq.isFraud ? "PHASE 3: SUSPICIOUS ACTIVITY INTERCEPTED" : "PHASE 3: TRANSACTION CLEARED";
             if (movieSubText) {
                 movieSubText.textContent = seq.isFraud
-                    ? `VERDICT: SUSPICIOUS (RISK: ${seq.score}%) — AUTOMATED SETTLEMENT FREEZE EXECUTED • ALERT STORED IN POSTGRESQL`
-                    : `VERDICT: LEGITIMATE (RISK: ${seq.score}%) — TRANSACTION AUTHORIZED • CLEARED FOR LEDGER SETTLEMENT`;
+                    ? `SUSPICIOUS ACTIVITY FLAG = 1 (Risk: ${seq.score}% ≥ 42.0) — AUTOMATED TRANSACTION FREEZE EXECUTED • RECORDED IN POSTGRESQL AUDIT`
+                    : `SUSPICIOUS ACTIVITY FLAG = 0 (Risk: ${seq.score}% < 42.0) — TRANSACTION VERIFIED & CLEARED FOR SETTLEMENT`;
             }
             if (movieDecisionDisplay) {
-                movieDecisionDisplay.textContent = seq.isFraud ? "THREAT BLOCKED // FROZEN" : "CLEARED // APPROVED";
+                movieDecisionDisplay.textContent = seq.isFraud ? "FLAGGED: FRAUD INTERCEPTED" : "CLEARED: LEGITIMATE PAYMENT";
                 movieDecisionDisplay.className = seq.isFraud ? "text-danger" : "text-green";
             }
-            if (movieTelemetryTag) movieTelemetryTag.textContent = seq.isFraud ? "INTERCEPTION LOCK: ACTIVE" : "SETTLEMENT: CONFIRMED";
+            if (movieTelemetryTag) movieTelemetryTag.textContent = seq.isFraud ? "STATUS: SUSPICIOUS ACTIVITY FLAG = 1" : "STATUS: SUSPICIOUS ACTIVITY FLAG = 0";
         }
     }
 
@@ -1430,7 +1430,7 @@
 
         const loc = resolveLocation(txData?.location || txData?.city || "Texas");
         const isFraud = txData?.prediction === "Fraud" || txData?.prediction === "Suspicious" || (txData?.risk_score !== undefined && Number(txData.risk_score) >= 42) || Boolean(txData?.is_fraud);
-        const txId = txData?.transaction_id || `TX-WIRE-${Math.floor(1000 + Math.random() * 9000)}`;
+        const txId = txData?.transaction_id || `T${Math.floor(1000 + Math.random() * 9000)}`;
         const amount = Number(txData?.amount || 8450.0).toLocaleString("en-US", { style: "currency", currency: "USD" });
         const score = txData?.risk_score !== undefined ? Number(txData.risk_score).toFixed(1) : (isFraud ? "89.0" : "4.2");
 
@@ -1500,7 +1500,8 @@
         }
 
         const sevClass = isFraud ? "danger" : "clean";
-        const probText = isFraud ? `Chance of collision: ${score}%` : `Clearance Confirmed: 99.8%`;
+        const probText = isFraud ? `SUSPICIOUS RISK: ${score}%` : `LEGITIMATE VERIFIED: ${score}%`;
+        const flagText = isFraud ? `FLAG: 1 (FRAUD DETECTED)` : `FLAG: 0 (NORMAL)`;
         const timeStr = new Date().toLocaleTimeString();
 
         hud.innerHTML = `
@@ -1511,7 +1512,7 @@
                     <span class="hud-status-dot ${sevClass}"></span>
                 </div>
                 <div class="hud-bottom-line">
-                    <span>Est. time: ${timeStr}</span>
+                    <span>${flagText}</span>
                     <span class="hud-sub-loc">${loc.city}</span>
                 </div>
                 <div class="hud-tx-strip">
@@ -1662,11 +1663,107 @@
             });
         }
 
-        const btnTestFire = document.getElementById("btnTestFireSatellite");
-        if (btnTestFire) {
-            btnTestFire.addEventListener("click", () => {
-                const picked = sampleFrauds[Math.floor(Math.random() * sampleFrauds.length)];
-                playCinematicMovie(picked);
+        const btnLaunchMission = document.getElementById("btnLaunchMissionPrediction");
+        if (btnLaunchMission) {
+            btnLaunchMission.addEventListener("click", () => {
+                const locSelect = document.getElementById("missionSelectLoc");
+                const scenSelect = document.getElementById("missionSelectScenario");
+                const loc = locSelect ? locSelect.value : "texas";
+                const scen = scenSelect ? scenSelect.value : "attack_drain";
+
+                let txId, amount, risk_score, prediction, isFraud;
+                const rnd = Math.floor(1000 + Math.random() * 9000);
+
+                if (scen === "attack_drain") {
+                    txId = `T${rnd}`;
+                    amount = 1508.20;
+                    risk_score = 100.0;
+                    prediction = "Fraud";
+                    isFraud = true;
+                } else if (scen === "attack_rapid") {
+                    txId = `T${rnd}`;
+                    amount = 9500.00;
+                    risk_score = 98.7;
+                    prediction = "Fraud";
+                    isFraud = true;
+                } else if (scen === "clean_payroll") {
+                    txId = `T${rnd}`;
+                    amount = 4200.00;
+                    risk_score = 8.5;
+                    prediction = "Legitimate";
+                    isFraud = false;
+                } else {
+                    txId = `T${rnd}`;
+                    amount = 45.00;
+                    risk_score = 3.2;
+                    prediction = "Legitimate";
+                    isFraud = false;
+                }
+
+                // Trigger cinematic movie sequence: Earth Uplink -> Orbital AI -> Satellite Downlink
+                playCinematicMovie({
+                    transaction_id: txId,
+                    location: loc,
+                    amount: amount,
+                    risk_score: risk_score,
+                    prediction: prediction,
+                    is_fraud: isFraud
+                });
+
+                // Update Mission Verdict Display
+                const verdictCard = document.getElementById("missionVerdictCard");
+                const vBadge = document.getElementById("mVerdictBadge");
+                const vAction = document.getElementById("mVerdictAction");
+                const vScore = document.getElementById("mVerdictScore");
+                const vFlag = document.getElementById("mVerdictFlag");
+
+                if (verdictCard) {
+                    verdictCard.style.display = "flex";
+                    if (isFraud) {
+                        verdictCard.className = "mission-verdict-card";
+                        if (vBadge) {
+                            vBadge.className = "m-verdict-badge danger";
+                            vBadge.textContent = "SUSPICIOUS (FRAUD INTERCEPTED)";
+                        }
+                        if (vFlag) {
+                            vFlag.className = "font-mono text-danger";
+                            vFlag.textContent = "1 (SUSPICIOUS / FRAUD DETECTED)";
+                        }
+                        if (vAction) {
+                            vAction.className = "text-danger";
+                            vAction.textContent = "🚨 TRANSACTION FROZEN & POSTGRESQL ALERT RECORDED";
+                        }
+                        if (vScore) {
+                            vScore.className = "font-mono text-danger";
+                            vScore.textContent = `${risk_score.toFixed(1)} / 100`;
+                        }
+
+                        // Increment active cases counter if present
+                        const totalAlertEl = document.getElementById("statTotalAlerts");
+                        if (totalAlertEl) {
+                            const cur = parseInt(totalAlertEl.textContent) || 0;
+                            totalAlertEl.textContent = cur + 1;
+                        }
+                    } else {
+                        verdictCard.className = "mission-verdict-card clean";
+                        if (vBadge) {
+                            vBadge.className = "m-verdict-badge clean";
+                            vBadge.textContent = "CLEARED (LEGITIMATE)";
+                        }
+                        if (vFlag) {
+                            vFlag.className = "font-mono text-green";
+                            vFlag.textContent = "0 (LEGITIMATE / NORMAL)";
+                        }
+                        if (vAction) {
+                            vAction.className = "text-green";
+                            vAction.textContent = "✔ INSTANT SETTLEMENT RELEASED";
+                        }
+                        if (vScore) {
+                            vScore.className = "font-mono text-green";
+                            vScore.textContent = `${risk_score.toFixed(1)} / 100`;
+                        }
+                    }
+                }
             });
         }
 

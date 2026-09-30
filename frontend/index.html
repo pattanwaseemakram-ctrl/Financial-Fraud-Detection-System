@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Intelligence Fraud Shield - Real-Time Core Banking Platform & Financial Fraud Interception Engine">
-    <title>Intelligence Fraud Shield | Institutional Banking & Fraud Operations Terminal</title>
+    <meta name="description" content="Financial Fraud Detection System - Machine Learning Real-Time Transaction Screening &amp; Threat Interception Engine">
+    <title>Financial Fraud Detection System | Real-Time Machine Learning Operations Terminal</title>
     
     <!-- Google Fonts: Plus Jakarta Sans, Outfit, & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,7 +49,7 @@
             </div>
             <div class="brand-text">
                 <div class="brand-title-line">
-                    <span class="bank-prefix">PROJECT-7 • AI &amp; CYBERSECURITY</span>
+                    <span class="bank-prefix">AI &amp; MACHINE LEARNING • CYBERSECURITY</span>
                     <h1 class="brand-title">INTELLIGENT <span class="accent-glow">FRAUD DETECTION SYSTEM</span></h1>
                     <span class="security-tier">FOR FINANCIAL TRANSACTIONS</span>
                     <span class="compliance-pill">SMOTE • FASTAPI • ML</span>
@@ -106,7 +106,7 @@
                 </div>
                 <div class="operator-meta">
                     <strong id="operatorName">FRAUD RISK ANALYST</strong>
-                    <span id="operatorRole">Project-7 Operations Desk</span>
+                    <span id="operatorRole">Fraud Operations Desk</span>
                 </div>
             </div>
 
@@ -130,59 +130,52 @@
     <div class="banking-ticker-strip">
         <div class="ticker-badge">
             <span class="pulse-beacon"></span>
-            <span>PROJECT-7 REAL-TIME STREAM:</span>
+            <span>REAL-TIME TRANSACTION STREAM:</span>
         </div>
         <div class="ticker-track-wrap">
             <div id="tickerContent" class="ticker-track">
-                <span class="ticker-item"><strong class="text-danger">● STEP 8 ALERT:</strong> WIRE-9896 INTERCEPTED — $1,508.20 FRAUD BLOCKED (RISK: 100.0)</span>
-                <span class="ticker-item"><strong class="text-green">✔ STEP 7 CLEARED:</strong> WIRE-9841 SETTLED — $4,200.00 LEGITIMATE PAYMENT</span>
-                <span class="ticker-item"><strong class="text-danger">● STEP 8 ALERT:</strong> WIRE-3227 INTERCEPTED — $91.62 SUSPICIOUS (RISK: 100.0)</span>
-                <span class="ticker-item"><strong class="text-cyan">STEP 5 RECALL PERFORMANCE:</strong> 98.50% (197 OF 200 TEST FRAUDS INTERCEPTED)</span>
-                <span class="ticker-item"><strong class="text-green">EUR/USD:</strong> 1.0842 ▲</span>
-                <span class="ticker-item"><strong class="text-green">GBP/USD:</strong> 1.2915 ▲</span>
-                <span class="ticker-item"><strong class="text-cyan">STEP 6 RISK ENGINE:</strong> CONTINUOUS PROBABILITY SCORING (SUB-16MS)</span>
+                <span class="ticker-item"><strong class="text-danger">● SUSPICIOUS ALERT:</strong> T9896 INTERCEPTED — $1,508.20 (FLAG = 1 | RISK: 100.0)</span>
+                <span class="ticker-item"><strong class="text-green">✔ NORMAL TRANSACTION:</strong> T7841 CLEARED — $4,200.00 (FLAG = 0 | VERIFIED)</span>
+                <span class="ticker-item"><strong class="text-danger">● SUSPICIOUS ALERT:</strong> T3227 INTERCEPTED — $1,420.00 (FLAG = 1 | RISK: 96.4)</span>
+                <span class="ticker-item"><strong class="text-cyan">OPTIMIZED FRAUD RECALL:</strong> 98.50% (197 OF 200 TEST FRAUDS INTERCEPTED AT T = 0.42)</span>
+                <span class="ticker-item"><strong class="text-yellow">ROC-AUC:</strong> 0.9967 | PR-AUC: 0.9712</span>
+                <span class="ticker-item"><strong class="text-green">TRAINED MODEL:</strong> RANDOM OVER-SAMPLING + LOGISTIC REGRESSION (11 FEATURES)</span>
+                <span class="ticker-item"><strong class="text-cyan">FASTAPI INFERENCE:</strong> REAL-TIME SUB-16MS SCORING WITH POSTGRESQL AUDIT</span>
             </div>
         </div>
     </div>
 
     <!-- ======================================================
-         3. Navigation Hub (Mapped 1:1 to Project-7 Operations)
+         3. Navigation Hub
     ======================================================= -->
     <nav id="bankNavHub" class="bank-navigation hidden">
         <div class="nav-cluster">
-            <button class="bank-nav-tab active" data-tab="cockpit" title="Step 9: Real-time fraud trends, telemetry, and 3D defense theater">
-                <span class="nav-tab-icon">📊</span>
-                <span class="nav-tab-text">Step 9: Monitoring &amp; Analytics Dashboard</span>
-            </button>
-
-            <button class="bank-nav-tab" data-tab="transfer" title="Steps 1 & 7: Historical transaction collection & real-time prediction simulator">
-                <span class="nav-tab-icon">💳</span>
-                <span class="nav-tab-text">Steps 1 &amp; 7: Real-Time Payment Simulator</span>
-            </button>
-
-            <button class="bank-nav-tab" data-tab="stream" title="Step 6: Continuous fraud risk scoring engine">
+            <button class="bank-nav-tab" data-tab="transfer" title="Single Transaction Fraud Predictor">
                 <span class="nav-tab-icon">⚡</span>
-                <span class="nav-tab-text">Step 6: Live Wire Risk Scoring Stream</span>
-                <span id="streamPulseBadge" class="stream-pulse-pill">AUTO-LIVE</span>
+                <span class="nav-tab-text">Real-Time Predictor</span>
             </button>
 
-            <button class="bank-nav-tab" data-tab="batch" title="Steps 4 & 5: Model selection & 197-fraud benchmark evaluation">
-                <span class="nav-tab-icon">📦</span>
-                <span class="nav-tab-text">Steps 4 &amp; 5: Model Selection &amp; 197 Benchmark</span>
-            </button>
-
-            <button class="bank-nav-tab" data-tab="triage" title="Step 8: Automated alert flagging & case review desk">
+            <button class="bank-nav-tab" data-tab="triage" title="Flagged Fraud Cases Docket (PostgreSQL)">
                 <span class="nav-tab-icon">🚨</span>
-                <span class="nav-tab-text">Step 8: Alert &amp; Flagging Investigation Desk</span>
+                <span class="nav-tab-text">Flagged Fraud Alerts</span>
                 <span id="activeAlertBadge" class="case-count-pill">0</span>
             </button>
 
-            <button class="bank-nav-tab" data-tab="compliance" title="Complete Project-7 specification, methodology, and 9 operations">
+            <button class="bank-nav-tab" data-tab="compliance" title="Project Architecture &amp; 9-Step Methodology">
                 <span class="nav-tab-icon">📘</span>
-                <span class="nav-tab-text">Project-7: 9-Step Architecture &amp; Guide</span>
+                <span class="nav-tab-text">Project Architecture</span>
             </button>
         </div>
     </nav>
+
+    <!-- Persistent Side Quick Dock: Defense Cockpit & 3D Theater (On the Screen Side) -->
+    <div id="sideTheaterQuickDock" class="side-theater-quick-dock hidden">
+        <button type="button" id="btnSideTheaterQuick" class="btn-side-theater-quick active" onclick="window.BankingTerminal &amp;&amp; window.BankingTerminal.switchTab('cockpit')" title="Return to Defense Cockpit &amp; 3D Theater">
+            <span class="pulse-beacon"></span>
+            <span class="side-dock-icon">🌐</span>
+            <span class="side-dock-label font-mono">DEFENSE COCKPIT &amp; 3D THEATER</span>
+        </button>
+    </div>
 
     <!-- ======================================================
          4. Main Application Workspace
@@ -249,280 +242,99 @@
             <div id="view-cockpit" class="workspace-view active">
                 
                 <!-- ==============================================
-                     PROJECT-7: EXECUTIVE SHOWCASE & 9-STEP OPERATIONS ARCHITECTURE
+                     EXECUTIVE TELEMETRY STRIP (COMPACT & MODERN)
                 =============================================== -->
-                <div class="project-operations-showcase glass-card">
-                    <div class="showcase-content">
-                        <div class="showcase-header-row">
-                            <div class="showcase-badge">
-                                <span class="pulse-beacon"></span>
-                                <span>PROJECT-7 • AI &amp; CYBERSECURITY • SUB-16MS INLINE CLEARING</span>
+                <div class="executive-telemetry-bar glass-card">
+                    <div class="telemetry-stat-item">
+                        <div class="tstat-icon-wrap danger">🚨</div>
+                        <div class="tstat-content">
+                            <span class="tstat-label">INTERCEPTED FRAUD CASES</span>
+                            <div class="tstat-value-row">
+                                <span id="statTotalAlerts" class="tstat-num text-danger">0</span>
+                                <span class="tstat-pill red">POSTGRESQL SYNC</span>
                             </div>
-                            <div class="showcase-tech-tags">
-                                <span class="tech-tag primary">Python</span>
-                                <span class="tech-tag primary">Scikit-learn</span>
-                                <span class="tech-tag">Random Forest</span>
-                                <span class="tech-tag">Logistic Regression</span>
-                                <span class="tech-tag">SMOTE</span>
-                                <span class="tech-tag">FastAPI</span>
-                            </div>
-                        </div>
-
-                        <h2 class="showcase-headline">
-                            Intelligent Fraud Detection System for Financial Transactions
-                        </h2>
-                        
-                        <div class="showcase-problem-box">
-                            <strong>Problem Statement &amp; Solution:</strong> Traditional rule-based fraud detection methods fail to adapt to evolving fraud patterns and often generate high false positives. This system analyzes transaction behavior in real time, identifies suspicious patterns, and accurately detects fraudulent activities while minimizing false alerts using calibrated machine learning algorithms (98.50% recall).
-                        </div>
-                        
-                        <div class="showcase-cta-group">
-                            <button type="button" class="btn btn-primary btn-lg showcase-btn-glow" onclick="window.BankingTerminal.switchTab('transfer'); window.BankingTerminal.populateWirePreset('attack');" title="Simulate high-risk account drain attack">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                                <span>⚡ Step 7: Simulate Attack &amp; Intercept Live Fraud</span>
-                            </button>
-                            <button type="button" class="btn btn-secondary btn-lg" onclick="window.BankingTerminal.switchTab('batch');" title="Score untouched 197 test frauds">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
-                                <span>📦 Steps 4 &amp; 5: Run 197 Certified Fraud Benchmark</span>
-                            </button>
-                            <button type="button" class="btn btn-outline-info" onclick="window.BankingTerminal.switchTab('compliance');" title="Open complete Project-7 9-step documentation">
-                                <span>📘 View 9-Step Project Operations &amp; Architecture</span>
-                            </button>
-                            <button type="button" class="btn btn-outline-secondary" id="btnOpenGuideModal">
-                                <span>📖 30-Sec Evaluator Guide</span>
-                            </button>
                         </div>
                     </div>
 
-                    <!-- Interactive 9-Step Project Operations Architecture Strip -->
-                    <div class="operations-architecture-strip">
-                        <div class="operations-strip-header">
-                            <span class="operations-strip-title">SYSTEM SOLUTION APPROACH — 9 CORE OPERATIONS (PROJECT-7):</span>
-                            <small class="font-mono text-cyan">Click any operation card to interact live</small>
+                    <div class="telemetry-stat-item">
+                        <div class="tstat-icon-wrap green">🎯</div>
+                        <div class="tstat-content">
+                            <span class="tstat-label">ML FRAUD RECALL RATE</span>
+                            <div class="tstat-value-row">
+                                <span class="tstat-num text-green">98.50%</span>
+                                <span class="tstat-pill green">T=0.42 OPTIMIZED</span>
+                            </div>
                         </div>
+                    </div>
 
-                        <div class="operations-grid-9">
-                            <!-- Step 1: Transaction Data Collection -->
-                            <div class="operation-card" onclick="window.BankingTerminal.switchTab('transfer')" title="Click to open Payment Simulator">
-                                <div class="op-card-top">
-                                    <span class="op-step-badge">STEP 01</span>
-                                    <span class="op-step-icon">📥</span>
-                                </div>
-                                <div class="op-title">Transaction Data Collection</div>
-                                <p class="op-desc">Historical transaction ingestion: amount, timestamp, location (CA, TX, NY, FL), device hardware info, and user behavioral profiles.</p>
-                                <span class="op-action-link">Open Ingestion Simulator &rarr;</span>
+                    <div class="telemetry-stat-item">
+                        <div class="tstat-icon-wrap cyan">⚡</div>
+                        <div class="tstat-content">
+                            <span class="tstat-label">INLINE CLEARING LATENCY</span>
+                            <div class="tstat-value-row">
+                                <span class="tstat-num text-cyan">14ms</span>
+                                <span class="tstat-pill cyan">SUB-16MS SLA</span>
                             </div>
+                        </div>
+                    </div>
 
-                            <!-- Step 2: Data Cleaning and Imbalance Handling -->
-                            <div class="operation-card" onclick="window.BankingTerminal.switchTab('compliance')" title="Click to inspect SMOTE configuration">
-                                <div class="op-card-top">
-                                    <span class="op-step-badge">STEP 02</span>
-                                    <span class="op-step-icon">⚖️</span>
-                                </div>
-                                <div class="op-title">Data Cleaning &amp; SMOTE Imbalance</div>
-                                <p class="op-desc">Missing values imputed; severe minority class imbalance resolved via Synthetic Minority Over-sampling (SMOTE) to eliminate majority bias.</p>
-                                <span class="op-action-link">Inspect SMOTE Config &rarr;</span>
-                            </div>
-
-                            <!-- Step 3: Feature Engineering from Transaction Patterns -->
-                            <div class="operation-card" onclick="window.BankingTerminal.switchTab('compliance')" title="Click to view 11 engineered features">
-                                <div class="op-card-top">
-                                    <span class="op-step-badge">STEP 03</span>
-                                    <span class="op-step-icon">🧬</span>
-                                </div>
-                                <div class="op-title">Feature Engineering Patterns</div>
-                                <p class="op-desc">11 behavioral features derived: spending deviation amount, transaction frequency velocity, balance ratio, and geo-location mismatch.</p>
-                                <span class="op-action-link">View 11 AI Features &rarr;</span>
-                            </div>
-
-                            <!-- Step 4: Model Selection and Training -->
-                            <div class="operation-card" onclick="window.BankingTerminal.switchTab('batch')" title="Click to inspect model training">
-                                <div class="op-card-top">
-                                    <span class="op-step-badge">STEP 04</span>
-                                    <span class="op-step-icon">🧠</span>
-                                </div>
-                                <div class="op-title">Model Selection &amp; Training</div>
-                                <p class="op-desc">Supervised classification models trained: Logistic Regression (calibrated probability) and Random Forest ensemble bagging.</p>
-                                <span class="op-action-link">Inspect Trained Models &rarr;</span>
-                            </div>
-
-                            <!-- Step 5: Model Evaluation and Threshold Optimization -->
-                            <div class="operation-card warning-step" onclick="window.BankingTerminal.switchTab('batch')" title="Click to run 197-fraud benchmark">
-                                <div class="op-card-top">
-                                    <span class="op-step-badge">STEP 05</span>
-                                    <span class="op-step-icon">🎯</span>
-                                </div>
-                                <div class="op-title">Evaluation &amp; Threshold Opt.</div>
-                                <p class="op-desc">Evaluated via Precision, Recall, F1, and ROC analysis. Threshold optimized to T=0.42, cutting missed frauds by 50% (98.50% recall).</p>
-                                <span class="op-action-link">Run 197 Benchmark &rarr;</span>
-                            </div>
-
-                            <!-- Step 6: Fraud Risk Scoring Engine -->
-                            <div class="operation-card" onclick="window.BankingTerminal.switchTab('stream')" title="Click to launch live wire risk scorer">
-                                <div class="op-card-top">
-                                    <span class="op-step-badge">STEP 06</span>
-                                    <span class="op-step-icon">⚡</span>
-                                </div>
-                                <div class="op-title">Fraud Risk Scoring Engine</div>
-                                <p class="op-desc">Continuous institutional risk metric (0 to 100) assigned to every electronic payment, quantifying instantaneous threat probability.</p>
-                                <span class="op-action-link">Launch Live Risk Scorer &rarr;</span>
-                            </div>
-
-                            <!-- Step 7: Real-Time Prediction Integration -->
-                            <div class="operation-card" onclick="window.BankingTerminal.switchTab('transfer')" title="Click to test live FastAPI prediction">
-                                <div class="op-card-top">
-                                    <span class="op-step-badge">STEP 07</span>
-                                    <span class="op-step-icon">🚀</span>
-                                </div>
-                                <div class="op-title">Real-Time Prediction API</div>
-                                <p class="op-desc">Trained models deployed via asynchronous FastAPI REST endpoint, scoring incoming payments inline in under 16 milliseconds.</p>
-                                <span class="op-action-link">Test Live API Payload &rarr;</span>
-                            </div>
-
-                            <!-- Step 8: Alert and Flagging Mechanism -->
-                            <div class="operation-card danger-step" onclick="window.BankingTerminal.switchTab('triage')" title="Click to open case investigation desk">
-                                <div class="op-card-top">
-                                    <span class="op-step-badge">STEP 08</span>
-                                    <span class="op-step-icon">🚨</span>
-                                </div>
-                                <div class="op-title">Alert &amp; Flagging Mechanism</div>
-                                <p class="op-desc">High-risk transactions (Risk &ge; 42) automatically frozen and flagged; recorded in PostgreSQL audit tables for analyst investigation.</p>
-                                <span class="op-action-link">Manage Flagged Cases &rarr;</span>
-                            </div>
-
-                            <!-- Step 9: Monitoring and Analytics Dashboard -->
-                            <div class="operation-card active-step" onclick="window.BankingTerminal.switchTab('cockpit')" title="Currently active view">
-                                <div class="op-card-top">
-                                    <span class="op-step-badge">STEP 09</span>
-                                    <span class="op-step-icon">📊</span>
-                                </div>
-                                <div class="op-title">Monitoring &amp; Analytics Dashboard</div>
-                                <p class="op-desc">Telemetry cockpit displays real-time fraud trends, flagged transaction docket, regional risk distribution, and 3D defense theater.</p>
-                                <span class="op-action-link">Active Cockpit &rarr;</span>
+                    <div class="telemetry-stat-item">
+                        <div class="tstat-icon-wrap gold">🛰️</div>
+                        <div class="tstat-content">
+                            <span class="tstat-label">MODEL SERVING STATUS</span>
+                            <div class="tstat-value-row">
+                                <span class="tstat-num text-green">ACTIVE</span>
+                                <span class="tstat-pill green">FASTAPI REST</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Cockpit Metric Banners -->
-                <div class="view-header-strip">
-                    <div>
-                        <span class="subhead-tag">EXECUTIVE RISK TELEMETRY</span>
-                        <h2 class="view-title">Institutional Risk Operations Cockpit</h2>
-                        <p class="view-desc">High-frequency transaction monitoring, portfolio fraud exposure, and model recall metrics.</p>
-                    </div>
-                    <div class="last-sync-badge">
-                        <span>Database Sync:</span>
-                        <strong id="lastSyncTime">10:45:12 AM</strong>
-                    </div>
-                </div>
-
-                <!-- 6-Metric Executive Strip -->
-                <div class="cockpit-kpi-grid">
-                    <div class="bank-kpi-card kpi-total">
-                        <div class="kpi-icon-badge">🚨</div>
-                        <div class="kpi-content">
-                            <span class="kpi-title">INTERCEPTED FRAUD CASES</span>
-                            <h3 id="statTotalAlerts" class="kpi-number text-danger">0</h3>
-                            <span class="kpi-footnote">Synchronized in PostgreSQL</span>
-                        </div>
-                    </div>
-
-                    <div class="bank-kpi-card kpi-new">
-                        <div class="kpi-icon-badge">🆕</div>
-                        <div class="kpi-content">
-                            <span class="kpi-title">UNASSIGNED / NEW CASES</span>
-                            <h3 id="statNewAlerts" class="kpi-number text-yellow">0</h3>
-                            <span class="kpi-footnote">Immediate triage required</span>
-                        </div>
-                    </div>
-
-                    <div class="bank-kpi-card kpi-review">
-                        <div class="kpi-icon-badge">🔎</div>
-                        <div class="kpi-content">
-                            <span class="kpi-title">ACTIVE INVESTIGATIONS</span>
-                            <h3 id="statUnderReview" class="kpi-number text-cyan">0</h3>
-                            <span class="kpi-footnote">Claimed by analysts</span>
-                        </div>
-                    </div>
-
-                    <div class="bank-kpi-card kpi-resolved">
-                        <div class="kpi-icon-badge">✅</div>
-                        <div class="kpi-content">
-                            <span class="kpi-title">RESOLVED & SETTLED</span>
-                            <h3 id="statResolved" class="kpi-number text-green">0</h3>
-                            <span class="kpi-footnote">Funds protected / released</span>
-                        </div>
-                    </div>
-
-                    <div class="bank-kpi-card kpi-recall">
-                        <div class="kpi-icon-badge">🎯</div>
-                        <div class="kpi-content">
-                            <span class="kpi-title">FRAUD RECALL RATE</span>
-                            <h3 class="kpi-number text-green">98.50%</h3>
-                            <span class="kpi-footnote">197 of 200 caught ($T=0.42$)</span>
-                        </div>
-                    </div>
-
-                    <div class="bank-kpi-card kpi-savings">
-                        <div class="kpi-icon-badge">🛡️</div>
-                        <div class="kpi-content">
-                            <span class="kpi-title">MISSED FRAUDS HALVED</span>
-                            <h3 class="kpi-number text-cyan">-50.0%</h3>
-                            <span class="kpi-footnote">Cut from 6 to 3 misses</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ======================================================
-                     SATELLITE INTELLIGENCE & GLOBAL FRAUD DEFENSE THEATER (Image 4 Style)
-                ======================================================= -->
                 <!-- ======================================================
                      SATELLITE INTELLIGENCE & GLOBAL FRAUD DEFENSE THEATER
-                     (1:1 Fuselab Creative CyberDefend Starlink Architecture)
                 ======================================================= -->
                 <div class="satellite-defense-theater glass-card">
-                    <!-- Theater Header Strip (Matching Image 4) -->
+                    <!-- Clean Theater Header Strip -->
                     <div class="sat-theater-header">
                         <div class="sat-brand-block">
                             <div class="sat-icon-circle">
-                                <span>⬢</span>
+                                <span>🛰️</span>
                             </div>
                             <div class="sat-brand-text">
-                                <span class="sat-cyberdefend-title">ORBITAL FRAUD RECONNAISSANCE THEATER</span>
-                                <span class="sat-brand-sub">STEP 9 OPERATION: REAL-TIME THREAT INTERCEPTION • PROJECT-7</span>
+                                <span class="sat-cyberdefend-title">FINANCIAL FRAUD DETECTION SYSTEM</span>
+                                <span class="sat-brand-sub">REAL-TIME BEHAVIORAL PATTERN ANALYSIS &bull; 2-WAY SATELLITE SIGNAL LINK &bull; TRAINED LOCATIONS (CA, TX, NY, FL)</span>
                             </div>
                         </div>
 
-                        <!-- Center Navigation Tabs Mapped to Project Operations -->
-                        <div class="fuselab-center-nav">
-                            <button type="button" class="fuselab-tab active" onclick="window.BankingTerminal && window.BankingTerminal.switchTab('cockpit')" title="Step 9: Interactive 3D Orbit View">🌐 Orbit Cockpit</button>
-                            <button type="button" class="fuselab-tab" onclick="window.BankingTerminal && window.BankingTerminal.switchTab('transfer')" title="Steps 1 & 7: Test payment ingestion & live API scoring">💳 Steps 1 &amp; 7 Simulator</button>
-                            <button type="button" class="fuselab-tab" onclick="window.BankingTerminal && window.BankingTerminal.switchTab('stream')" title="Step 6: High-frequency risk scoring stream">⚡ Step 6 Risk Stream</button>
-                            <button type="button" class="fuselab-tab" onclick="window.BankingTerminal && window.BankingTerminal.switchTab('triage')" title="Step 8: Investigate flagged fraud alerts">🚨 Step 8 Alert Triage</button>
-                        </div>
-
-                        <!-- Top Right Live Controls -->
+                        <!-- Top Right Controls -->
                         <div class="sat-theater-actions">
                             <div class="sat-camera-controls" role="group" aria-label="Camera Perspectives">
                                 <button type="button" id="btnCamOrbital" class="btn-sat-cam active" title="3D Orbital Perspective">🌐 Orbit</button>
                                 <button type="button" id="btnCamChase" class="btn-sat-cam" title="Satellite Chase Camera">🛰️ Sat Cam</button>
                                 <button type="button" id="btnCamTarget" class="btn-sat-cam" title="Target City Lock">🎯 Target</button>
                             </div>
-                            <button type="button" id="btnPlayMovieInterception" class="btn btn-warning btn-sm sat-fire-btn sat-movie-btn" title="Watch full 3-phase cinematic movie: Earth Uplink -> Orbital AI Inference -> Satellite Downlink Strike">
+                            <button type="button" id="btnPlayMovieInterception" class="btn btn-warning btn-sm sat-fire-btn sat-movie-btn" title="Watch full cinematic movie: Ground Uplink -> Orbital AI Inference -> Satellite Downlink Strike">
                                 <span class="btn-sheen"></span>
                                 <span>🎬 Play Cinematic Movie</span>
-                            </button>
-                            <button type="button" id="btnTestFireSatellite" class="btn btn-primary btn-sm sat-fire-btn" title="Simulate Real-Time Satellite Laser Interception">
-                                <span class="btn-sheen"></span>
-                                <span>⚡ Intercept Test Fraud</span>
                             </button>
                         </div>
                     </div>
 
-                    <!-- 3D Three.js Globe Stage with Image 4 Glass Overlays -->
+                    <!-- 3D Three.js Globe Stage (Unobstructed & Clean) -->
                     <div id="satelliteTheaterContainer" class="sat-viewport-container">
                         <!-- Three.js Canvas injected dynamically here -->
+
+                        <!-- Defense Cockpit & 3D Theater Button (Positioned by the side in the Globe Screen) -->
+                        <div class="globe-side-cockpit-anchor">
+                            <button type="button" id="btnGlobeSideCockpit" class="btn-globe-side-cockpit active" onclick="window.BankingTerminal &amp;&amp; window.BankingTerminal.switchTab('cockpit')" title="Defense Cockpit &amp; 3D Theater">
+                                <span class="side-cockpit-pulse"></span>
+                                <span class="side-cockpit-icon">🌐</span>
+                                <div class="side-cockpit-meta">
+                                    <span class="side-cockpit-name">DEFENSE COCKPIT &amp; 3D THEATER</span>
+                                    <span class="side-cockpit-status">RANDOM FOREST + LOGREG &bull; ACTIVE</span>
+                                </div>
+                            </button>
+                        </div>
 
                         <!-- Cinematic 4K Movie Letterbox & Director HUD (Real-Time Earth <-> Satellite Stream) -->
                         <div id="satMovieLetterbox" class="sat-movie-letterbox" style="display: none;">
@@ -531,10 +343,10 @@
                                 <div class="movie-meta-left">
                                     <span class="movie-rec-dot">●</span>
                                     <span class="movie-rec-txt font-mono">REC LIVE</span>
-                                    <span class="movie-scene-tag font-mono" id="movieSceneTag">SCENE 01: GROUND UPLINK</span>
+                                    <span class="movie-scene-tag font-mono" id="movieSceneTag">SCENE 01: GROUND TRANSACTION UPLINK</span>
                                 </div>
-                                <div class="movie-meta-center font-mono">PROJECT-7: SATELLITE FRAUD INTERCEPTION CINEMA</div>
-                                <div class="movie-meta-right font-mono" id="movieTelemetryTag">Ku-BAND 14.25 GHz • LATENCY: 14ms</div>
+                                <div class="movie-meta-center font-mono">FINANCIAL FRAUD DETECTION SYSTEM</div>
+                                <div class="movie-meta-right font-mono" id="movieTelemetryTag">FASTAPI REST &bull; LATENCY: 14ms &bull; THRESHOLD: T=0.42</div>
                             </div>
 
                             <!-- Center Reticle Framing -->
@@ -549,27 +361,27 @@
                             <!-- Bottom Cinema Bar with Live Dynamic Subtitles -->
                             <div class="movie-bar-bottom">
                                 <div class="movie-subtitle-card">
-                                    <div class="movie-sub-phase font-mono" id="movieSubPhase">PHASE 1: GROUND TRANSMISSION</div>
-                                    <div class="movie-sub-text" id="movieSubText">Transmitting transaction telemetry from ground station to Starlink LEO Defense constellation...</div>
+                                    <div class="movie-sub-phase font-mono" id="movieSubPhase">PHASE 1: TRANSACTION INGESTION &amp; UPLINK</div>
+                                    <div class="movie-sub-text" id="movieSubText">Transmitting 11 engineered features (Amount, Balance Ratio, Device Recognition, Location Deviation) from ground terminal to satellite AI node...</div>
                                 </div>
                                 <div class="movie-live-metrics font-mono">
                                     <div class="movie-metric-row">
-                                        <span class="text-muted">WIRE:</span>
-                                        <strong id="movieTxIdDisplay" class="text-white">TX-WIRE-9896</strong>
+                                        <span class="text-muted">TX ID:</span>
+                                        <strong id="movieTxIdDisplay" class="text-white">T9896</strong>
                                     </div>
                                     <div class="movie-metric-row">
-                                        <span class="text-muted">NODE:</span>
+                                        <span class="text-muted">LOCATION:</span>
                                         <strong id="movieLocDisplay" class="text-cyan">Texas, USA</strong>
                                     </div>
                                     <div class="movie-metric-row">
-                                        <span class="text-muted">STATUS:</span>
+                                        <span class="text-muted">FLAG STATUS:</span>
                                         <strong id="movieDecisionDisplay" class="text-warning">UPLINK TRANSMITTING...</strong>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 1:1 Tactical Starlink Flight HUD Overlay (Activated in 🛰️ Sat Cam Mode) -->
+                        <!-- 1:1 Tactical ML Flight HUD Overlay (Activated in 🛰️ Sat Cam Mode) -->
                         <div id="satCamTacticalHud" class="sat-cam-tactical-hud" style="display: none;">
                             <!-- Corner Reticle Framing Brackets -->
                             <div class="hud-corner top-left"></div>
@@ -578,7 +390,7 @@
                             <div class="hud-corner bottom-right"></div>
 
                             <!-- Top-Left Tactical Satellite Comms Icon -->
-                            <div class="hud-sat-icon-wrap" title="Starlink Inter-Satellite Laser Comms OK">
+                            <div class="hud-sat-icon-wrap" title="Real-Time FastAPI Model Scoring Active">
                                 <svg viewBox="0 0 48 48" class="hud-sat-svg">
                                     <rect x="18" y="18" width="12" height="12" rx="2" fill="none" stroke="#38bdf8" stroke-width="2"/>
                                     <line x1="12" y1="12" x2="18" y2="18" stroke="#38bdf8" stroke-width="2"/>
@@ -590,7 +402,7 @@
                                 </svg>
                             </div>
 
-                            <!-- Top-Right Tactical Beacon Status (Matching Image 1:1) -->
+                            <!-- Top-Right Tactical Beacon Status -->
                             <div class="hud-beacon-status-wrap">
                                 <div class="hud-beacon-icon-line">
                                     <svg viewBox="0 0 32 32" class="hud-beacon-svg">
@@ -601,24 +413,23 @@
                                         <line x1="26" y1="10" x2="23" y2="13" stroke="#ff0033" stroke-width="2"/>
                                     </svg>
                                     <div class="hud-status-pills">
-                                        <span class="hud-p-dot cyan">● DEPLOYED</span>
-                                        <span class="hud-p-dot green">● ACTIVE</span>
-                                        <span class="hud-p-dot green">● COMMS OK</span>
+                                        <span class="hud-p-dot cyan">● MODEL LOADED</span>
+                                        <span class="hud-p-dot green">● FASTAPI ACTIVE</span>
+                                        <span class="hud-p-dot green">● POSTGRESQL OK</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Bottom-Left Flight Telemetry Metrics (Matching Image 1:1) -->
+                            <!-- Bottom-Left Model Telemetry Metrics -->
                             <div class="hud-flight-telemetry-block font-mono">
-                                <div class="hud-tele-row"><span class="hud-t-lbl">ALTITUDE:</span><span class="hud-t-val">548 KM</span></div>
-                                <div class="hud-tele-row"><span class="hud-t-lbl">VELOCITY:</span><span class="hud-t-val">7.6 KM/S</span></div>
-                                <div class="hud-tele-row"><span class="hud-t-lbl">ORBITAL INCL:</span><span class="hud-t-val">53.0°</span></div>
-                                <div class="hud-tele-row"><span class="hud-t-lbl">PWR:</span><span class="hud-t-val text-green">100%</span></div>
-                                <div class="hud-tele-row"><span class="hud-t-lbl">TEMP:</span><span class="hud-t-val">-45°C</span></div>
-                                <div class="hud-tele-row"><span class="hud-t-lbl">COMMS:</span><span class="hud-t-val text-green font-bold">OK</span></div>
+                                <div class="hud-tele-row"><span class="hud-t-lbl">ML MODEL:</span><span class="hud-t-val">ROS + LOGREG</span></div>
+                                <div class="hud-tele-row"><span class="hud-t-lbl">CUTOFF:</span><span class="hud-t-val">T = 0.42</span></div>
+                                <div class="hud-tele-row"><span class="hud-t-lbl">RECALL:</span><span class="hud-t-val text-green font-bold">98.50%</span></div>
+                                <div class="hud-tele-row"><span class="hud-t-lbl">ROC-AUC:</span><span class="hud-t-val text-green">0.9967</span></div>
+                                <div class="hud-tele-row"><span class="hud-t-lbl">INFERENCE:</span><span class="hud-t-val text-cyan font-bold">14ms INLINE</span></div>
                             </div>
 
-                            <!-- Bottom-Right Starlink Mission Docket (Matching Image 1:1) -->
+                            <!-- Bottom-Right Mission Docket -->
                             <div class="hud-mission-card font-mono">
                                 <div class="hud-mission-logo">
                                     <svg viewBox="0 0 60 28" class="starlink-arc-svg">
@@ -626,135 +437,88 @@
                                         <polygon points="56,12 46,11 50,18" fill="#38bdf8"/>
                                     </svg>
                                 </div>
-                                <div class="hud-m-title">STARLINK MISSION - LEO-345</div>
-                                <div class="hud-m-sub">TARGET: <strong class="text-white">548 KM</strong></div>
-                                <div class="hud-m-sub">DATA LINK: <strong class="text-green">ACTIVE</strong></div>
+                                <div class="hud-m-title">FRAUD DETECTION ENGINE</div>
+                                <div class="hud-m-sub">TARGET: <strong class="text-white">SUSPICIOUS ACTIVITY FLAG</strong></div>
+                                <div class="hud-m-sub">FASTAPI STATUS: <strong class="text-green">ONLINE (PORT 8000)</strong></div>
                             </div>
-                        </div>
-
-                        <!-- Top Left: Aerial Radar Scan Sensor Tile (Image 4) -->
-                        <div class="sat-radar-scan-box">
-                            <div class="radar-scan-img-wrap">
-                                <img src="assets/images/satellite_radar_scan.jpg" alt="Aerial Satellite Reconnaissance" class="radar-scan-img" />
-                                <div class="radar-coord-overlay">108.39.0.532</div>
-                            </div>
-                            <div class="radar-scan-meta">
-                                <span class="radar-scan-code">SAT-Error: ST-25854-54</span>
-                                <div class="radar-scan-metrics">
-                                    <span>R: 14/100</span>
-                                    <span class="text-green">99.95%</span>
-                                    <span>120 Mbps</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Left Mid: Simulation Layer Controls (Image 4) -->
-                        <div class="sat-sim-layer-box">
-                            <span class="sim-layer-title">SIMULATE</span>
-                            <div class="sim-layer-item">
-                                <input type="checkbox" id="simChkSat" checked />
-                                <label for="simChkSat"><span class="sim-dot cyan"></span> Satellites</label>
-                            </div>
-                            <div class="sim-layer-item">
-                                <input type="checkbox" id="simChkTowers" />
-                                <label for="simChkTowers"><span class="sim-dot gold"></span> Towers</label>
-                            </div>
-                            <span class="sim-layer-filter-title">FILTER</span>
-                            <span class="sim-layer-link active">Flight path</span>
-                            <span class="sim-layer-link">Space trash</span>
-                        </div>
-
-                        <!-- Top Right: Starlink-1753A Satellite Preview Card (Image 4) -->
-                        <div class="sat-starlink-card">
-                            <div class="starlink-card-img-wrap">
-                                <img src="assets/images/starlink_satellite.jpg" alt="Starlink Satellite Preview" class="starlink-card-img" />
-                                <span class="starlink-status-badge">ONLINE</span>
-                            </div>
-                            <div class="starlink-card-info">
-                                <div class="starlink-card-title">Starlink-1753A</div>
-                                <div class="starlink-metric-row">
-                                    <span class="s-label">Signal</span>
-                                    <strong class="s-val text-green">98% <span class="signal-bars">||||</span></strong>
-                                </div>
-                                <div class="starlink-metric-row">
-                                    <span class="s-label">Frequency</span>
-                                    <strong class="s-val font-mono">12.4 GHz</strong>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Right Mid: Circular Gyro Compass & Attitude Dial (Image 4) -->
-                        <div class="sat-gyro-dial-box">
-                            <svg class="sat-gyro-svg" viewBox="0 0 80 80">
-                                <circle cx="40" cy="40" r="36" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" />
-                                <circle cx="40" cy="40" r="30" fill="none" stroke="rgba(56,189,248,0.25)" stroke-width="1.2" stroke-dasharray="4 2" />
-                                <circle cx="40" cy="40" r="8" fill="none" stroke="#d4af37" stroke-width="1.5" />
-                                <line x1="40" y1="2" x2="40" y2="78" stroke="rgba(255,255,255,0.12)" stroke-width="1" />
-                                <line x1="2" y1="40" x2="78" y2="40" stroke="rgba(255,255,255,0.12)" stroke-width="1" />
-                                <text x="40" y="14" fill="#38bdf8" font-size="7" font-family="monospace" text-anchor="middle">N 0°</text>
-                                <text x="68" y="43" fill="#64748b" font-size="6" font-family="monospace" text-anchor="middle">90°</text>
-                                <text x="40" y="72" fill="#64748b" font-size="6" font-family="monospace" text-anchor="middle">180°</text>
-                                <text x="12" y="43" fill="#64748b" font-size="6" font-family="monospace" text-anchor="middle">270°</text>
-                            </svg>
                         </div>
                     </div>
 
-                    <!-- Lower 3-Column Telemetry Deck (Matching Image 4 1:1) -->
+                    <!-- Lower 3-Column Telemetry Deck (Matching Image 4 Layout) -->
                     <div class="sat-image4-deck">
-                        <!-- Left Column: Project-7 ML Engine Controller & Performance Dials -->
+                        <!-- Left Column: Interactive Mission Command Predictor -->
                         <div class="deck-col deck-col-controller">
-                            <div class="controller-card-inner">
-                                <div class="controller-top-row">
-                                    <div class="starlink-thumb-box">
-                                        <img src="assets/images/starlink_satellite.jpg" alt="Starlink Reconnaissance Platform" class="starlink-thumb-img" />
-                                        <div class="starlink-thumb-label">
-                                            <span class="st-brand">PROJECT-7 ML CORE</span>
-                                            <span class="st-sub font-mono">RF + LOGREG (SMOTE)</span>
-                                        </div>
+                            <div class="mission-predictor-card">
+                                <div class="mission-pred-head">
+                                    <div class="mission-head-title">
+                                        <span class="pulse-beacon"></span>
+                                        <strong>REAL-TIME TRANSACTION FRAUD PREDICTOR</strong>
                                     </div>
-                                    <div class="controller-speed-box">
-                                        <div class="speed-dial-item">
-                                            <span class="speed-val font-mono">16ms</span>
-                                            <span class="speed-lbl">Inference Latency</span>
-                                        </div>
-                                        <div class="speed-dial-item">
-                                            <span class="speed-val font-mono text-cyan">98.50%</span>
-                                            <span class="speed-lbl">Fraud Recall (T=0.42)</span>
-                                        </div>
+                                    <span class="font-mono text-cyan text-xs">MODEL: T=0.42</span>
+                                </div>
+                                <p class="mission-pred-sub">Select transaction attributes from dataset, transmit uplink to satellite AI node &amp; receive real-time prediction:</p>
+
+                                <div class="mission-form-grid">
+                                    <div class="mission-field">
+                                        <label for="missionSelectLoc">Transaction Location (Location Feature)</label>
+                                        <select id="missionSelectLoc" class="mission-select font-mono">
+                                            <option value="california">📍 California, USA (LOC-CA-01)</option>
+                                            <option value="texas" selected>📍 Texas, USA (LOC-TX-02)</option>
+                                            <option value="new york">📍 New York, USA (LOC-NY-03)</option>
+                                            <option value="florida">📍 Florida, USA (LOC-FL-04)</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mission-field">
+                                        <label for="missionSelectScenario">Transaction Scenario (Behavioral Features)</label>
+                                        <select id="missionSelectScenario" class="mission-select font-mono">
+                                            <option value="attack_drain" selected>🚨 Attack: High-Deviation Account Drain ($1,508.20 | Spending Dev: 1 | Location Dev: 1)</option>
+                                            <option value="attack_rapid">🚨 Attack: Unusual Hour Rapid Wire ($9,500.00 | Unusual Hour: 1 | Device Unrecognized: 1)</option>
+                                            <option value="clean_payroll">🛡️ Legitimate: Standard Payroll Transfer ($4,200.00 | Device Match: 1 | Spending Dev: 0)</option>
+                                            <option value="clean_retail">🛡️ Legitimate: Low-Risk Retail Payment ($45.00 | Device Match: 1 | Spending Dev: 0)</option>
+                                        </select>
                                     </div>
                                 </div>
 
-                                <!-- D-Pad Attitude Gimbal Controller -->
-                                <div class="gimbal-controls-row">
-                                    <div class="gimbal-dpad">
-                                        <button type="button" id="btnDpadUp" class="dpad-btn up" title="Pitch Up">▲</button>
-                                        <div class="dpad-mid-row">
-                                            <button type="button" id="btnDpadLeft" class="dpad-btn left" title="Yaw Left">◄</button>
-                                            <button type="button" id="btnDpadCenter" class="dpad-btn center" title="Recenter View">⦿</button>
-                                            <button type="button" id="btnDpadRight" class="dpad-btn right" title="Yaw Right">►</button>
-                                        </div>
-                                        <button type="button" id="btnDpadDown" class="dpad-btn down" title="Pitch Down">▼</button>
+                                <button type="button" id="btnLaunchMissionPrediction" class="mission-launch-btn">
+                                    <span class="btn-sheen"></span>
+                                    <span>🎬 PREDICT &amp; INTERCEPT TRANSACTION (LIVE SATELLITE SIGNAL)</span>
+                                </button>
+
+                                <!-- Live Mission Verdict Card -->
+                                <div id="missionVerdictCard" class="mission-verdict-card" style="display: none;">
+                                    <div class="m-verdict-header">
+                                        <span id="mVerdictBadge" class="m-verdict-badge danger">SUSPICIOUS (FRAUD DETECTED)</span>
+                                        <span id="mVerdictLatency" class="font-mono text-cyan text-xs">14ms inline</span>
                                     </div>
-                                    <div class="gimbal-meta">
-                                        <div class="meta-item">
-                                            <span class="meta-label">Targets Detected</span>
-                                            <strong class="meta-value font-mono">2 Satellites</strong>
+                                    <div class="m-verdict-body">
+                                        <div class="m-verdict-row">
+                                            <span class="text-muted">Suspicious Activity Flag:</span>
+                                            <strong id="mVerdictFlag" class="font-mono text-danger">1 (FLAGGED FRAUD)</strong>
                                         </div>
-                                        <div class="meta-item">
-                                            <span class="meta-label">Next Contact</span>
-                                            <strong class="meta-value font-mono text-yellow">2h 30m 13s</strong>
+                                        <div class="m-verdict-row">
+                                            <span class="text-muted">Calculated Risk Score:</span>
+                                            <strong id="mVerdictScore" class="font-mono text-danger">100.0 / 100</strong>
+                                        </div>
+                                        <div class="m-verdict-row">
+                                            <span class="text-muted">Operating Cutoff:</span>
+                                            <strong class="font-mono text-cyan">T = 0.42 (Recall 98.50%)</strong>
+                                        </div>
+                                        <div class="m-verdict-row">
+                                            <span class="text-muted">System Action:</span>
+                                            <strong id="mVerdictAction" class="text-danger">🚨 TRANSACTION FROZEN &amp; POSTGRESQL ALERT RECORDED</strong>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Middle Column: Project Locations & Telemetry Stream (California, Texas, New York, Florida) -->
+                        <!-- Middle Column: Project Trained Locations (California, Texas, New York, Florida) -->
                         <div class="deck-col deck-col-towers">
                             <div class="towers-top-bar">
                                 <div class="towers-title-wrap">
-                                    <span class="t-badge font-mono">PROJECT LOCATIONS: 4</span>
-                                    <span class="t-badge font-mono active">ML TRAINED REGIONS: 4</span>
+                                    <span class="t-badge font-mono">TRAINED TRANSACTION LOCATIONS: 4</span>
+                                    <span class="t-badge font-mono active">DATASET LOCATIONS: 4</span>
                                 </div>
                                 <div class="towers-search-wrap">
                                     <input type="text" placeholder="Filter locations..." class="towers-search-input" />
@@ -764,10 +528,10 @@
                                 <table class="towers-table">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th>Project Location</th>
-                                            <th>Velocity</th>
-                                            <th>Transactions</th>
+                                            <th>Location ID</th>
+                                            <th>Dataset Location</th>
+                                            <th>Risk Exposure Rate</th>
+                                            <th>Processed Transactions</th>
                                         </tr>
                                     </thead>
                                     <tbody id="satLocationDocketBody">
@@ -812,10 +576,10 @@
                             </div>
                         </div>
 
-                        <!-- Right Column: Chance of Failure Seismograph -->
+                        <!-- Right Column: Suspicious Transaction Rate & Hourly Risk Velocity -->
                         <div class="deck-col deck-col-failure">
                             <div class="failure-top-bar">
-                                <span class="failure-title">CHANCE OF FAILURE (VELOCITY)</span>
+                                <span class="failure-title">SUSPICIOUS TRANSACTION RATE &amp; HOURLY RISK VELOCITY</span>
                                 <div class="failure-legend">
                                     <span class="f-dot cyan"></span> Normal
                                     <span class="f-dot red"></span> Spike
@@ -839,7 +603,7 @@
                                     <path d="M 25 70 Q 55 60 85 45 T 145 25 T 205 60 T 265 20 T 325 45 L 355 50 L 355 85 L 25 85 Z" fill="url(#failureGrad)" />
                                     <path d="M 25 70 Q 55 60 85 45 T 145 25 T 205 60 T 265 20 T 325 45 L 355 50" fill="none" stroke="#38bdf8" stroke-width="2" />
                                     <path d="M 115 50 Q 145 25 175 35 T 235 65 T 285 15 L 355 40" fill="none" stroke="#ef4444" stroke-width="1.8" />
-                                    <!-- Peak callout pins matching Image 4 -->
+                                    <!-- Peak callout pins matching Image 4 (Strictly Project Locations) -->
                                     <circle cx="145" cy="25" r="3.5" fill="#ffffff" stroke="#38bdf8" stroke-width="2" />
                                     <circle cx="285" cy="15" r="4" fill="#ef4444" stroke="#ffffff" stroke-width="1.8" />
                                 </svg>
@@ -848,12 +612,12 @@
                                     <div class="pin-tag">
                                         <span class="pin-badge">CA-01</span>
                                         <span class="pin-loc">California, USA</span>
-                                        <small class="pin-time">21-11-02T 13:43:18</small>
+                                        <small class="pin-time">RECORDED FRAUD</small>
                                     </div>
                                     <div class="pin-tag">
                                         <span class="pin-badge">NY-03</span>
                                         <span class="pin-loc">New York, USA</span>
-                                        <small class="pin-time">LAST DOWNLINK</small>
+                                        <small class="pin-time">MODEL VERIFIED</small>
                                     </div>
                                     <div class="pin-tag">
                                         <span class="pin-badge alert">TX-02</span>
@@ -863,7 +627,7 @@
                                     <div class="pin-tag">
                                         <span class="pin-badge">FL-04</span>
                                         <span class="pin-loc">Florida, USA</span>
-                                        <small class="pin-time">CLEARED 14ms</small>
+                                        <small class="pin-time">CLEARED PAYMENTS</small>
                                     </div>
                                 </div>
                             </div>
@@ -993,10 +757,10 @@
 
                         <div class="cockpit-launchpad">
                             <button class="btn btn-primary" onclick="window.BankingTerminal.switchTab('transfer')">
-                                <span>⚡ Launch Payment Simulator</span>
+                                <span>⚡ Real-Time Transaction Predictor</span>
                             </button>
-                            <button class="btn btn-secondary" onclick="window.BankingTerminal.switchTab('batch')">
-                                <span>📦 Execute 197-Batch Settlement</span>
+                            <button class="btn btn-secondary" onclick="window.BankingTerminal.switchTab('triage')">
+                                <span>🚨 Flagged Fraud Cases Docket</span>
                             </button>
                         </div>
                     </div>
@@ -1005,42 +769,42 @@
 
 
             <!-- ==============================================
-                 TAB 2: REAL-TIME PAYMENT & TRANSFER SIMULATOR
+                 TAB 2: REAL-TIME TRANSACTION FRAUD PREDICTOR
             =============================================== -->
             <div id="view-transfer" class="workspace-view">
                 <div class="view-header-strip">
                     <div>
-                        <span class="subhead-tag">TRANSACTION DISPATCH DESK</span>
-                        <h2 class="view-title">Real-Time Core Payment Dispatch & Scoring</h2>
-                        <p class="view-desc">Simulate institutional wire transfers and payments. Every transaction passes through the calibrated ML model before clearing.</p>
+                        <span class="subhead-tag">DATASET FEATURE INGESTION &amp; SCORING</span>
+                        <h2 class="view-title">Real-Time Transaction Fraud Predictor</h2>
+                        <p class="view-desc">Score individual transactions across the 15 dataset attributes and 11 engineered features using the trained Random Over-Sampling + Logistic Regression pipeline at the optimized T = 0.42 threshold.</p>
                     </div>
                 </div>
 
-                <!-- Institutional Preset Quick-Picks -->
+                <!-- Dataset Benchmark Transaction Presets -->
                 <div class="preset-wires-card glass-card">
-                    <span class="preset-label">🏦 ONE-CLICK WIRE TRANSFER SCENARIOS:</span>
+                    <span class="preset-label">📊 DATASET BENCHMARK TRANSACTION PRESETS:</span>
                     <div class="preset-buttons-row">
                         <button type="button" class="btn-wire-preset preset-attack" id="btnPresetAttack">
                             <span class="preset-icon">🚨</span>
                             <div class="preset-meta">
-                                <strong>Scenario 1: High-Value Account Drain Attack</strong>
-                                <small>Transfer $8,450 (93% of balance) • Unknown Device • Threat Flagged • Deviation 3.4x</small>
+                                <strong>Scenario 1: High-Deviation Account Drain (Flag = 1)</strong>
+                                <small>T9896 &bull; Amount: $8,450.00 | Balance: $9,100.00 | Device: Unrecognized (0) | Threat Flag: 1 | Spending Deviation: 3.4x | Location: Texas</small>
                             </div>
                         </button>
 
                         <button type="button" class="btn-wire-preset preset-anomaly" id="btnPresetAnomaly">
                             <span class="preset-icon">⚠️</span>
                             <div class="preset-meta">
-                                <strong>Scenario 2: Geo-Location Mismatch Anomaly</strong>
-                                <small>Withdrawal $1,420 • Foreign Login Location • Unrecognized Hardware</small>
+                                <strong>Scenario 2: Geo-Location Mismatch Anomaly (Flag = 1)</strong>
+                                <small>T3227 &bull; Amount: $1,420.00 | Balance: $4,500.00 | Login Location Match: 0 | Device: Unrecognized (0) | Location: California</small>
                             </div>
                         </button>
 
                         <button type="button" class="btn-wire-preset preset-clean" id="btnPresetClean">
                             <span class="preset-icon">✅</span>
                             <div class="preset-meta">
-                                <strong>Scenario 3: Verified Corporate Vendor Wire</strong>
-                                <small>Deposit $4,800 • Verified Device • Zero Threats • Clean Spending Pattern</small>
+                                <strong>Scenario 3: Normal Legitimate Transaction (Flag = 0)</strong>
+                                <small>T7841 &bull; Amount: $450.00 | Balance: $12,500.00 | Recognized Device: 1 | Threat Flag: 0 | Location Match: 1 | Location: New York</small>
                             </div>
                         </button>
                     </div>
@@ -1048,51 +812,51 @@
 
                 <!-- Simulator Layout: Transfer Form on Left, Risk HUD on Right -->
                 <div class="simulator-layout">
-                    <!-- Left: Wire Transfer Form -->
+                    <!-- Left: Transaction Feature Authorization Form -->
                     <div class="transfer-form-card glass-card">
                         <div class="panel-topbar">
-                            <h3>Wire Transfer Authorization Slip</h3>
+                            <h3>Transaction Data Form (Dataset Attributes)</h3>
                             <button type="button" id="btnGenNewWireId" class="btn btn-sm btn-secondary">
-                                🎲 Generate New TX-ID
+                                🎲 Generate New Transaction ID (T0001–T9999)
                             </button>
                         </div>
 
                         <form id="wireTransferForm" class="wire-form">
-                            <!-- Row 1: Wire ID & Execution Timestamp -->
+                            <!-- Row 1: Transaction ID & Timestamp -->
                             <div class="form-row">
                                 <div class="terminal-field">
-                                    <label for="wireTxId">Transaction Reference ID</label>
-                                    <input id="wireTxId" type="text" class="font-mono" required value="TX-WIRE-7841">
+                                    <label for="wireTxId">Transaction ID (e.g. T9896, T3227, T7841)</label>
+                                    <input id="wireTxId" type="text" class="font-mono" required value="T9896">
                                 </div>
                                 <div class="terminal-field">
-                                    <label for="wireTimestamp">Execution Timestamp (ISO)</label>
+                                    <label for="wireTimestamp">Timestamp (ISO / YYYY-MM-DD HH:MM:SS)</label>
                                     <input id="wireTimestamp" type="datetime-local" class="font-mono" required>
                                 </div>
                             </div>
 
-                            <!-- Row 2: Accounts -->
+                            <!-- Row 2: Account IDs -->
                             <div class="form-row">
                                 <div class="terminal-field">
-                                    <label for="wireSender">Originating Account (Debtor)</label>
-                                    <input id="wireSender" type="text" class="font-mono" required value="US-JPMC-774921">
+                                    <label for="wireSender">Sender Account ID (e.g. A41624, A23440)</label>
+                                    <input id="wireSender" type="text" class="font-mono" required value="A41624">
                                 </div>
                                 <div class="terminal-field">
-                                    <label for="wireReceiver">Beneficiary Account (Creditor)</label>
-                                    <input id="wireReceiver" type="text" class="font-mono" required value="KY-BCM-991204">
+                                    <label for="wireReceiver">Receiver Account ID (e.g. B51095, B87929)</label>
+                                    <input id="wireReceiver" type="text" class="font-mono" required value="B51095">
                                 </div>
                             </div>
 
                             <!-- Row 3: Amount & Account Balance -->
                             <div class="form-row">
                                 <div class="terminal-field">
-                                    <label for="wireAmount">Wire Amount ($ USD)</label>
+                                    <label for="wireAmount">Amount ($ USD)</label>
                                     <div class="currency-input">
                                         <span class="curr-sign">$</span>
                                         <input id="wireAmount" type="number" step="0.01" min="0" class="font-mono" required value="8450.00">
                                     </div>
                                 </div>
                                 <div class="terminal-field">
-                                    <label for="wireBalance">Available Balance Before ($ USD)</label>
+                                    <label for="wireBalance">Account Balance ($ USD)</label>
                                     <div class="currency-input">
                                         <span class="curr-sign">$</span>
                                         <input id="wireBalance" type="number" step="0.01" min="0" class="font-mono" required value="9100.00">
@@ -1100,23 +864,23 @@
                                 </div>
                             </div>
 
-                            <!-- Row 4: Transfer Type & Clearing Hub Location -->
+                            <!-- Row 4: Transaction Type & Location -->
                             <div class="form-row">
                                 <div class="terminal-field">
-                                    <label for="wireType">Clearing Method / Type</label>
+                                    <label for="wireType">Type (Transaction Type)</label>
                                     <select id="wireType" required>
-                                        <option value="Transfer" selected>SWIFT Wire Transfer</option>
-                                        <option value="Withdrawal">Electronic Withdrawal</option>
-                                        <option value="Deposit">Deposit / Settlement</option>
+                                        <option value="Transfer" selected>Transfer</option>
+                                        <option value="Withdrawal">Withdrawal</option>
+                                        <option value="Deposit">Deposit</option>
                                     </select>
                                 </div>
                                 <div class="terminal-field">
-                                    <label for="wireLocation">Originating Geo-Location</label>
+                                    <label for="wireLocation">Location (Trained Regions)</label>
                                     <select id="wireLocation" required>
-                                        <option value="California">California, USA</option>
-                                        <option value="New York">New York, USA</option>
-                                        <option value="Texas">Texas, USA</option>
-                                        <option value="Florida" selected>Florida, USA</option>
+                                        <option value="California">California</option>
+                                        <option value="Texas" selected>Texas</option>
+                                        <option value="New York">New York</option>
+                                        <option value="Florida">Florida</option>
                                     </select>
                                 </div>
                             </div>
@@ -1124,38 +888,38 @@
                             <!-- Row 5: Device ID & IP Address -->
                             <div class="form-row">
                                 <div class="terminal-field">
-                                    <label for="wireDeviceId">Device Hardware Fingerprint</label>
-                                    <input id="wireDeviceId" type="text" class="font-mono" value="DEV-SUSPECT-4091">
+                                    <label for="wireDeviceId">Device ID (e.g. D946, D616, D226)</label>
+                                    <input id="wireDeviceId" type="text" class="font-mono" value="D616">
                                 </div>
                                 <div class="terminal-field">
-                                    <label for="wireIp">Origination IP Address</label>
+                                    <label for="wireIp">IP Address</label>
                                     <input id="wireIp" type="text" class="font-mono" value="185.220.101.5">
                                 </div>
                             </div>
 
-                            <!-- Row 6: Banking Threat & Hardware Verification Toggles -->
+                            <!-- Row 6: User Device Recognition, Known Threat Flag, Login Location Match -->
                             <div class="security-toggles-block">
                                 <div class="sec-toggle-item">
-                                    <label for="toggleDevice">Hardware Fingerprint Verified?</label>
+                                    <label for="toggleDevice">User Device Recognition</label>
                                     <select id="toggleDevice" class="select-risk-pill">
-                                        <option value="0" selected>⚠️ UNRECOGNIZED NEW DEVICE (0)</option>
-                                        <option value="1">✅ TRUSTED RECOGNIZED HARDWARE (1)</option>
+                                        <option value="0" selected>⚠️ Unrecognized Device (0)</option>
+                                        <option value="1">✅ Recognized Trusted Device (1)</option>
                                     </select>
                                 </div>
 
                                 <div class="sec-toggle-item">
-                                    <label for="toggleThreat">AML / Global Threat Blacklist Match?</label>
+                                    <label for="toggleThreat">Known Threat Flag</label>
                                     <select id="toggleThreat" class="select-risk-pill">
-                                        <option value="1" selected>🚨 ACTIVE THREAT BLACKLIST MATCH (1)</option>
-                                        <option value="0">✅ CLEAN / NO ADVERSE MEDIA (0)</option>
+                                        <option value="1" selected>🚨 Flagged Threat / Blacklist (1)</option>
+                                        <option value="0">✅ Clean / No Threat History (0)</option>
                                     </select>
                                 </div>
 
                                 <div class="sec-toggle-item">
-                                    <label for="toggleGeoMatch">Login IP Matches Customer Home State?</label>
+                                    <label for="toggleGeoMatch">Login Location Match</label>
                                     <select id="toggleGeoMatch" class="select-risk-pill">
-                                        <option value="0" selected>⚠️ GEOGRAPHIC LOCATION MISMATCH (0)</option>
-                                        <option value="1">✅ VERIFIED RESIDENCE MATCH (1)</option>
+                                        <option value="0" selected>⚠️ Location Mismatch (0)</option>
+                                        <option value="1">✅ Verified Location Match (1)</option>
                                     </select>
                                 </div>
                             </div>
@@ -1163,7 +927,7 @@
                             <!-- Row 7: Behavioral Spending Pattern Deviation -->
                             <div class="slider-field-wrap">
                                 <div class="slider-header">
-                                    <label for="wireDeviation">Spending Pattern Deviation (Historical Velocity Multiple)</label>
+                                    <label for="wireDeviation">Spending Pattern Deviation (0 = Normal, 1+ = Deviation Multiple)</label>
                                     <span id="wireDeviationBadge" class="val-pill font-mono text-cyan">3.40x Multiple</span>
                                 </div>
                                 <input id="wireDeviation" type="range" min="0.0" max="5.0" step="0.05" value="3.40">
@@ -1178,7 +942,7 @@
                             <!-- Row 8: Model Cutoff Tuning -->
                             <div class="slider-field-wrap">
                                 <div class="slider-header">
-                                    <label for="wireThreshold">Calibrated Operating Cutoff ($T$)</label>
+                                    <label for="wireThreshold">Decision Threshold (T = 0.42 Recall-Optimized Cutoff)</label>
                                     <span id="wireThresholdBadge" class="val-pill font-mono text-yellow">0.42 (Optimal 98.5% Recall)</span>
                                 </div>
                                 <input id="wireThreshold" type="range" min="0.10" max="0.90" step="0.01" value="0.42">
@@ -1186,10 +950,10 @@
 
                             <div class="wire-action-group" style="display:flex;gap:12px;margin-top:16px;">
                                 <button id="btnExecuteScoring" class="btn btn-primary btn-lg" type="submit" style="flex:1;">
-                                    <span class="btn-icon">⚡</span> Intercept &amp; Score
+                                    <span class="btn-icon">⚡</span> Predict Suspicious Activity Flag
                                 </button>
                                 <button id="btnExecuteMoviePrediction" class="btn btn-warning btn-lg" type="button" style="flex:1;" title="Trigger the full Earth-to-Satellite Uplink, Orbital ML inference, and Downlink return laser movie!">
-                                    <span class="btn-icon">🎬</span> Predict &amp; Watch Cinema
+                                    <span class="btn-icon">🎬</span> Predict &amp; Watch Cinematic Movie
                                 </button>
                             </div>
                         </form>
@@ -1198,8 +962,8 @@
                     <!-- Right: Real-Time Risk Radar HUD -->
                     <div class="risk-hud-card glass-card">
                         <div class="panel-topbar">
-                            <h3>Pre-Clearing Risk Assessment HUD</h3>
-                            <span id="hudTimestamp" class="font-mono text-muted">AWAITING WIRE...</span>
+                            <h3>Model Inference &amp; Prediction Assessment</h3>
+                            <span id="hudTimestamp" class="font-mono text-muted">AWAITING TRANSACTION...</span>
                         </div>
 
                         <!-- Empty State -->
@@ -1209,7 +973,7 @@
                                 <span class="idle-icon">🛡️</span>
                             </div>
                             <h4>Transaction Ingestion Ready</h4>
-                            <p>Select a scenario above or enter wire parameters and click <strong>"Intercept & Score Payment"</strong>.</p>
+                            <p>Select a scenario above or enter transaction parameters and click <strong>"Predict Suspicious Activity Flag"</strong>.</p>
                         </div>
 
                         <!-- Live Scored HUD Container -->
@@ -1217,13 +981,35 @@
                             <!-- Visual Speedometer Gauge -->
                             <div class="hud-gauge-container">
                                 <svg class="hud-radial-svg" viewBox="0 0 240 130">
+                                    <defs>
+                                        <!-- Fraud Interception Crimson Gradient -->
+                                        <linearGradient id="gaugeGradientFraud" x1="0%" y1="100%" x2="100%" y2="0%">
+                                            <stop offset="0%" stop-color="#ef4444" />
+                                            <stop offset="50%" stop-color="#f87171" />
+                                            <stop offset="100%" stop-color="#dc2626" />
+                                        </linearGradient>
+                                        <!-- Legitimate Clean Emerald Gradient -->
+                                        <linearGradient id="gaugeGradientClean" x1="0%" y1="100%" x2="100%" y2="0%">
+                                            <stop offset="0%" stop-color="#10b981" />
+                                            <stop offset="50%" stop-color="#34d399" />
+                                            <stop offset="100%" stop-color="#059669" />
+                                        </linearGradient>
+                                        <!-- Warning / Elevated Anomaly Amber Gradient -->
+                                        <linearGradient id="gaugeGradientWarn" x1="0%" y1="100%" x2="100%" y2="0%">
+                                            <stop offset="0%" stop-color="#f59e0b" />
+                                            <stop offset="50%" stop-color="#fbbf24" />
+                                            <stop offset="100%" stop-color="#d97706" />
+                                        </linearGradient>
+                                    </defs>
                                     <!-- Background Track -->
-                                    <path class="gauge-track" d="M 25 115 A 95 95 0 0 1 215 115" fill="none" stroke="#182338" stroke-width="18" stroke-linecap="round"/>
+                                    <path class="gauge-track" d="M 25 115 A 95 95 0 0 1 215 115" fill="none" stroke="rgba(255, 255, 255, 0.09)" stroke-width="18" stroke-linecap="round"/>
                                     <!-- Animated Progress Meter -->
-                                    <path id="hudGaugeFill" class="gauge-meter" d="M 25 115 A 95 95 0 0 1 215 115" fill="none" stroke="#ef4444" stroke-width="18" stroke-linecap="round" stroke-dasharray="298.45" stroke-dashoffset="29.84"/>
+                                    <path id="hudGaugeFill" class="gauge-meter gauge-fraud" d="M 25 115 A 95 95 0 0 1 215 115" fill="none" stroke="#ef4444" stroke-width="18" stroke-linecap="round" stroke-dasharray="298.45" stroke-dashoffset="0"/>
+                                    <!-- Dynamic Glowing Needle Tip Indicator -->
+                                    <circle id="hudGaugeNeedleDot" class="gauge-needle-dot" cx="215" cy="115" r="7" fill="#ffffff" stroke="#ef4444" stroke-width="3"/>
                                 </svg>
                                 <div class="gauge-hud-center">
-                                    <span id="hudRiskScore" class="gauge-score font-heading">98.8</span>
+                                    <span id="hudRiskScore" class="gauge-score font-heading score-fraud">100.0</span>
                                     <span class="gauge-caption">RISK SCORE / 100</span>
                                 </div>
                             </div>
@@ -1231,10 +1017,10 @@
                             <!-- Massive Verdict Decision Banner -->
                             <div id="hudVerdictBanner" class="hud-verdict-banner verdict-fraud">
                                 <span id="hudVerdictIcon">🚨</span>
-                                <span id="hudVerdictText">SUSPICIOUS WIRE — INTERCEPTED</span>
+                                <span id="hudVerdictText">SUSPICIOUS (FLAG = 1) — FRAUD DETECTED</span>
                             </div>
 
-                            <!-- Banking Telemetry Metrics -->
+                            <!-- Model Telemetry Metrics -->
                             <div class="hud-telemetry-grid">
                                 <div class="hud-t-cell">
                                     <span class="hud-t-label">FRAUD PROBABILITY</span>
@@ -1242,8 +1028,8 @@
                                 </div>
 
                                 <div class="hud-t-cell">
-                                    <span class="hud-t-label">CLASSIFICATION</span>
-                                    <strong id="hudTierVal" class="hud-t-value text-danger">HIGH RISK</strong>
+                                    <span class="hud-t-label">PREDICTED VERDICT</span>
+                                    <strong id="hudTierVal" class="hud-t-value text-danger">SUSPICIOUS (1)</strong>
                                 </div>
 
                                 <div class="hud-t-cell">
@@ -1260,8 +1046,8 @@
                             <!-- Explainable AI (XAI) Risk Factors -->
                             <div class="xai-reasons-card">
                                 <div class="xai-reasons-header">
-                                    <span class="xai-tag">EXPLAINABLE AI SIGNALS (XAI):</span>
-                                    <small>Contributing Anomaly Factors</small>
+                                    <span class="xai-tag">EXPLAINABLE AI SIGNALS (11 ENGINEERED FEATURES):</span>
+                                    <small>Contributing Behavioral Risk Factors</small>
                                 </div>
                                 <ul id="hudXaiList" class="xai-reasons-list">
                                     <!-- Dynamic -->
@@ -1270,8 +1056,8 @@
 
                             <!-- Fast Action: Jump to Investigation -->
                             <div class="hud-actions-strip">
-                                <button type="button" class="btn btn-secondary btn-full" onclick="window.BankingTerminal.switchTab('triage')">
-                                    <span>🔍 Inspect Case in PostgreSQL Triage Desk</span>
+                                <button type="button" class="btn btn-secondary btn-full" onclick="window.BankingTerminal.inspectCurrentCaseInDocket()">
+                                    <span>🔍 Inspect Case in PostgreSQL Fraud Docket</span>
                                 </button>
                             </div>
                         </div>
@@ -1281,181 +1067,14 @@
 
 
             <!-- ==============================================
-                 TAB 3: LIVE WIRE STREAM (AUTO-SCORING ENGINE)
-            =============================================== -->
-            <div id="view-stream" class="workspace-view">
-                <div class="view-header-strip">
-                    <div>
-                        <span class="subhead-tag">HIGH FREQUENCY INGESTION</span>
-                        <h2 class="view-title">Live Wire Stream (Automated Core Ingestion)</h2>
-                        <p class="view-desc">Simulate live incoming interbank wires passing through the model in real time. Suspicious transactions trigger automated interception alerts.</p>
-                    </div>
-                    <div class="stream-controls">
-                        <button id="btnToggleLiveFeed" class="btn btn-primary" type="button">
-                            <span id="liveFeedIcon">▶</span> <span id="liveFeedText">Start Auto Ingestion</span>
-                        </button>
-                        <button id="btnClearLiveFeed" class="btn btn-secondary btn-sm" type="button">
-                            Clear Feed
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Stream Statistics Ribbon -->
-                <div class="stream-stats-bar glass-card">
-                    <div class="sstat-item">
-                        <span class="sstat-label">WIRES STREAMED:</span>
-                        <strong id="streamCount" class="font-mono">0</strong>
-                    </div>
-                    <div class="sstat-item">
-                        <span class="sstat-label">INTERCEPTED FRAUDS:</span>
-                        <strong id="streamFraudCount" class="font-mono text-danger">0</strong>
-                    </div>
-                    <div class="sstat-item">
-                        <span class="sstat-label">CLEARED LEGITIMATE:</span>
-                        <strong id="streamCleanCount" class="font-mono text-green">0</strong>
-                    </div>
-                    <div class="sstat-item">
-                        <span class="sstat-label">INTERCEPTED CAPITAL:</span>
-                        <strong id="streamSavedCapital" class="font-mono text-cyan">$0.00</strong>
-                    </div>
-                </div>
-
-                <!-- Live Stream Feed Table -->
-                <div class="live-stream-table-card glass-card">
-                    <div class="table-container">
-                        <table class="banking-data-table stream-table">
-                            <thead>
-                                <tr>
-                                    <th>Timestamp</th>
-                                    <th>Transaction Ref</th>
-                                    <th>Debtor &rarr; Creditor</th>
-                                    <th>Amount</th>
-                                    <th>Location</th>
-                                    <th>Threat Match</th>
-                                    <th>Fraud Prob</th>
-                                    <th>Decision</th>
-                                </tr>
-                            </thead>
-                            <tbody id="streamTableBody">
-                                <tr class="stream-empty-row">
-                                    <td colspan="8">Live stream paused. Click <strong>"Start Auto Ingestion"</strong> to stream institutional wires through the ML engine.</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- ==============================================
-                 TAB 4: BATCH LIQUIDITY SETTLEMENT (197 FRAUDS)
-            =============================================== -->
-            <div id="view-batch" class="workspace-view">
-                <div class="view-header-strip">
-                    <div>
-                        <span class="subhead-tag">BULK CLEARING & BENCHMARKING</span>
-                        <h2 class="view-title">Batch Liquidity Settlement & Hold-Out Validation</h2>
-                        <p class="view-desc">Execute bulk scoring across the certified 197 hold-out fraud dataset to verify 98.50% recall and PostgreSQL automated alert synchronization.</p>
-                    </div>
-                </div>
-
-                <div class="batch-split-hub">
-                    <!-- Option 1: 197 Certified Fraud Batch -->
-                    <div class="batch-launch-box glass-card">
-                        <div class="launch-emblem">⚡</div>
-                        <div class="launch-info">
-                            <h3>Test All 197 Certified Hold-Out Fraud Cases</h3>
-                            <p>Sends all 197 untouched test-set frauds to <code>POST /batch-predict?threshold=0.42</code>. Confirms zero fraud leakage and automatic database storage.</p>
-                            <button id="btnExecute197Batch" class="btn btn-primary btn-lg" type="button">
-                                <span>🚀 Execute 197-Transaction Batch Scoring</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Option 2: Custom JSON Upload -->
-                    <div class="batch-launch-box glass-card">
-                        <div class="launch-emblem">📂</div>
-                        <div class="launch-info">
-                            <h3>Upload Custom Interbank Clearing File</h3>
-                            <p>Upload a custom transaction JSON payload containing a <code>{"transactions": [...]}</code> array for real-time portfolio risk scoring.</p>
-                            <div class="custom-file-row">
-                                <input type="file" id="batchCustomFileInput" accept=".json">
-                                <label for="batchCustomFileInput" class="btn btn-secondary">
-                                    <span>📁 Select JSON Payload</span>
-                                </label>
-                                <span id="batchCustomFileLabel" class="file-chosen-text">No file loaded</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Batch Loading Indicator -->
-                <div id="batchLoadingIndicator" class="batch-progress-card glass-card hidden">
-                    <div class="banking-spinner"></div>
-                    <h4>Executing Batch Vectorized Inference & PostgreSQL Sync...</h4>
-                    <p>Standardizing numerical features, evaluating Logistic Regression weights, and synchronizing fraud alerts.</p>
-                </div>
-
-                <!-- Batch Summary Card (Hidden until run) -->
-                <div id="batchResultsHub" class="batch-summary-panel glass-card hidden">
-                    <div class="panel-topbar">
-                        <h3>Batch Clearing Results Summary</h3>
-                        <span id="batchLatencyBadge" class="badge-tag-green">Completed in 1.95s</span>
-                    </div>
-
-                    <div class="batch-metrics-bar">
-                        <div class="bm-card">
-                            <span class="bm-title">TOTAL EVALUATED</span>
-                            <h4 id="bmTotal" class="font-mono">197</h4>
-                        </div>
-                        <div class="bm-card">
-                            <span class="bm-title">SUSPICIOUS (INTERCEPTED)</span>
-                            <h4 id="bmSuspicious" class="font-mono text-danger">197</h4>
-                        </div>
-                        <div class="bm-card">
-                            <span class="bm-title">CLEARED NORMAL</span>
-                            <h4 id="bmNormal" class="font-mono text-green">0</h4>
-                        </div>
-                        <div class="bm-card">
-                            <span class="bm-title">FRAUD DETECTION RECALL</span>
-                            <h4 id="bmRate" class="font-mono text-green">100.0%</h4>
-                        </div>
-                        <div class="bm-card">
-                            <span class="bm-title">AVG RISK SCORE</span>
-                            <h4 id="bmAvgRisk" class="font-mono">93.90 / 100</h4>
-                        </div>
-                    </div>
-
-                    <!-- Batch Transactions Table Preview -->
-                    <div class="table-container margin-top-md">
-                        <table class="banking-data-table">
-                            <thead>
-                                <tr>
-                                    <th>Transaction ID</th>
-                                    <th>Verdict</th>
-                                    <th>Fraud Probability</th>
-                                    <th>Risk Score</th>
-                                    <th>Risk Severity</th>
-                                </tr>
-                            </thead>
-                            <tbody id="batchPreviewTableBody">
-                                <!-- Populated dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-
-            <!-- ==============================================
-                 TAB 5: FRAUD CASE INVESTIGATION (TRIAGE)
+                 TAB 3: FLAGGED FRAUD ALERTS (POSTGRESQL AUDIT DESK)
             =============================================== -->
             <div id="view-triage" class="workspace-view">
                 <div class="view-header-strip">
                     <div>
-                        <span class="subhead-tag">POSTGRESQL AUDIT TABLE</span>
-                        <h2 class="view-title">Fraud Case Investigation & Triage Desk</h2>
-                        <p class="view-desc">Lifecycle management for suspicious transactions recorded in PostgreSQL. Claim cases, freeze accounts, or authorize verified funds.</p>
+                        <span class="subhead-tag">POSTGRESQL DATABASE AUDIT: fraud_alerts</span>
+                        <h2 class="view-title">Flagged Fraud Cases Docket (PostgreSQL)</h2>
+                        <p class="view-desc">Centralized investigation desk for transactions flagged as Suspicious (Flag = 1) and stored in PostgreSQL. Review risk scores, inspect 11 feature anomaly flags, update case status, or export audit reports.</p>
                     </div>
                     <div class="triage-toolbar-btns">
                         <button id="btnExportTriageCsv" class="btn btn-secondary btn-sm" type="button">
@@ -1531,13 +1150,13 @@
 
 
             <!-- ==============================================
-                 TAB 6: PROJECT-7: 9-STEP ARCHITECTURE & METHODOLOGY GUIDE
+                 TAB 4: PROJECT ARCHITECTURE & 9-STEP METHODOLOGY GUIDE
             =============================================== -->
             <div id="view-compliance" class="workspace-view">
                 <div class="view-header-strip">
                     <div>
                         <span class="subhead-tag">OFFICIAL PROJECT SPECIFICATION</span>
-                        <h2 class="view-title">Project-7: Intelligent Fraud Detection System for Financial Transactions</h2>
+                        <h2 class="view-title">Project Architecture: Intelligent Fraud Detection System for Financial Transactions</h2>
                         <p class="view-desc">Formal documentation of domain, technologies, problem statement, 9-step solution approach, and institutional deliverables.</p>
                     </div>
                     <div class="last-sync-badge">
@@ -1552,7 +1171,7 @@
                         <div class="docket-brand">
                             <span class="docket-icon">📋</span>
                             <div>
-                                <h3>Project-7 System Specification Docket</h3>
+                                <h3>Project System Specification Docket</h3>
                                 <p class="text-muted">Master Document Reference for Evaluators &amp; Examination</p>
                             </div>
                         </div>
@@ -1566,7 +1185,7 @@
                     <div class="docket-meta-table">
                         <div class="d-meta-row">
                             <div class="d-meta-cell label">Title</div>
-                            <div class="d-meta-cell value font-bold">Intelligent Fraud Detection System for Financial Transactions (Project-7)</div>
+                            <div class="d-meta-cell value font-bold">Intelligent Fraud Detection System for Financial Transactions</div>
                         </div>
                         <div class="d-meta-row">
                             <div class="d-meta-cell label">Domain</div>
@@ -1616,7 +1235,7 @@
                         <div class="comp-body">
                             <p><strong>Official Specification:</strong> Missing values are handled and class imbalance is addressed using techniques such as oversampling or synthetic data generation (SMOTE).</p>
                             <p><strong>System Implementation:</strong> Handled minority fraud imbalance (~10% fraud, 90% legitimate) via SMOTE (Synthetic Minority Over-sampling Technique) and Random Over-Sampling, synthesizing minority fraud vectors to prevent majority-class bias.</p>
-                            <button type="button" class="btn btn-outline-info btn-sm" onclick="window.BankingTerminal.switchTab('batch')">📦 Inspect Balanced Test Set &rarr;</button>
+                            <button type="button" class="btn btn-outline-info btn-sm" onclick="window.BankingTerminal.switchTab('transfer')">⚡ Test Balanced Model Ingestion &rarr;</button>
                         </div>
                     </div>
 
@@ -1628,7 +1247,7 @@
                         </div>
                         <div class="comp-body">
                             <p><strong>Official Specification:</strong> Behavioral features such as transaction frequency, spending deviation, location changes, and time-based patterns are derived.</p>
-                            <p><strong>System Implementation:</strong> Derived 11 behavioral features including <code>Spending_Deviation_Amount</code> (amount × historical deviation), <code>Amount_Percent_of_Balance</code>, <code>Transaction_Hour</code>, <code>Device Recognition</code>, and inverted geo-location mismatch.</p>
+                            <p><strong>System Implementation:</strong> Derived 11 behavioral features including <code>Spending_Deviation_Amount</code> (amount &times; historical deviation), <code>Amount_Percent_of_Balance</code>, <code>Transaction_Hour</code>, <code>Device Recognition</code>, and inverted geo-location mismatch.</p>
                         </div>
                     </div>
 
@@ -1641,7 +1260,7 @@
                         <div class="comp-body">
                             <p><strong>Official Specification:</strong> Classification and anomaly detection models are trained to distinguish between legitimate and fraudulent transactions.</p>
                             <p><strong>System Implementation:</strong> Trained dual classification pipelines: <strong>Logistic Regression</strong> (for well-calibrated probabilistic scoring) and <strong>Random Forest Classifier</strong> (for nonlinear multi-decision tree bagging), achieving $ROC\text{-}AUC = 0.9967$.</p>
-                            <button type="button" class="btn btn-outline-info btn-sm" onclick="window.BankingTerminal.switchTab('batch')">🧠 View Trained Models &rarr;</button>
+                            <button type="button" class="btn btn-outline-info btn-sm" onclick="window.BankingTerminal.switchTab('cockpit')">🌐 View ML Architecture in 3D Cockpit &rarr;</button>
                         </div>
                     </div>
 
@@ -1654,7 +1273,7 @@
                         <div class="comp-body">
                             <p><strong>Official Specification:</strong> Models are evaluated using precision, recall, F1-score, and ROC analysis, with emphasis on reducing false negatives.</p>
                             <p><strong>System Implementation:</strong> To reduce dangerous false negatives (missed frauds), the operating cutoff was calibrated from default 0.50 down to $T=0.42$. This slashed missed frauds by 50% (from 6 to 3), achieving an institutional <strong>98.50% recall</strong> on 197 test frauds.</p>
-                            <button type="button" class="btn btn-outline-info btn-sm" onclick="window.BankingTerminal.switchTab('batch')">🎯 Run 197 Benchmark &rarr;</button>
+                            <button type="button" class="btn btn-outline-info btn-sm" onclick="window.BankingTerminal.switchTab('transfer')">🎯 Test T = 0.42 Cutoff &rarr;</button>
                         </div>
                     </div>
 
@@ -1667,7 +1286,7 @@
                         <div class="comp-body">
                             <p><strong>Official Specification:</strong> Each transaction is assigned a fraud risk score indicating the likelihood of fraudulent behavior.</p>
                             <p><strong>System Implementation:</strong> Computes a continuous probabilistic risk score between 0 and 100: $\text{Risk Score} = P(\text{Fraud}) \times 100$. Allows dynamic classification into Low (&lt;40), Medium (40–69), and High (&ge;70) risk tiers.</p>
-                            <button type="button" class="btn btn-outline-info btn-sm" onclick="window.BankingTerminal.switchTab('stream')">⚡ Launch Live Risk Scorer &rarr;</button>
+                            <button type="button" class="btn btn-outline-info btn-sm" onclick="window.BankingTerminal.switchTab('transfer')">⚡ Launch Risk Scorer &rarr;</button>
                         </div>
                     </div>
 
@@ -1739,27 +1358,27 @@
                 <div class="guide-step-card">
                     <div class="guide-step-num">1</div>
                     <div class="guide-step-content">
-                        <h4>Demonstrate Real-Time In-Flight Payment Interception</h4>
-                        <p>Go to <strong>"Real-Time Payment Simulator"</strong> tab &rarr; click <strong>"Scenario 1: High-Value Account Drain Attack"</strong> &rarr; click <strong>"Intercept &amp; Score Payment"</strong>.</p>
-                        <span class="guide-highlight">Result: The HUD speedometer swings to 100% Risk, flashes a crimson [INTERCEPTED] verdict banner, lists XAI anomaly drivers, and records the alert in PostgreSQL.</span>
+                        <h4>1. Demonstrate Real-Time Transaction Screening (11 Engineered Features)</h4>
+                        <p>Go to <strong>"Real-Time Predictor"</strong> tab &rarr; click <strong>"Scenario 1: High-Deviation Account Drain (Flag = 1)"</strong> &rarr; click <strong>"Predict Suspicious Activity Flag"</strong>.</p>
+                        <span class="guide-highlight">Result: The HUD speedometer swings to 100% Risk, flashes a crimson [SUSPICIOUS (FLAG = 1)] verdict banner, displays the 11 XAI anomaly factors, and records the alert in PostgreSQL.</span>
                     </div>
                 </div>
 
                 <div class="guide-step-card">
                     <div class="guide-step-num">2</div>
                     <div class="guide-step-content">
-                        <h4>Demonstrate 98.50% Recall on 197 Certified Frauds</h4>
-                        <p>Go to <strong>"Batch Liquidity Settlement"</strong> tab &rarr; click <strong>"Execute 197-Transaction Batch Scoring"</strong>.</p>
-                        <span class="guide-highlight">Result: Vectorized scoring evaluates all 197 untouched test-set frauds simultaneously, confirming 100% detection rate and automatic batch persistence.</span>
+                        <h4>2. Demonstrate 3D Satellite Earth Defense Movie (2-Way Signal Link)</h4>
+                        <p>Click <strong>"DEFENSE COCKPIT &amp; 3D THEATER"</strong> side button on the globe &rarr; click <strong>"🎬 Play Cinematic Movie"</strong> (or click <strong>"Predict &amp; Watch Cinematic Movie"</strong> in the predictor tab).</p>
+                        <span class="guide-highlight">Result: Watch the ground terminal uplink transmit 11 features into orbit, the satellite AI node evaluate the trained ML pipeline, and the return laser beam intercept the transaction.</span>
                     </div>
                 </div>
 
                 <div class="guide-step-card">
                     <div class="guide-step-num">3</div>
                     <div class="guide-step-content">
-                        <h4>Demonstrate PostgreSQL Enterprise Case Management</h4>
-                        <p>Go to <strong>"Fraud Case Investigation"</strong> tab &rarr; inspect live alerts stored in PostgreSQL.</p>
-                        <span class="guide-highlight">Result: Filter by High/Medium severity, claim cases as Under Review, settle false alarms, or click "Export Audit Log (CSV)" to download proof.</span>
+                        <h4>3. Demonstrate PostgreSQL Case Audit &amp; Triage Lifecycle</h4>
+                        <p>Go to <strong>"Flagged Fraud Alerts"</strong> tab &rarr; inspect live alerts stored in PostgreSQL.</p>
+                        <span class="guide-highlight">Result: Filter by High/Medium severity, claim cases as Under Review, resolve verified transactions, or click "Export Audit Log (CSV)" to download proof.</span>
                     </div>
                 </div>
             </div>

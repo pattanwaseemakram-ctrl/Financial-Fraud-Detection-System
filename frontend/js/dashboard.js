@@ -336,6 +336,7 @@
     const hudEmptyState = document.getElementById("hudEmptyState");
     const hudLiveScored = document.getElementById("hudLiveScored");
     const hudGaugeFill = document.getElementById("hudGaugeFill");
+    const hudGaugeNeedleDot = document.getElementById("hudGaugeNeedleDot");
     const hudRiskScore = document.getElementById("hudRiskScore");
     const hudVerdictBanner = document.getElementById("hudVerdictBanner");
     const hudVerdictIcon = document.getElementById("hudVerdictIcon");
@@ -443,6 +444,16 @@
             }
         });
 
+        // Toggle side cockpit button states
+        const sideBtns = document.querySelectorAll(".btn-side-theater-quick, .btn-globe-side-cockpit");
+        sideBtns.forEach((btn) => {
+            if (tabName === "cockpit") {
+                btn.classList.add("active");
+            } else {
+                btn.classList.remove("active");
+            }
+        });
+
         if (tabName === "triage") {
             loadTriageCases();
         } else if (tabName === "cockpit") {
@@ -465,6 +476,9 @@
         operatorBadge.classList.remove("hidden");
         logoutBtn.classList.remove("hidden");
 
+        const sideDock = document.getElementById("sideTheaterQuickDock");
+        if (sideDock) sideDock.classList.remove("hidden");
+
         if (operatorName) operatorName.textContent = username.toUpperCase();
         if (operatorRole) operatorRole.textContent = role || "Risk Operations Officer";
 
@@ -477,6 +491,9 @@
         bankNavHub.classList.add("hidden");
         operatorBadge.classList.add("hidden");
         logoutBtn.classList.add("hidden");
+
+        const sideDock = document.getElementById("sideTheaterQuickDock");
+        if (sideDock) sideDock.classList.add("hidden");
 
         if (liveFeedRunning) stopLiveFeed();
     }
@@ -655,59 +672,59 @@
         document.getElementById("wireTimestamp").value = isoNow;
 
         if (type === "attack") {
-            document.getElementById("wireTxId").value = `TX-ATTACK-${rand}`;
-            document.getElementById("wireSender").value = `US-JPMC-902144`;
-            document.getElementById("wireReceiver").value = `KY-BCM-889102`;
+            document.getElementById("wireTxId").value = `T${rand}`;
+            document.getElementById("wireSender").value = `A41624`;
+            document.getElementById("wireReceiver").value = `B51095`;
             document.getElementById("wireAmount").value = "8450.00";
             document.getElementById("wireBalance").value = "9100.00";
             document.getElementById("wireType").value = "Transfer";
-            document.getElementById("wireLocation").value = "Florida";
-            document.getElementById("wireDeviceId").value = `DEV-MALICIOUS-${rand}`;
+            document.getElementById("wireLocation").value = "Texas";
+            document.getElementById("wireDeviceId").value = `D616`;
             document.getElementById("wireIp").value = "185.220.101.5";
-            document.getElementById("toggleDevice").value = "0"; // Unrecognized
-            document.getElementById("toggleThreat").value = "1"; // Threat Flagged
-            document.getElementById("toggleGeoMatch").value = "0"; // Location Mismatch
+            document.getElementById("toggleDevice").value = "0"; // Unrecognized (0)
+            document.getElementById("toggleThreat").value = "1"; // Threat Flagged (1)
+            document.getElementById("toggleGeoMatch").value = "0"; // Location Mismatch (0)
             wireDeviation.value = "3.40";
             wireDeviationBadge.textContent = "3.40x Multiple";
             wireThreshold.value = "0.42";
             wireThresholdBadge.textContent = "0.42 (Optimal 98.5% Recall)";
-            showToast("Preset Loaded: High-Value Account Takeover Attack", "error");
+            showToast("Preset Loaded: High-Deviation Account Drain (Flag = 1)", "error");
         } else if (type === "anomaly") {
-            document.getElementById("wireTxId").value = `TX-ANOMALY-${rand}`;
-            document.getElementById("wireSender").value = `US-BOFA-550921`;
-            document.getElementById("wireReceiver").value = `UK-BARC-774019`;
+            document.getElementById("wireTxId").value = `T${rand}`;
+            document.getElementById("wireSender").value = `A23440`;
+            document.getElementById("wireReceiver").value = `B87929`;
             document.getElementById("wireAmount").value = "1420.00";
             document.getElementById("wireBalance").value = "4500.00";
             document.getElementById("wireType").value = "Withdrawal";
-            document.getElementById("wireLocation").value = "Texas";
-            document.getElementById("wireDeviceId").value = `DEV-FOREIGN-${rand}`;
+            document.getElementById("wireLocation").value = "California";
+            document.getElementById("wireDeviceId").value = `D226`;
             document.getElementById("wireIp").value = "77.91.76.247";
-            document.getElementById("toggleDevice").value = "0"; // Unrecognized
-            document.getElementById("toggleThreat").value = "0"; // Clean
-            document.getElementById("toggleGeoMatch").value = "0"; // Mismatch
+            document.getElementById("toggleDevice").value = "0"; // Unrecognized (0)
+            document.getElementById("toggleThreat").value = "0"; // Clean (0)
+            document.getElementById("toggleGeoMatch").value = "0"; // Mismatch (0)
             wireDeviation.value = "1.25";
             wireDeviationBadge.textContent = "1.25x Multiple";
             wireThreshold.value = "0.42";
             wireThresholdBadge.textContent = "0.42 (Optimal 98.5% Recall)";
-            showToast("Preset Loaded: Geo-Location Mismatch Anomaly", "warning");
+            showToast("Preset Loaded: Geo-Location Mismatch Anomaly (Flag = 1)", "warning");
         } else if (type === "clean") {
-            document.getElementById("wireTxId").value = `TX-SETTLE-${rand}`;
-            document.getElementById("wireSender").value = `US-WELLS-881023`;
-            document.getElementById("wireReceiver").value = `US-CITI-339104`;
-            document.getElementById("wireAmount").value = "4800.00";
-            document.getElementById("wireBalance").value = "128500.00";
+            document.getElementById("wireTxId").value = `T${rand}`;
+            document.getElementById("wireSender").value = `A56501`;
+            document.getElementById("wireReceiver").value = `B39190`;
+            document.getElementById("wireAmount").value = "450.00";
+            document.getElementById("wireBalance").value = "12500.00";
             document.getElementById("wireType").value = "Deposit";
             document.getElementById("wireLocation").value = "New York";
-            document.getElementById("wireDeviceId").value = `DEV-CORP-SECURE`;
+            document.getElementById("wireDeviceId").value = `D946`;
             document.getElementById("wireIp").value = "192.168.1.50";
-            document.getElementById("toggleDevice").value = "1"; // Recognized
-            document.getElementById("toggleThreat").value = "0"; // Clean
-            document.getElementById("toggleGeoMatch").value = "1"; // Match
+            document.getElementById("toggleDevice").value = "1"; // Recognized (1)
+            document.getElementById("toggleThreat").value = "0"; // Clean (0)
+            document.getElementById("toggleGeoMatch").value = "1"; // Match (1)
             wireDeviation.value = "0.05";
             wireDeviationBadge.textContent = "0.05x Multiple";
             wireThreshold.value = "0.42";
             wireThresholdBadge.textContent = "0.42 (Optimal 98.5% Recall)";
-            showToast("Preset Loaded: Verified Corporate Vendor Wire", "success");
+            showToast("Preset Loaded: Normal Legitimate Transaction (Flag = 0)", "success");
         }
     }
 
@@ -718,7 +735,7 @@
         if (event) event.preventDefault();
 
         btnExecuteScoring.disabled = true;
-        btnExecuteScoring.innerHTML = `<span class="banking-spinner" style="width:14px;height:14px;margin:0 8px 0 0;display:inline-block;vertical-align:middle;border-width:2px;"></span> Intercepting & Scoring via ML Pipeline...`;
+        btnExecuteScoring.innerHTML = `<span class="banking-spinner" style="width:14px;height:14px;margin:0 8px 0 0;display:inline-block;vertical-align:middle;border-width:2px;"></span> Predicting Suspicious Activity Flag...`;
 
         const txId = document.getElementById("wireTxId").value.trim();
         const timestamp = document.getElementById("wireTimestamp").value || new Date().toISOString();
@@ -728,7 +745,7 @@
         const balance = parseFloat(document.getElementById("wireBalance").value) || 0;
         const type = document.getElementById("wireType").value;
         const location = document.getElementById("wireLocation").value;
-        const deviceId = document.getElementById("wireDeviceId").value.trim() || "DEV-UNASSIGNED";
+        const deviceId = document.getElementById("wireDeviceId").value.trim() || "D946";
         const ip = document.getElementById("wireIp").value.trim() || "127.0.0.1";
         const devRecog = parseInt(document.getElementById("toggleDevice").value, 10);
         const threatFlag = parseInt(document.getElementById("toggleThreat").value, 10);
@@ -763,43 +780,86 @@
 
             const riskScore = Number(result.risk_score || 0);
             const fraudProb = Number(result.fraud_probability || 0);
-            const isSuspicious = String(result.prediction).toLowerCase() === "suspicious";
+            const isSuspicious = String(result.prediction).toLowerCase() === "suspicious" || String(result.prediction).toLowerCase() === "fraud";
 
-            // Gauge SVG Arc Offset (Circumference: 298.45)
+            // Dynamic Semicircular Speedometer Arc Math (Radius = 95, Circumference = π * 95 ≈ 298.45)
             const circumference = 298.45;
-            const targetOffset = circumference - (riskScore / 100) * circumference;
-            hudGaugeFill.style.strokeDashoffset = targetOffset;
-            hudRiskScore.textContent = riskScore.toFixed(1);
+            const clampedScore = Math.max(0, Math.min(100, riskScore));
+            const targetOffset = circumference - (clampedScore / 100) * circumference;
+
+            // Apply stroke dashoffset to both CSS style & SVG attribute for rock-solid cross-browser rendering
+            hudGaugeFill.style.strokeDashoffset = `${targetOffset}px`;
+            hudGaugeFill.setAttribute("stroke-dashoffset", targetOffset);
+            hudRiskScore.textContent = clampedScore.toFixed(1);
+
+            // Compute Needle Tip Indicator Position along arc: theta from π (0% risk, left) to 0 (100% risk, right)
+            const angleRad = Math.PI * (1 - clampedScore / 100);
+            const dotX = (120 + 95 * Math.cos(angleRad)).toFixed(2);
+            const dotY = (115 - 95 * Math.sin(angleRad)).toFixed(2);
+            if (hudGaugeNeedleDot) {
+                hudGaugeNeedleDot.setAttribute("cx", dotX);
+                hudGaugeNeedleDot.setAttribute("cy", dotY);
+            }
+
+            hudGaugeFill.classList.remove("gauge-fraud", "gauge-clean", "gauge-warn");
+            hudRiskScore.classList.remove("score-fraud", "score-clean");
 
             if (isSuspicious) {
-                hudGaugeFill.style.stroke = "var(--text-danger)";
+                hudGaugeFill.classList.add("gauge-fraud");
+                hudGaugeFill.style.stroke = "url(#gaugeGradientFraud)";
+                hudGaugeFill.setAttribute("stroke", "url(#gaugeGradientFraud)");
+                hudGaugeFill.style.filter = "drop-shadow(0 0 12px rgba(239, 68, 68, 0.85))";
+
+                if (hudGaugeNeedleDot) {
+                    hudGaugeNeedleDot.setAttribute("stroke", "#ef4444");
+                    hudGaugeNeedleDot.style.filter = "drop-shadow(0 0 8px rgba(239, 68, 68, 0.95))";
+                }
+
+                hudRiskScore.classList.add("score-fraud");
+                hudRiskScore.style.color = "#ef4444";
+                hudRiskScore.style.textShadow = "0 0 18px rgba(239, 68, 68, 0.65)";
+
                 hudVerdictBanner.className = "hud-verdict-banner verdict-fraud";
                 hudVerdictIcon.textContent = "🚨";
-                hudVerdictText.textContent = "SUSPICIOUS WIRE — INTERCEPTED";
+                hudVerdictText.textContent = "SUSPICIOUS (FLAG = 1) — FRAUD DETECTED";
                 hudProbVal.className = "hud-t-value font-mono text-danger";
                 hudTierVal.className = "hud-t-value text-danger";
+                hudTierVal.textContent = "SUSPICIOUS (1)";
                 hudDbSyncVal.textContent = "AUTO-STORED IN POSTGRESQL";
                 hudDbSyncVal.className = "hud-t-value text-green";
 
                 playBeep("alert");
-                showToast(`🚨 WIRE INTERCEPTED! Fraud Probability: ${(fraudProb * 100).toFixed(1)}%`, "error");
+                showToast(`🚨 SUSPICIOUS TRANSACTION INTERCEPTED! Fraud Probability: ${(fraudProb * 100).toFixed(1)}%`, "error");
             } else {
-                hudGaugeFill.style.stroke = "var(--text-green)";
+                hudGaugeFill.classList.add("gauge-clean");
+                hudGaugeFill.style.stroke = "url(#gaugeGradientClean)";
+                hudGaugeFill.setAttribute("stroke", "url(#gaugeGradientClean)");
+                hudGaugeFill.style.filter = "drop-shadow(0 0 12px rgba(16, 185, 129, 0.85))";
+
+                if (hudGaugeNeedleDot) {
+                    hudGaugeNeedleDot.setAttribute("stroke", "#10b981");
+                    hudGaugeNeedleDot.style.filter = "drop-shadow(0 0 8px rgba(16, 185, 129, 0.95))";
+                }
+
+                hudRiskScore.classList.add("score-clean");
+                hudRiskScore.style.color = "#10b981";
+                hudRiskScore.style.textShadow = "0 0 18px rgba(16, 185, 129, 0.65)";
+
                 hudVerdictBanner.className = "hud-verdict-banner verdict-clean";
                 hudVerdictIcon.textContent = "✅";
-                hudVerdictText.textContent = "LEGITIMATE WIRE — APPROVED";
+                hudVerdictText.textContent = "LEGITIMATE (FLAG = 0) — NORMAL TRANSACTION";
                 hudProbVal.className = "hud-t-value font-mono text-green";
                 hudTierVal.className = "hud-t-value text-green";
-                hudDbSyncVal.textContent = "CLEARED (NO CASE OPENED)";
+                hudTierVal.textContent = "NORMAL (0)";
+                hudDbSyncVal.textContent = "CLEARED (NORMAL)";
                 hudDbSyncVal.className = "hud-t-value text-muted";
 
                 playBeep("clean");
-                showToast(`✅ Wire Approved. Settled with low risk score (${riskScore.toFixed(1)})`, "success");
+                showToast(`✅ Transaction Cleared (Flag = 0). Normal risk score: ${riskScore.toFixed(1)}`, "success");
             }
 
             hudProbVal.textContent = `${(fraudProb * 100).toFixed(2)}%`;
-            hudTierVal.textContent = result.risk_level.toUpperCase();
-            hudCutoffVal.textContent = `T = ${Number(result.decision_threshold).toFixed(2)}`;
+            hudCutoffVal.textContent = `T = ${Number(result.decision_threshold || threshold).toFixed(2)}`;
 
             // Populate XAI Bullet Reasons
             renderHudXaiSignals(payload, isSuspicious, riskScore);
@@ -821,14 +881,15 @@
                 });
             }
 
-            // Background reload cockpit counters
-            loadAlertSummaryData();
+            // Background reload cockpit counters and docket cases
+            await loadAlertSummaryData();
+            await loadTriageCases();
 
         } catch (error) {
             showToast(`Scoring Error: ${error.message}`, "error");
         } finally {
             btnExecuteScoring.disabled = false;
-            btnExecuteScoring.innerHTML = `<span class="btn-icon">⚡</span> Intercept &amp; Score`;
+            btnExecuteScoring.innerHTML = `<span class="btn-icon">⚡</span> Predict Suspicious Activity Flag`;
         }
     }
 
@@ -1396,11 +1457,11 @@
         if (btnPresetAnomaly) btnPresetAnomaly.addEventListener("click", () => populateWirePreset("anomaly"));
         if (btnPresetClean) btnPresetClean.addEventListener("click", () => populateWirePreset("clean"));
 
-        // New Wire ID Generator
+        // New Transaction ID Generator
         if (btnGenNewWireId) {
             btnGenNewWireId.addEventListener("click", () => {
                 const rand = Math.floor(1000 + Math.random() * 9000);
-                document.getElementById("wireTxId").value = `TX-WIRE-${rand}`;
+                document.getElementById("wireTxId").value = `T${rand}`;
             });
         }
 
@@ -1492,12 +1553,22 @@
         }
     }
 
+    function inspectCurrentCaseInDocket() {
+        const txId = (document.getElementById("wireTxId")?.value || "").trim();
+        switchTab("triage");
+        if (txId && triageSearchInput) {
+            triageSearchInput.value = txId;
+            renderTriageTable();
+        }
+    }
+
     // Export to Window for inline button bindings
     window.BankingTerminal = {
         switchTab,
         updateCaseStatus,
         deleteCase,
         populateWirePreset,
+        inspectCurrentCaseInDocket,
     };
 
     // Initialize on DOM Ready
